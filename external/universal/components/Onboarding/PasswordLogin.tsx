@@ -1,8 +1,5 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useState} from "react";
-// @ts-ignore
 import {withRouter, RouteComponentProps, Redirect} from "react-router";
-// @ts-ignore
 import c from 'classnames';
 import {parseUsername, RELAYER_TLDS} from "../../utils/user";
 import Icon from "../Icon";

@@ -1,12 +1,9 @@
-// @ts-ignore
-import React, {ReactElement, ReactNode, useCallback, useEffect, MouseEvent} from "react";
-// @ts-ignore
+import {ReactElement, ReactNode, useCallback, MouseEvent} from "react";
 import {RouteComponentProps, withRouter, Switch, Route} from "react-router-dom";
 import "./app-header.scss";
-// @ts-ignore
 import {useDispatch} from "react-redux";
 import Icon from "../Icon";
-import {fetchIdentity, useCurrentUsername, useUser, useIdentities, setCurrentUser} from "../../ducks/users";
+import {useCurrentUsername, useUser, useIdentities, setCurrentUser} from "../../ducks/users";
 import Button from "../Button";
 import Avatar from "../Avatar";
 import Menuable from "../Menuable";
@@ -16,7 +13,7 @@ type Props = { logoUrl: string } & RouteComponentProps;
 function AppHeader(props: Props): ReactElement {
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(fetchIdentity()), []);
+  // useEffect(() => dispatch(fetchIdentity()), []);
 
   return (
     <div className="app-header">
@@ -134,7 +131,9 @@ function renderRight(props: RouteComponentProps): ReactNode {
   const dispatch = useDispatch();
   const onSetting = useCallback(() => props.history.push(`/settings`), []);
 
-  const onCreate = useCallback(() => props.history.push(`/write`), []);
+  const onCreate = useCallback(() => {
+    props.history.push(`/write`);
+  }, []);
 
   const onLogout = useCallback(async () => {
     localStorage.removeItem('nomad_token');

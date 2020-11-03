@@ -1,19 +1,16 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useState} from "react";
-// @ts-ignore
-import {withRouter, RouteComponentProps, Redirect} from "react-router";
-// @ts-ignore
-import c from 'classnames';
+import {withRouter, RouteComponentProps} from "react-router";
 import Icon from "../Icon";
 import Input from "../Input";
 import Button from "../Button";
 import {OnboardingViewType} from "./index";
-import {decrypt} from "../../../../src/app/util/key";
 
 type ImportPrivateKeyProps = {
   onAddTLD: (tld: string, password: string, privateKey: string) => Promise<void>;
   setViewType: (viewType: OnboardingViewType) => void;
 } & RouteComponentProps;
+
+const BASE64_VALIDATE = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
 export default withRouter(ImportPrivateKey);
 function ImportPrivateKey(props: ImportPrivateKeyProps): ReactElement {
@@ -29,7 +26,7 @@ function ImportPrivateKey(props: ImportPrivateKeyProps): ReactElement {
       return;
     }
 
-    if (!(/[0-9A-Fa-f]{64}/).test(privateKey) && privateKey.length !== 64) {
+    if (!BASE64_VALIDATE.test(privateKey) && privateKey.length !== 44) {
       setErrorMessage('Invalid private key');
       return;
     }

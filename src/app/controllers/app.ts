@@ -764,15 +764,17 @@ export default class AppManager {
         this.sendResponse(ipcEvt, e.id, { tld, subdomain });
       } else if (isTLD(name)) {
         const cipher = this.usersController.identity[name].encryptedKey || '';
-        const pk = decrypt(cipher, password);
-        if (!pk  || pk.length < 64) {
+        const pkb64 = decrypt(cipher, password);
+        if (!pkb64  || pkb64.length < 44) {
           throw new Error('Invalid password');
         }
+        const pk = Buffer.from(pkb64, 'base64').toString('hex');
         await this.usersController.setCurrentUser(name);
-        this.signerManager.addSignerByHexPrivateKey(pk);
+        await this.signerManager.addSignerByHexPrivateKey(pk);
         this.sendResponse(ipcEvt, e.id, {
           publicKey: derivePublicKey(pk),
-          tld, subdomain,
+          tld,
+          subdomain,
         });
       }
     } catch (err) {

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, ChangeEventHandler, ReactElement, useCallback, useState} from "react";
+import React, {ChangeEvent, ReactElement, useCallback, useState} from "react";
 import {withRouter, RouteComponentProps} from "react-router";
 import MarkdownEditor from "../../components/MarkdownEditor";
 import "./compose.scss";
@@ -152,31 +152,31 @@ function ComposeView(props: Props): ReactElement {
                     {label: 'OL', style: 'ordered-list-item'},
                   ],
                 }}
-                customControls={[
-                  () => {
-                    return (
-                      <div className="custom-rte-btn">
-                        {(
-                          // @ts-ignore
-                          <Icon
-                            className="custom-rte-btn__icon"
-                            material="image"
-                            onClick={props.onFileUploadButtonClick && onSelectAndInsertFile}
-                          />
-                        )}
-                        {
-                          !props.onFileUploadButtonClick && (
-                            <input
-                              type="file"
-                              onChange={e => onInsertFile(e.target.files![0])}
-                            />
-                          )
-                        }
-                      </div>
-
-                    )
-                  }
-                ]}
+                // customControls={[
+                //   () => {
+                //     return (
+                //       <div className="custom-rte-btn">
+                //         {(
+                //           // @ts-ignore
+                //           <Icon
+                //             className="custom-rte-btn__icon"
+                //             material="image"
+                //             onClick={props.onFileUploadButtonClick && onSelectAndInsertFile}
+                //           />
+                //         )}
+                //         {
+                //           !props.onFileUploadButtonClick && (
+                //             <input
+                //               type="file"
+                //               onChange={e => onInsertFile(e.target.files![0])}
+                //             />
+                //           )
+                //         }
+                //       </div>
+                //
+                //     )
+                //   }
+                // ]}
               />
             )
             : (
@@ -333,27 +333,27 @@ function _RichTextEditor(props: RichTextEditorProps): ReactElement {
                   {label: 'OL', style: 'ordered-list-item'},
                 ],
               }}
-              customControls={[
-                () => {
-                  return (
-                    <div className="custom-rte-btn">
-                      {(
-                        // @ts-ignore
-                        <Icon
-                          className="custom-rte-btn__icon"
-                          material="image"
-                          onClick={() => null}
-                        />
-                      )}
-                      <input
-                        type="file"
-                        onChange={e => onInsertFile(e.target.files![0])}
-                      />
-                    </div>
-
-                  )
-                }
-              ]}
+              // customControls={[
+              //   () => {
+              //     return (
+              //       <div className="custom-rte-btn">
+              //         {(
+              //           // @ts-ignore
+              //           <Icon
+              //             className="custom-rte-btn__icon"
+              //             material="image"
+              //             onClick={() => null}
+              //           />
+              //         )}
+              //         <input
+              //           type="file"
+              //           onChange={e => onInsertFile(e.target.files![0])}
+              //         />
+              //       </div>
+              //
+              //     )
+              //   }
+              // ]}
             />
           )
           : (

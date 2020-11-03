@@ -15,10 +15,8 @@ import {parseUsername} from "../../../../../external/universal/utils/user";
 
 function AppHeader(props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();
-  // const initialized = useAppInitialized();
 
-  // @ts-ignore
-  useEffect(() => dispatch(fetchIdentity()), []);
+  useEffect(() => dispatch<any>(fetchIdentity()), []);
 
   return (
     <div className="app-header">
@@ -59,7 +57,9 @@ function renderRight(props: RouteComponentProps): ReactNode {
     payload: null,
   }), []);
 
-  const onCreate = useCallback(() => props.history.push('/write'), []);
+  const onCreate = useCallback(() => {
+    props.history.push('/write');
+  }, []);
 
   const onLogout = useCallback(async () => {
     await postIPCMain({

@@ -1,7 +1,7 @@
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse} from "../../app/types";
-import {ThunkDispatch} from "redux-thunk";
+import {ThunkAction, ThunkDispatch} from "redux-thunk";
 // @ts-ignore
 import {Pageable} from '../../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
@@ -88,7 +88,7 @@ type FetchIdentityIPCResponse = IPCMessageResponse<{
   currentUser: string;
 }>
 
-export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
+export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>) => {
   const ipcEvt = {
     type: IPCMessageRequestType.GET_IDENTITY,
     payload: {},

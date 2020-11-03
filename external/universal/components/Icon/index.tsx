@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, {Component, MouseEventHandler} from "react";
 import './icon.scss';
 
@@ -20,7 +19,6 @@ export default class Icon extends Component<Props> {
       onClick,
       disabled,
       material,
-    // @ts-ignore
     } = this.props;
 
     return onClick

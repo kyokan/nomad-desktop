@@ -130,14 +130,13 @@ export default class SignerManager {
     await fs.promises.writeFile(indexerVersionPath, '0.0.55');
   }
 
-  private async setIngestor (pk: string) {
+  private async setIngestor (pkhex: string) {
     if (!this.postsDao || !this.moderationsDao || !this.connectionsDao) return;
-    const signer = SECP256k1Signer.fromHexPrivateKey(pk || '0000000000000000000000000000000000000000000000000000000000000000');
-    this.signer = signer;
+    this.signer = SECP256k1Signer.fromHexPrivateKey(pkhex || '0000000000000000000000000000000000000000000000000000000000000000');
   }
 
   addSignerByHexPrivateKey (pk: string) {
-    this.setIngestor(pk);
+    return this.setIngestor(pk);
   }
 
   private async appendTLDMessage(tld: string, message: DomainEnvelope<DomainPost|DomainModeration|DomainConnection|DomainMedia>, truncate: boolean): Promise<DomainEnvelope<DomainPost|DomainModeration|DomainConnection|DomainMedia>> {
@@ -148,7 +147,14 @@ export default class SignerManager {
     const wire = message.toWire(0);
     const { offset } = await this.userDataManager.getUserData();
 
-    const nextOffset = await this.writer?.appendEnvelope(tld, wire, undefined, false, offset, this.signer);
+    const nextOffset = await this.writer?.appendEnvelope(
+      tld,
+      wire,
+      undefined,
+      false,
+      offset,
+      this.signer,
+    );
 
     if (typeof nextOffset === "number") {
       await this.userDataManager.setOffset(nextOffset);

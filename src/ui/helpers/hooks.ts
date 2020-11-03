@@ -315,7 +315,7 @@ export const useCreateNewView = () => {
       payload: view,
     }, true);
 
-    await fetchCurrentUserData(dispatch);
+    await dispatch(fetchCurrentUserData());
   }, [postIPCMain, dispatch]);
 };
 
@@ -330,11 +330,11 @@ export const useSaveCustomView = () => {
       },
     }, true);
 
-    await fetchCurrentUserData(dispatch);
+    await dispatch(fetchCurrentUserData());
   }, [postIPCMain, dispatch]);
 };
 
-export async function fetchCurrentUserData (dispatch: Dispatch<any>): Promise<void> {
+export const fetchCurrentUserData = () => async (dispatch: Dispatch<any>): Promise<void> => {
   const resp: IPCMessageResponse<UserData | string> = await postIPCMain({
     type: IPCMessageRequestType.GET_USER_DATA,
     payload: null,
@@ -348,5 +348,4 @@ export async function fetchCurrentUserData (dispatch: Dispatch<any>): Promise<vo
     type: UsersActionType.SET_CURRENT_USER_DATA,
     payload: resp.payload,
   });
-}
-
+};

@@ -25,7 +25,9 @@ import {
   useFollowUser,
   useLikePage,
   useSaveCustomView,
-  fetchCurrentUserData, useFileUpload, useSendPost, useUploadImage,
+  fetchCurrentUserData,
+  useFileUpload,
+  useSendPost,
 } from "../../helpers/hooks";
 import {useFetchAppData, useHydrated, useInitialized} from "../../ducks/app";
 import InitApp from "../../components/InitApp";
@@ -55,7 +57,7 @@ export default function Root(): ReactElement {
   const initialized = useInitialized();
   const hydrated = useHydrated();
   const [isBrowsing, setBrowsing] = useState<boolean>(false);
-  const [isClosed, closeModal] = useState<boolean>(false);
+  const [isClosed, closeModal] = useState<boolean>(true);
 
   useEffect(() => {
     (async function onAppMount() {
@@ -64,7 +66,7 @@ export default function Root(): ReactElement {
         fetchUser(currentUsername);
         dispatch(fetchUserLikes(currentUsername));
         dispatch(fetchUserFollowings(currentUsername));
-        // dispatch(fetchCurrentUserData(dispatch));
+        dispatch(fetchCurrentUserData());
       }
     }());
   }, [currentUsername, fetchUser, dispatch]);

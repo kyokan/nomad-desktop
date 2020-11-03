@@ -1,19 +1,12 @@
-// @ts-ignore
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState, UIEvent} from 'react';
-// @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-// @ts-ignore
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';;
-// @ts-ignore
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../../indexer/domain/Envelope';
+import {Connection as DomainConnection} from '../../../indexer/domain/Connection';
+import {Pageable} from '../../../indexer/dao/Pageable';
 import "./following-view.scss";
-import {useUser} from "../../ducks/users";
 import UserCard from "../UserCard";
 import {INDEXER_API} from "../../utils/api";
 import {serializeUsername} from "../../utils/user";
-// @ts-ignore
 import debounce from "lodash.debounce";
 
 type Props = {
@@ -69,6 +62,7 @@ function BlocksView (props: Props): ReactElement {
   return (
     <div
       className="custom-view following-view"
+      // @ts-ignore
       ref={setScrollEl}
       onScroll={onScroll}
     >

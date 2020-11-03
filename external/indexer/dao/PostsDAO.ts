@@ -76,7 +76,7 @@ export class PostsDAOImpl implements PostsDAO {
       const exists = this.engine.first('SELECT EXISTS(SELECT 1 FROM envelopes WHERE refhash = @refhash) AS result', {
         refhash: post.refhash,
       });
-      if (exists!.result) {
+      if (exists?.result) {
         return;
       }
 
