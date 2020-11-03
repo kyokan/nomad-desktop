@@ -1,0 +1,112 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import configureAppStore from './store/configureAppStore';
+import Root from './pages/AppRoot';
+import {ipcRenderer} from "electron";
+import {
+  APP_DATA_EVENT_TYPES,
+  DDRP_EVENT_TYPES,
+  IPCMessageRequest,
+  IPCMessageRequestType,
+  ResponsePost
+} from "../app/types";
+import * as postsActions from './ducks/posts';
+import {mapRawToPost, PostType} from './ducks/posts';
+import {MemoryRouter} from 'react-router-dom';
+import {setMuteUser, setUnmuteUser} from "./ducks/blocklist";
+import {
+  addIdentity,
+  fetchCurrentUserData,
+  setCurrentUpdateQueue,
+  updateCurrentLastFlushed,
+  updateCurrentUser
+} from "./ducks/users";
+import {setDDRPStatus, setHandshakeEndHeight, setHandshakeStartHeight, setInitialized, setLastSync} from "./ducks/app";
+// const Matomo = require("matomo-tracker");
+// const matomo = new Matomo(2, 'http://34.106.54.216/matomo.php');
+// matomo.track({
+//   url: 'nomad://electron',
+//   // eslint-disable-next-line @typescript-eslint/camelcase
+//   action_name: 'App Loaded',
+//   ua: navigator.userAgent,
+//   lang: navigator.language,
+//   res: window.innerWidth + 'x' + window.innerHeight,
+// });
+
+const store = configureAppStore();
+
+ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
+  switch (message.type) {
+    case IPCMessageRequestType.NEW_POST_UPDATE:
+      // eslint-disable-next-line no-case-declarations
+      const posts: ResponsePost[] = message.payload;
+      posts.forEach(rawPost => {
+        const { posts } = store.getState();
+        const mapped = mapRawToPost(rawPost);
+        const post = posts.map[mapped.hash];
+        if (!post) {
+          store.dispatch(postsActions.updateRawPost(rawPost));
+          if (mapped.type === PostType.ORIGINAL) {
+            store.dispatch(postsActions.appendNewPost(mapped.hash))
+          } else {
+            store.dispatch(postsActions.appendNewComment(mapped.parent, mapped.hash));
+          }
+        } else if (post.creator !== mapped.creator) {
+          store.dispatch(postsActions.updateRawPost(rawPost));
+        } else if (post.content !== mapped.content) {
+          store.dispatch(postsActions.updateRawPost(rawPost));
+        } else if (post.context !== mapped.context) {
+          store.dispatch(postsActions.updateRawPost(rawPost));
+        } else if (post.title !== mapped.title) {
+          store.dispatch(postsActions.updateRawPost(rawPost));
+        }
+      });
+      // return;
+      return;
+    case IPCMessageRequestType.NEW_USER_ADDED:
+      if (typeof message.payload !== "string") return;
+      store.dispatch(addIdentity(message.payload));
+      return;
+    case IPCMessageRequestType.CURRENT_IDENTITY_CHANGED:
+      store.dispatch(updateCurrentUser(message.payload));
+      store.dispatch(fetchCurrentUserData());
+      return;
+    case IPCMessageRequestType.NEW_INDEXER_LOG_ENTRY:
+      // store.dispatch(appActions.updateFooter(message.payload[0], ''));
+      return;
+    case IPCMessageRequestType.MUTE_USER_UPDATED:
+      return message.payload.blocked
+        ? store.dispatch(setMuteUser(message.payload.name))
+        : store.dispatch(setUnmuteUser(message.payload.name));
+    case IPCMessageRequestType.LAST_FLUSHED_UPDATED:
+      return store.dispatch(updateCurrentLastFlushed(message.payload));
+    case IPCMessageRequestType.UPDATE_QUEUE_UPDATED:
+      return store.dispatch(setCurrentUpdateQueue(message.payload));
+    case APP_DATA_EVENT_TYPES.START_HEIGHT_UPDATED:
+      return store.dispatch(setHandshakeStartHeight(message.payload));
+    case APP_DATA_EVENT_TYPES.END_HEIGHT_UPDATED:
+      return store.dispatch(setHandshakeEndHeight(message.payload));
+    case APP_DATA_EVENT_TYPES.LAST_SYNC_UPDATED:
+      return store.dispatch(setLastSync(message.payload));
+    case APP_DATA_EVENT_TYPES.INITIALIZED_UPDATED:
+      return store.dispatch(setInitialized(true));
+    case DDRP_EVENT_TYPES.NODE_STATUS_CHANGED:
+      return store.dispatch(setDDRPStatus(message.payload));
+    default:
+      return;
+  }
+});
+
+ReactDOM.render(
+  <Provider store={store}>
+    <MemoryRouter>
+      <Root />
+    </MemoryRouter>
+  </Provider>,
+  document.getElementById('root'),
+);
+
+if ((module as any).hot) {
+  (module as any).hot.accept();
+}

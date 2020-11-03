@@ -1,0 +1,91 @@
+@import "../../variables";
+
+button.follow-btn {
+  background-color: $menu-highlight-blue;
+  color: $pure-white;
+  font-weight: 600;
+  border: 1px solid transparent;
+
+  &--followed {
+    background-color: $pure-black;
+    cursor: default;
+    &:hover,
+    &:active {
+      background: $pure-black !important;
+      cursor: default !important;
+      border: 1px solid transparent;
+    }
+  }
+}
+
+.more-btn {
+  font-weight: 600;
+  border: 1px solid transparent;
+
+  &:active {
+    background: $menu-bg-gray;
+    color: $dark-text-gray;
+  }
+
+  &__menu {
+    .menu {
+      left: auto;
+      right: 0;
+      top: calc(100% + 4px);
+    }
+  }
+}
+
+.user-view {
+  &__followings {
+    padding: .25rem;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: .25rem;
+    grid-row-gap: .25rem;
+    grid-auto-rows: min-content;
+
+    .user-card {
+      //min-width: 30%;
+      //max-width: 32%;
+      //flex: 1 1 auto;
+    }
+  }
+
+  &__empty-following {
+    width: 100%;
+    text-align: center;
+    border-radius: .25rem;
+    font-size: .8125rem;
+    line-height: 1.3125;
+    color: rgba($pure-black, .15);
+    padding: 1rem;
+    font-weight: 500;
+    user-select: none;
+  }
+
+  .custom-view-header__cover-img--blank {
+    @extend %row-nowrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+    height: 12.5rem;
+    background-color: rgba($pure-black, .8);
+    .custom-view-header__cover-img__title {
+      color: $pure-white;
+      font-size: 1.25rem;
+      line-height: 1.5rem;
+      font-weight: 600;
+      position: absolute;
+      bottom: 0;
+      left: 7.875rem;
+      padding: .5rem 1rem;
+    }
+  }
+
+  .custom-view-header--no-avatar {
+    .custom-view-header__cover-img__title {
+      //left: 0;
+    }
+  }
+}

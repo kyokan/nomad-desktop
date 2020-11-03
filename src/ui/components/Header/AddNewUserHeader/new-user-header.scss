@@ -1,0 +1,27 @@
+@import "../../../variables";
+
+.app-header {
+  height: 1.5rem;
+
+  .header {
+    &__bottom {
+      .menuable {
+        &:nth-of-type(2),
+        &:nth-of-type(3) {
+          margin-left: .25rem;
+          .menu {
+            top: calc(100% + 3px);
+            right: 0;
+            left: auto;
+          }
+        }
+
+        &:nth-of-type(2) {
+          .menu {
+            min-width: 7rem;
+          }
+        }
+      }
+    }
+  }
+}

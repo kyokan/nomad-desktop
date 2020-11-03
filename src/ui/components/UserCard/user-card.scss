@@ -1,0 +1,113 @@
+@import "../../variables";
+
+.user-card {
+  @extend %col-nowrap;
+  background-color: $pure-white;
+  border: 1px solid $dark-border-gray;
+  height: fit-content;
+  border-radius: .25rem;
+  overflow: hidden;
+  position: relative;
+
+  &__cover-image {
+    height: 8rem;
+    width: 100%;
+    background-color: $pure-black;
+  }
+
+  &__info {
+    @extend %row-nowrap;
+    align-items: center;
+
+    .profile-pic {
+      border: 0;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+      position: absolute;
+      width: 3.125rem;
+      height: 3.125rem;
+      margin: .5rem .5rem .25rem .5rem;
+      top: 6rem;
+      left: 0;
+    }
+
+    &__name {
+      margin: .5rem 0 .5rem 4.125rem;
+      font-size: .875rem;
+      font-weight: 500;
+      flex: 1 1 auto;
+      width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+
+    }
+
+    .button {
+      margin: 0 .5rem;
+      font-size: .675rem;
+      line-height: 1.3125;
+      font-weight: 600;
+      padding: .125rem .5rem;
+      height: auto;
+      background-color: $highlight-blue;
+      color: $pure-white;
+      border-color: $highlight-blue;
+    }
+  }
+
+  &__button {
+    &--followed {
+      cursor: default !important;
+      background-color: $pure-black !important;
+      color: $header-inactive-gray;
+      border-color: $pure-black !important;
+
+      &:active {
+        background: $pure-black !important;
+        color: $header-inactive-gray !important;
+      }
+    }
+  }
+
+  &__footer {
+    @extend %row-nowrap;
+
+    &__group {
+      @extend %col-nowrap;
+      padding: .25rem;
+      align-items: center;
+      justify-content: center;
+      flex: 1 1 auto;
+      width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      div {
+        text-align: center;
+        font-size: .75rem;
+        line-height: 1.3125;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+
+        &:nth-of-type(1) {
+          font-size: .8125rem;
+          font-weight: 600;
+          color: $dark-text-gray;
+          margin-bottom: .125rem;
+        }
+
+        &:nth-of-type(2) {
+          color: $light-text-gray;
+        }
+      }
+    }
+
+    &__group + &__group {
+      border-left: 1px solid $menu-border-gray;
+    }
+  }
+}

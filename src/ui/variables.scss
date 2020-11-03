@@ -1,0 +1,71 @@
+$pure-white: #fff;
+$header-inactive-gray: #F6F6F6;
+$menu-bg-gray: #EFEFEF;
+$menu-border-gray: #DFDFDF;
+$menu-btn-border: #c9c9c9;
+$dark-border-gray: #B2B2B2;
+$header-inactive-text: #acacac;
+$light-text-gray: #999999;
+$preview-bg-gray: #868686;
+$rte-bg-gray: #272822;
+$dark-text-gray: #252525;
+$pure-black: #000;
+
+$baby-blue: #f3f7fc;
+$menu-highlight-blue: #308AFD;
+//$tag-blue: #1588ff;
+$tag-blue: #7d7d7d;
+$highlight-blue: #0269D4;
+
+$success-text-green: #03d66c;
+$success-bg-green: mix($success-text-green, $pure-white, 12);
+
+$error-text-red: #dc585e;
+$error-bg-red: mix(#dc585e, $pure-white, 12);
+
+
+
+
+
+%col-nowrap {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+%row-nowrap {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+%header-bg-gradient {
+  background: linear-gradient(180deg, #E3E2E4 0%, #E4E4E5 26.04%, #D8D7D8 100%);
+}
+
+%rte {
+  flex: 0 0 auto;
+  font-size: .875rem;
+  line-height: 1.1875rem;
+
+  .public-DraftStyleDefault-pre {
+    background: #232323;
+    color: #e6e1dc;
+    border-radius: 2px;
+    font-family: "Roboto Mono", monospace;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+
+    pre {
+      margin: 0;
+      padding: 0 1.25rem;
+    }
+  }
+
+  blockquote {
+    background-color: #f6f6f6;
+    margin: .5rem 0;
+    padding: .125rem 1rem;
+    border-left: 3px solid #c9c9c9;
+  }
+}

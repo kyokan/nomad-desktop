@@ -1,0 +1,87 @@
+@import "../../variables";
+
+.media-picker {
+  @extend %col-nowrap;
+
+  &__overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  &__view-container {
+    box-shadow: 0 2px 2px 1px $dark-border-gray;
+    border-radius: .125rem;
+    z-index: 200;
+
+    .media-view {
+      align-self: flex-end;
+      width: 16rem;
+      height: 16rem;
+      grid-auto-rows: 4rem;
+      background-color: $menu-bg-gray;
+      border-radius: .25rem;
+      padding: .5rem;
+      grid-column-gap: 0;
+      grid-row-gap: 0;
+
+      &__image {
+        box-shadow: 0 0 0 1px $dark-border-gray;
+        border-radius: 0;
+      }
+
+      &__empty {
+        @extend %col-nowrap;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background-color: $menu-bg-gray;
+        width: 17rem;
+        height: 17rem;
+      }
+    }
+  }
+
+  &__confirm {
+    @extend %row-nowrap;
+    align-items: center;
+    left: 0;
+    top: 100%;
+    position: absolute;
+    border-radius: 3px;
+    background-color: $menu-bg-gray;
+    box-shadow: 2px 4px 8px 0px rgba(#000, 0.125);
+    border: 1px solid $menu-border-gray;
+    border-bottom-color: darken($menu-border-gray, 15);
+    border-right-color: darken($menu-border-gray, 15);
+    border-top-color: darken($menu-border-gray, 5);
+    border-left-color: darken($menu-border-gray, 5);
+    padding: .25rem .5rem;
+    z-index: 200;
+    width: max-content;
+
+    &__text {
+      color: $dark-text-gray;
+      font-size: .8125rem;
+      line-height: 1.125rem;
+      font-weight: 500;
+      padding: .125rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    &__icons {
+      @extend %row-nowrap;
+
+      .icon {
+        background-color: transparent;
+        height: auto;
+        width: auto;
+        margin: .25rem;
+        padding: 0;
+      }
+    }
+  }
+}

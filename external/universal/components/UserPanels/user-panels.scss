@@ -1,0 +1,140 @@
+@import "../../styles/variable";
+
+.user-panels {
+  @extend %col-nowrap;
+  padding: .5rem;
+}
+
+.user-panel {
+  @extend %col-nowrap;
+  border: 1px solid $gray-100;
+  border-radius: .125rem;
+
+  &__title {
+    @extend %lite-font;
+    @extend %bolder;
+    padding: .5rem;
+    border-bottom: 1px solid $gray-100;
+    color: $dark-primary-text;
+    cursor: default;
+  }
+
+  &__empty {
+    @extend %tiny-font;
+    @extend %bold;
+    color: $light-primary-text;
+    text-align: center;
+    padding: 1rem;
+    user-select: none;
+  }
+
+  &__files {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  &__file {
+    cursor: pointer;
+    width: 7rem;
+    height: 7rem;
+    object-fit: cover;
+  }
+
+  &__row {
+    @extend %row-nowrap;
+    padding: .5rem;
+    border-top: 1px solid $gray-100;
+
+    transition: background-color 150ms ease-in-out;
+
+    &:hover {
+      background-color: $gray-25;
+      .user-panel__row__info__display-name {
+        text-decoration: underline;
+      }
+    }
+
+    .avatar {
+      flex: 0 0 auto;
+      height: 2.125em;
+      width: 2.125em;
+      border-radius: 4px;
+    }
+
+    &__info {
+      flex: 1 1 auto;
+      padding-left: .5rem;
+      width: 0;
+      cursor: pointer;
+
+      &__name {
+        @extend %row-nowrap;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      &__display-name {
+        @extend %lite-font;
+        @extend %bold;
+        flex: 0 0 auto;
+        color: $dark-primary-text;
+      }
+
+      &__username {
+        @extend %small-font;
+        flex: 1 1 auto;
+        color: $light-primary-text;
+        padding-left: .25rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &__stats {
+        @extend %row-nowrap;
+        @extend %small-font;
+        align-items: center;
+        color: $gray-400;
+
+        &__number {
+          @extend %bold;
+          color: $gray-500;
+        }
+
+        &__unit {
+          padding-left: .1875rem;
+        }
+
+        &__divider {
+          height: .125rem;
+          width: .125rem;
+          border-radius: 50%;
+          background-color: $gray-500;
+          margin: 0 .25rem;
+        }
+      }
+    }
+  }
+}
+
+.user-panel + .user-panel {
+  margin-top: .5rem;
+}
+
+.trending-view-all {
+  @extend %small-font;
+  color: $blue-900;
+  text-align: center;
+  padding: .5rem;
+  cursor: pointer;
+  border-top: 1px solid $gray-100;
+
+  &:hover {
+    color: $blue-800;
+  }
+
+  &:active {
+    color: $blue;
+  }
+}

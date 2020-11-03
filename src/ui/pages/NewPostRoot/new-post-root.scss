@@ -1,0 +1,142 @@
+@import "../universal/styles/variable";
+
+.new-post {
+  @extend %col-nowrap;
+
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  .attachments {
+    margin: 0 1rem .5rem 4.625rem;
+    .attachment {
+      cursor: pointer;
+      transition: opacity 100ms ease-in-out;
+      &:hover {
+        opacity: .5;
+      }
+    }
+  }
+
+  &__md-editor {
+    width: 100% !important;
+    height: calc(100% - 1rem) !important;
+    padding-bottom: 0;
+
+    .markdown-editor__content {
+      margin-bottom: 0;
+    }
+
+    .markdown-editor__textarea {
+      margin-bottom: 0;
+    }
+  }
+
+  &__tags {
+    @extend %row-nowrap;
+    @extend %small-font;
+    margin: .5rem 1rem .75rem 4.75rem;
+
+    &__input-container {
+      @extend %row-nowrap;
+      @extend %small-font;
+      align-items: center;
+      position: relative;
+      box-shadow: none;
+      border: none;
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: $blue-100;
+      border-radius: .125rem;
+    }
+
+    &__input {
+      @extend %small-font;
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-shadow: none;
+      border: none;
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: transparent;
+      border-radius: .125rem;
+      opacity: 1;
+      width: 100%;
+      padding-left: .875rem;
+
+      &:focus-within {
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+
+    &__tag-input {
+      opacity: 0;
+    }
+
+    &__tag {
+      @extend %small-font;
+      color: $blue-800;
+      transition: 100ms background-color ease-in-out,
+      100ms color ease-in-out;
+
+      &:hover {
+        background-color: $blue-100;
+        border-radius: .125rem;
+      }
+    }
+
+    &__draft-tag {
+      @extend %small-font;
+      @extend %strong;
+
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: $blue-100;
+      border-radius: .125rem;
+      transition: 100ms background-color ease-in-out,
+        100ms color ease-in-out;
+
+      &:hover {
+        background-color: $red-100;
+        color: $red-800;
+      }
+    }
+  }
+}
+
+.content {
+  @extend %row-nowrap;
+  position: relative;
+
+  flex: 1 1 auto;
+  height: 0;
+}
+
+.loading-overlay {
+  @extend %row-nowrap;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($gray-100, .5);
+  z-index: 200;
+}
+
+.rich-text-editor {
+  height: 100%;
+}
+

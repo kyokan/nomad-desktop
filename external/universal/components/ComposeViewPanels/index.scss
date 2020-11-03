@@ -1,0 +1,23 @@
+@import "../../styles/variable";
+
+.compose-panels {
+  @extend %col-nowrap;
+  padding: .5rem;
+
+}
+
+.compose-panel {
+  @extend %col-nowrap;
+  border: 1px solid $gray-100;
+  border-radius: .125rem;
+  margin-top: 1.5rem;
+
+  &__title {
+    @extend %lite-font;
+    @extend %bolder;
+    padding: .5rem;
+    border-bottom: 1px solid $gray-100;
+    color: $dark-primary-text;
+    user-select: none;
+  }
+}

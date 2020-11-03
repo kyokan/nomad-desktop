@@ -1,0 +1,56 @@
+@import "../../variables";
+
+.attachments {
+  @extend %col-nowrap;
+  margin: 0 .5rem .5rem;
+
+  &--multi {
+    display: grid;
+    grid-template-columns: 15rem 15rem;
+    grid-auto-rows: 8rem;
+    border-radius: .25rem;
+    grid-gap: 1px;
+    box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.35);
+    max-width: 30rem;
+    height: 16rem;
+    overflow: hidden;
+    transition: box-shadow 100ms ease-in-out;
+
+    &:hover {
+      box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.5);
+    }
+
+    .attachment {
+      @extend %col-nowrap;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      border-radius: 0;
+      height: 100%;
+      box-shadow: none;
+      font-size: 2rem;
+      color: $header-inactive-gray;
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.attachment {
+  width: 100%;
+  height: 16rem;
+  max-width: 30rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: $pure-black;
+  background-position: center;
+  border-radius: .25rem;
+  box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.35);
+  cursor: zoom-in;
+  transition: box-shadow 100ms ease-in-out;
+
+  &:hover {
+    box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.5);
+  }
+}

@@ -1,0 +1,223 @@
+@import '../../styles/variable';
+
+.search-panels {
+  @extend %col-nowrap;
+  padding: .5rem;
+}
+
+.search-panel {
+  @extend %col-nowrap;
+  border: 1px solid $gray-100;
+  border-radius: .125rem;
+
+  &__row {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: .5rem 1rem;
+
+    span {
+      @extend %lite-font;
+      @extend %bold;
+      color: $dark-primary-text;
+      flex: 1 1 auto;
+      user-select: none;
+    }
+  }
+
+  &__cta {
+    flex: 0 0 auto;
+    width: fit-content;
+  }
+
+  &__title {
+    @extend %lite-font;
+    @extend %bolder;
+    padding: .5rem;
+    border-bottom: 1px solid $gray-100;
+    color: $dark-primary-text;
+    user-select: none;
+  }
+
+  &__input {
+    &--error {
+      animation: shake 500ms cubic-bezier(.05,.1,.1,.05) both;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+      border-color: $red-400 !important;
+
+      input {
+        color: $red-800;
+      }
+    }
+  }
+
+  &__text {
+    @extend %regular-font;
+    text-align: center;
+    padding: .5rem;
+    padding-top: .75rem;
+    user-select: none;
+  }
+}
+
+.search-param-group {
+  @extend %col-nowrap;
+  padding: .5rem;
+
+  &__title {
+    @extend %row-nowrap;
+    @extend %tiny-font;
+    @extend %strong;
+    align-items: center;
+
+    &__text {
+      cursor: default;
+      flex: 1 1 auto;
+    }
+
+    &__action {
+      @extend %row-nowrap;
+      align-items: center;
+      flex: 0 0 auto;
+      user-select: none;
+
+      input {
+        margin-right: .5rem;
+      }
+    }
+  }
+
+  &__boxes {
+    @extend %row-nowrap;
+    flex-wrap: wrap;
+    margin: .5rem 0 .375rem;
+    user-select: none;
+
+    &__empty-text {
+      @extend %small-font;
+      color: $gray-400;
+    }
+
+    .pill {
+      margin-bottom: .5rem;
+      margin-right: .5rem;
+    }
+  }
+}
+
+.saved-views-panels {
+  background-color: $gray-50;
+}
+
+.saved-view-row {
+  flex: 1 1 auto;
+  padding: .5rem;
+  cursor: pointer;
+  border-top: 1px solid $gray-100;
+  background-color: $gray-50;
+
+  &:hover {
+    background-color: $gray-100;
+    .saved-view-row__title {
+      text-decoration: underline;
+    }
+  }
+
+  &__title {
+    @extend %lite-font;
+    @extend %bold;
+    flex: 0 0 auto;
+    color: $dark-primary-text;
+  }
+
+  &__stats {
+    @extend %row-nowrap;
+    @extend %small-font;
+    align-items: center;
+    color: $gray-400;
+
+    &__number {
+      @extend %bold;
+      color: $gray-500;
+    }
+
+    &__unit {
+      padding-left: .1875rem;
+    }
+
+    &__divider {
+      height: .125rem;
+      width: .125rem;
+      border-radius: 50%;
+      background-color: $gray-500;
+      margin: 0 .25rem;
+    }
+  }
+}
+
+.search-panel + .search-panel {
+  margin-top: .5rem;
+}
+
+.pill {
+  @extend %row-nowrap;
+  position: relative;
+  align-items: center;
+  border: 1px solid $gray-400;
+  border-radius: 1.125rem;
+  color: $gray-800;
+  padding: .125rem;
+  cursor: pointer;
+  user-select: none;
+  transition:
+          border-color 150ms ease-in-out,
+          background-color 150ms ease-in-out,
+          color 150ms ease-in-out;
+
+  &__text {
+    @extend %small-font;
+    @extend %strong;
+    margin: 0 .8125rem;
+  }
+
+  .icon {
+    position: absolute;
+    top: .4125rem;
+    right: 0;
+    margin-right: .3125rem;
+    font-size: .5rem !important;
+    opacity: 0;
+    color: $red-600;
+    transition: opacity 150ms ease-in-out;
+  }
+
+  &:hover {
+    border-color: $red-600;
+    color: $red-800;
+    background-color: $red-50;
+
+    .icon {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+

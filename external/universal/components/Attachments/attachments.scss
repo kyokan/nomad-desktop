@@ -1,0 +1,75 @@
+@import "../../styles/variable";
+
+.attachments {
+  @extend %col-nowrap;
+  margin: 0 .5rem .5rem;
+  border: 1px solid $gray-100;
+  overflow: hidden;
+  border-radius: .5rem;
+
+  &--multi {
+    display: grid;
+    grid-template-columns: 15rem 15rem;
+    grid-auto-rows: 8rem;
+    border-radius: .25rem;
+    grid-gap: 1px;
+    max-width: 30rem;
+    height: 16rem;
+    overflow: hidden;
+    transition: box-shadow 100ms ease-in-out;
+
+    .attachment {
+      @extend %col-nowrap;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      border-radius: 0;
+      height: 100%;
+      box-shadow: none;
+      font-size: 2rem;
+      color: $gray-50;
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.attachment {
+  position: relative;
+  width: 100%;
+  height: 16rem;
+  cursor: zoom-in;
+
+  &__background,
+  &__image {
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    filter: blur(4px);
+    opacity: .5;
+  }
+
+  &__image {
+    position: relative;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    z-index: 200;
+  }
+
+  div {
+
+  }
+}

@@ -1,0 +1,135 @@
+@import '../../styles/variable';
+
+.detail {
+  @extend %col-nowrap;
+  flex: 1 1 auto;
+  min-width: 20rem;
+
+  &__header {
+    flex: 0 0 auto;
+    height: 0;
+    border-bottom: 4px solid $gray-50;
+
+    &:nth-of-type(1) {
+      display: none;
+    }
+  }
+
+  &__load-more-btn {
+    font-size: .8125rem;
+    padding: .25rem .75rem;
+    height: auto;
+    margin: 1rem auto 1rem;
+  }
+
+  &__content {
+    @extend %col-nowrap;
+    flex: 1 1 auto;
+    height: fit-content;
+    border-radius: .125em;
+
+    .post {
+      flex: 0 0 auto;
+      position: relative;
+      z-index: 100;
+    }
+
+    &__thread {
+      position: relative;
+      flex: 1 0 auto;
+    }
+
+    .thread {
+      &__post {
+      }
+
+      .post-card {
+        //background-color: $gray-25;
+      }
+    }
+
+    .post-card {
+      flex: 0 0 auto;
+
+      &__content {
+        max-height: 100%;
+      }
+
+      &__content__title {
+        display: none;
+      }
+    }
+
+    .post-card--content-overflow .post-card__footer {
+      box-shadow: none;
+    }
+  }
+
+  &__parents {
+    flex: 0 0 auto;
+    border-bottom: 4px solid $gray-50;
+
+    .post-card {
+      position: relative;
+      border-bottom: 1px solid $gray-100;
+
+      &:hover,
+      &:active {
+      }
+
+      &:before {
+        content: "";
+        position: absolute;
+        width: .125rem;
+        height: calc(100% - 3.625rem);
+        background-color: $gray-100;
+        top: 3.5rem;
+        left: 2.0625rem;
+        z-index: 200;
+      }
+
+      &:nth-of-type(1) {
+        //padding-left: 0;
+        &:before {
+          left: 2.0625rem;
+        }
+      }
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
+
+      &__header {
+        &__avatar {
+          width: 2rem;
+          height: 2rem;
+        }
+
+        &__info {
+          margin-left: 2.75rem;
+        }
+      }
+
+      &__content {
+        margin-left: 2.375rem;
+        cursor: pointer;
+        .marked p:nth-of-type(1) {
+          margin-top: .25rem;
+          margin-bottom: .25rem;
+        }
+      }
+
+      &__tags {
+        margin-left: 2.5rem;
+      }
+
+      &__footer {
+        margin-left: 2.375rem;
+      }
+
+      .post__reply-editor-container.post__reply-editor-container--replying {
+        margin-left: 2.75rem;
+      }
+    }
+  }
+}

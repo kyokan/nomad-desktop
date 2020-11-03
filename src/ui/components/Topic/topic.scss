@@ -1,0 +1,53 @@
+@import "../../variables";
+
+.topic {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  @extend %row-nowrap;
+  align-items: center;
+  color: $dark-text-gray;
+  cursor: pointer;
+  border-radius: .1875rem;
+  border: none;
+  background-color: rgba(black, .05) !important;
+  font-weight: 600;
+  transition:
+          background-color 50ms ease-in,
+          color 50ms ease-in;
+  padding: .125rem .1875rem;
+
+  .icon {
+    margin-right: .125rem;
+    margin-left: .125rem;
+  }
+
+  &:hover {
+    background-color: rgba(black, .075) !important;
+  }
+
+  &:active {
+    background-color: rgba(black, .1) !important;
+  }
+
+  &__text {
+    padding: 0 .125rem !important;
+  }
+
+  &--favorite {
+    background-color: $menu-highlight-blue !important;
+    color: $pure-white;
+
+    &:hover {
+      background-color: lighten($menu-highlight-blue, 5) !important;
+    }
+
+    &:active {
+      background-color: darken($menu-highlight-blue, 5) !important;
+    }
+  }
+
+  &--hidden {
+    color: $header-inactive-text;
+    font-weight: 400;
+  }
+}

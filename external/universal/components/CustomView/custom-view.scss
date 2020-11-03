@@ -1,0 +1,112 @@
+@import "../../../universal/styles/variable";
+
+.custom-view {
+  @extend %col-nowrap;
+  align-items: center;
+  flex: 1 1 auto;
+  width: 0;
+
+  &__content {
+    @extend %row-nowrap;
+    width: calc(100% - 0rem);
+    max-width: 80rem;
+    flex: 1 1 auto;
+    overflow: hidden;
+
+    &__posts {
+      @extend %col-nowrap;
+      flex: 1 0 auto;
+      overflow: visible;
+      padding: .5rem .375rem .5rem .5rem;
+
+      &__resizable {
+        overflow: visible;
+        box-sizing: border-box;
+      }
+
+      .posts {
+        flex: 1 1 auto;
+      }
+
+      .post-card {
+        flex: 0 0 auto;
+        max-height: 48rem;
+        border-radius: .125em;
+
+        &:first-of-type {
+
+        }
+
+        &__content {
+          cursor: pointer;
+        }
+
+        &--has-attachment {
+          .post-card {
+            &__content {
+
+              .marked {
+                max-height: 6rem;
+                overflow: hidden;
+              }
+            }
+          }
+        }
+      }
+
+      .post-card + .post-card {
+        margin-top: .375rem;
+      }
+
+      &__empty-text {
+        @extend %row-nowrap;
+        align-items: center;
+        justify-content: center;
+        border-radius: .25rem;
+        font-size: .8125rem;
+        line-height: 1.3125;
+        color: $gray-200;
+        user-select: none;
+        padding: 1rem;
+        font-weight: 500;
+      }
+
+      &--loading {
+        .custom-view__content__posts__empty-text {
+          color: transparent;
+          height: 8rem;
+        }
+      }
+    }
+
+    &__selected-post {
+      flex: 0 1 auto;
+      width: 36rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    &__panels {
+      @extend %col-nowrap;
+      flex: 1 0 20rem;
+      max-width: 20rem;
+      padding: .5rem;
+    }
+  }
+
+  &__list {
+    //@extend %col-nowrap;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.custom-view--selected {
+  .custom-view-header__cover-img {
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: 0 !important;
+    background-color: $gray-100 !important;
+  }
+}

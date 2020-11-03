@@ -1,0 +1,141 @@
+@import "../../styles/variable";
+
+.user-card {
+  @extend %col-nowrap;
+  background-color: $white;
+  //border: 1px solid $gray-100;
+  height: fit-content;
+  border-radius: .125rem;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+
+  &__cover-image {
+    height: 8rem;
+    width: 100%;
+    background-color: $gray-800;
+  }
+
+  &__content {
+    @extend %col-nowrap;
+    flex: 1 1 auto;
+    width: 0;
+  }
+
+  &__info {
+    @extend %row-nowrap;
+    align-items: flex-start;
+
+    .avatar {
+      width: 3.125rem;
+      height: 3.125rem;
+      margin: .5rem;
+      top: 6.25rem;
+      left: 0;
+      border-radius: 0.18755rem;
+      border: 1px solid $gray-100;
+      overflow: hidden;
+    }
+
+    &__name {
+      @extend %row-nowrap;
+      @extend %lite-font;
+
+      align-items: center;
+      flex: 1 1 auto;
+      overflow: hidden;
+      //text-overflow: ellipsis;
+      //white-space: nowrap;
+      cursor: pointer;
+      margin-top: .5rem;
+
+      &__nickname {
+        @extend %regular-font;
+        @extend %bold;
+        color: $dark-primary-text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-right: .3125rem;
+      }
+
+      &__username {
+        color: $light-primary-text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .marked {
+        @extend %lite-font;
+        font-weight: 400;
+        color: $dark-primary-text;
+        padding-right: 1rem;
+        max-height: 9.75rem;
+      }
+
+    }
+
+    &__bio {
+      @extend %lite-font;
+      color: $dark-primary-text;
+      margin-top: .25rem;
+      margin-bottom: .25rem;
+    }
+
+    .button {
+      flex: 0 0 auto;
+      @extend %small-font;
+      align-self: flex-start;
+      margin: .5rem;
+      font-weight: 600;
+      padding: .125rem .5rem;
+      height: auto;
+      background-color: $blue-800;
+      color: $white;
+      border-color: $blue;
+      border-radius: .25rem;
+    }
+
+    &__footer {
+      @extend %row-nowrap;
+      @extend %small-font;
+      align-items: center;
+      color: $gray-400;
+      margin: .5rem 0;
+
+      &__number {
+        @extend %bold;
+        color: $gray-500;
+      }
+
+      &__unit {
+        padding-left: .3125rem;
+      }
+
+      &__divider {
+        height: .125rem;
+        width: .125rem;
+        border-radius: 50%;
+        background-color: $gray-500;
+        margin: 0 .3125rem;
+      }
+    }
+  }
+
+  &__button {
+    &--followed {
+      cursor: default !important;
+      background-color: $black !important;
+      color: $white;
+      border-color: $black !important;
+
+      &:active,
+      &:hover,
+      &:focus {
+        background: $black !important;
+        color: $white !important;
+      }
+    }
+  }
+}

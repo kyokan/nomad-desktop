@@ -1,0 +1,27 @@
+@import '../../styles/variable';
+
+.saved-view-row {
+  &__input {
+    @extend %lite-font;
+    width: 100%;
+    padding: .125rem .5rem;
+  }
+}
+
+.saved-view-panel {
+
+  &__actions {
+    @extend %row-nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto .5rem;
+
+    &__cta {
+      @extend %lite-font;
+    }
+
+    &__cta + &__cta {
+      margin-left: .5rem;
+    }
+  }
+}

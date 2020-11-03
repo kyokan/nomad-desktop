@@ -1,0 +1,71 @@
+@import "../universal/styles/variable";
+
+.log-setting {
+  @extend %col-nowrap;
+  flex: 1 1 auto;
+  overflow-y: auto;
+
+  &__row {
+    @extend %row-nowrap;
+    max-width: 58rem;
+    align-items: center;
+    padding: .5rem 1.25rem .25rem .5rem;
+    color: $dark-primary-text;
+
+    &__label {
+      @extend %col-nowrap;
+      @extend %small-font;
+      position: relative;
+      flex: 1 0 13.5rem;
+
+      &__sub {
+        @extend %tiny-font;
+        @extend %strong;
+        //top: 1.25rem;
+        //position: absolute;
+        color: $gray-400;
+      }
+
+    }
+
+    &__value {
+      @extend %row-nowrap;
+      align-self: flex-start;
+      justify-content: flex-end;
+      flex: 1 1 auto;
+      @extend %lite-font;
+      @extend %strong;
+      font-family: "Roboto Mono", monospace;
+      user-select: text;
+
+      input[type=text] {
+        text-align: right;
+        padding: .25rem .5rem;
+        flex: 1 1 auto;
+        overflow-x: hidden;
+      }
+
+      button + button {
+        margin-left: .5rem;
+      }
+
+    }
+  }
+
+  &__log-viewer {
+    @extend %col-nowrap;
+    background-color: $gray-800;
+    padding: 0 .5rem;
+    flex: 1 1 auto;
+    overflow-y: auto;
+
+    &__log {
+      @extend %tiny-font;
+      line-height: 1.75;
+      font-family: "Roboto Mono", monospace;
+      color: $gray-100;
+      padding: 0 .5rem;
+      flex: 0 0 auto;
+    }
+  }
+}

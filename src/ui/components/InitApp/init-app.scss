@@ -1,0 +1,79 @@
+@import "../universal/styles/variable";
+
+.init-app {
+  @extend %col-nowrap;
+  position: relative;
+  margin: auto;
+  background-color: $gray-25;
+  border-radius: .125rem;
+  width: 28rem;
+  height: 20rem;
+  border: 1px solid $gray-200;
+  user-select: none;
+
+  &__header {
+    @extend %row-nowrap;
+    flex: 0 0 auto;
+
+    &__title {
+      @extend %row-nowrap;
+      @extend %regular-font;
+      @extend %bold;
+      align-items: center;
+      color: $dark-primary-text;
+      background-color: $gray-50;
+      padding: .5rem 1rem;
+      border-bottom: 1px solid $gray-200;
+
+      .icon {
+        margin-right: .5rem;
+      }
+    }
+
+    &__paragraph {
+      @extend %lite-font;
+      line-height: 1.4375;
+      color: $regular-primary-text;
+      padding: .5rem 1rem;
+    }
+  }
+
+  &__paragraph {
+    @extend %lite-font;
+    color: $regular-primary-text;
+    padding: .5rem 1rem;
+
+    &__list {
+      margin: .25rem 0 .25rem .5rem;
+    }
+  }
+
+  &__content {
+    flex: 1 0 auto;
+    padding: .5rem 0;
+  }
+
+  &__row {
+    @extend %row-nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__checkbox {
+    margin-right: .5rem;
+  }
+
+  &__checkbox-label {
+    @extend %tiny-font;
+    color: $regular-primary-text;
+  }
+
+  &__footer {
+    @extend %row-nowrap;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    padding: .5rem 0 1.5rem;
+  }
+
+}

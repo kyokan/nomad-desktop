@@ -1,0 +1,71 @@
+@import "../../../electron/src/ui/variables";
+
+.post-button {
+  @extend %row-nowrap;
+  background-color: transparent !important;
+  align-items: center;
+  user-select: none;
+  outline: none;
+  border: 0;
+  margin: 0;
+  padding: .1875rem .375rem;
+  cursor: pointer;
+  transition: background-color 100ms ease-in-out;
+  height: 1.375rem;
+  border-radius: .125rem;
+
+  .icon {
+    transition: opacity 100ms ease-in-out;
+    opacity: .375;
+  }
+
+  &__text {
+    font-weight: 700;
+    font-size: .75rem;
+    line-height: 1rem;
+    color: $light-text-gray;
+    padding-left: .375rem;
+    transition: color 100ms ease-in-out;
+  }
+
+  &:hover {
+    .post-button {
+      &__text {
+        color: darken($light-text-gray, 25);
+      }
+    }
+    .icon {
+      opacity: .8 !important;
+    }
+  }
+
+  &--blue {
+    .icon {
+      opacity: .75 !important;
+    }
+    &:hover {
+      background-color: rgba($highlight-blue, .1) !important;
+      .icon {
+        opacity: 1 !important;
+      }
+    }
+  }
+
+  &--active {
+    .post-button {
+      &__text {
+        color: darken($light-text-gray, 35);
+      }
+    }
+    .icon {
+      opacity: 1 !important;
+    }
+    &:hover {
+      background-color: transparent !important;
+      cursor: default;
+      .icon {
+        opacity: 1 !important;
+      }
+    }
+  }
+}

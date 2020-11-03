@@ -1,0 +1,39 @@
+@import "../../styles/variable";
+
+.input-container {
+  @extend %row-nowrap;
+  align-items: center;
+  padding: .5em;
+  outline: none;
+  border-radius: .125em;
+  border: 1px solid $gray-100;
+  background-color: $gray-25;
+  transition:
+          border 100ms ease-in-out;
+
+  &:focus-within {
+    border-color: $gray-200;
+  }
+
+  &--disabled {
+    cursor: default;
+    opacity: .5;
+  }
+
+  input {
+    flex: 1 1 auto;
+    width: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    transition: none;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .icon {
+    margin: 0 .25rem;
+  }
+}

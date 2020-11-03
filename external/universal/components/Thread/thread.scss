@@ -1,0 +1,144 @@
+@import "../../styles/variable";
+
+.thread {
+  position: relative;
+
+  &:active {
+    //background-color: $pure-white;
+  }
+
+  &__toggle {
+    position: absolute;
+    z-index: 300;
+    padding: 0;
+    border: none !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    top: 3.375rem;
+    margin-left: 1.25rem;
+  }
+
+  &__load-more-btn {
+    font-size: .8125rem;
+    padding: .25rem .75rem;
+    height: auto;
+    margin: 0 auto 1rem;
+  }
+
+  .post {
+    padding: .25rem .5rem 1rem;
+    border-bottom: none;
+    cursor: pointer;
+
+    &__content {
+      padding-bottom: 0;
+      padding-top: 0;
+      .DraftEditor-root {
+        margin: 0;
+      }
+      font-size: .875rem;
+      cursor: pointer;
+    }
+
+    &__bottom {
+      margin-top: 0;
+    }
+  }
+
+  .post-header {
+    font-size: .8125rem;
+    color: $light-primary-text;
+
+    &__posted-by__name {
+      font-weight: 400;
+    }
+
+    &__posted-by {
+      font-weight: 400;
+    }
+
+    &__time-ago {
+      font-weight: 400;
+    }
+  }
+
+  .post-card {
+    position: relative;
+    padding: .75rem;
+    box-shadow: 0 -1px 0 0 $gray-100;
+
+    &:hover,
+    &:active {
+    }
+
+    &__header {
+      &__avatar {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &__info {
+        margin-left: 2.75rem;
+      }
+    }
+
+    &__content {
+      margin-left: 2.375rem;
+      cursor: pointer;
+
+      .marked p:nth-of-type(1) {
+        margin-top: .25rem;
+        margin-bottom: .25rem;
+      }
+    }
+
+    &__footer {
+      margin-left: 2.375rem;
+    }
+
+    .post__reply-editor-container.post__reply-editor-container--replying {
+      margin-left: 1.25rem;
+    }
+  }
+
+
+}
+
+.thread {
+  position: relative;
+  &--with-comments {
+    overflow: visible;
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: .125rem;
+      height: calc(100% - 5rem);
+      top: 4.25rem;
+      left: 1.5rem;
+      z-index: 200;
+      background-color: $gray-100;
+    }
+
+    &:first-of-type {
+      padding-left: 0;
+      &:before {
+        left: 1.5rem;
+      }
+    }
+
+    &:hover {
+      &:before {
+      }
+    }
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid $gray-100;
+  }
+
+  .thread {
+    margin-left: 1.5rem;
+  }
+}

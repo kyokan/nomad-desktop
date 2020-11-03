@@ -1,0 +1,23 @@
+@import "../../../electron/src/ui/variables";
+
+.custom-filter-view {
+
+}
+
+.custom-view-container {
+  .more-btn {
+    border: 1px solid rgba($pure-black, .3);
+    &__menu {
+      .menu {
+        left: auto;
+        right: 0;
+        top: calc(100% + 4px);
+      }
+    }
+  }
+
+
+  .custom-view-header__actions {
+    bottom: .25rem;
+  }
+}

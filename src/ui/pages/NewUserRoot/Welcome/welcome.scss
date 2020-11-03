@@ -1,0 +1,80 @@
+@import "../universal/styles/variable";
+
+.onboarding {
+  &__welcome {
+    @extend %col-nowrap;
+    height: 100%;
+    user-select: none;
+
+    &__title {
+      @extend %bold;
+      flex: 0 0 auto;
+    }
+
+    &__content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: .75rem 0;
+
+      &__subtitle {
+        @extend %lite-font;
+        margin: 0 0 1rem;
+        color: $gray-400;
+
+        a {
+          @extend %lite-font;
+          margin-left: .25rem;
+        }
+      }
+
+      &__paragraph {
+        @extend %lite-font;
+        padding: .75rem 0;
+      }
+
+      &__input-group {
+        @extend %col-nowrap;
+        max-width: 28rem;
+        &__label {
+          @extend %lite-font;
+          @extend %strong;
+          margin-bottom: .25rem;
+        }
+      }
+
+      &__input-group + &__input-group {
+        margin-top: 1rem;
+      }
+    }
+
+    &__footer {
+      @extend %row-nowrap;
+      flex: 0 0 auto;
+      max-width: 28rem;
+
+      &__l {
+        @extend %row-nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1 0 auto;
+      }
+
+      &__r {
+        flex: 1 0 auto;
+        @extend %row-nowrap;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      button {
+        @extend %lite-font;
+      }
+
+      a {
+        @extend %lite-font;
+        user-select: none;
+        margin-right: .5rem;
+      }
+    }
+  }
+}

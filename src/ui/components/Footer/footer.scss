@@ -1,0 +1,72 @@
+@import "../../variables";
+@import "../universal/styles/variable";
+.footer {
+  @extend %header-bg-gradient;
+  user-select: none;
+  height: 1.5rem;
+  border-top: 1px solid $gray-300;
+  z-index: 200;
+
+  &__message {
+    @extend %row-nowrap;
+    height: 100%;
+    align-items: center;
+    margin-left: .5rem;
+    opacity: 1;
+    transition: opacity 150ms ease-in;
+
+    &__status {
+      height: .5rem;
+      width: .5rem;
+      border-radius: 50%;
+      background-color: $gray-200;
+      box-shadow: 0 0 1px 1px $gray-50;
+      transition:
+              background-color 250ms ease-in-out,
+              box-shadow 100ms ease-in-out;
+
+      &--green {
+        background-color: $green;
+        box-shadow: 0 0 1px 1px $green-200;
+      }
+
+      &--yellow {
+        background-color: $orange;
+        box-shadow: 0 0 1px 1px $orange-200;
+      }
+    }
+
+    &__text {
+      @extend %tiny-font;
+      flex: 1 1 auto;
+      color: $regular-primary-text;
+      font-weight: 400;
+      margin-left: .5rem;
+    }
+
+    &__fallback-api {
+      @extend %tiny-font;
+      font-weight: 300;
+      color: $gray-600;
+      margin-right: .5rem;
+
+      .icon {
+
+      }
+    }
+  }
+}
+
+body.blur {
+  .footer {
+    background: $header-inactive-gray !important;
+
+    &__message {
+      opacity: .8;
+
+      &__status {
+        box-shadow: none;
+      }
+    }
+  }
+}

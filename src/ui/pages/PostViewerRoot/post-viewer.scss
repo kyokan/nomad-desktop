@@ -1,0 +1,21 @@
+@import "../../variables";
+
+.post-viewer {
+  @extend %col-nowrap;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  &__header {
+    height: 1.5rem;
+  }
+
+  .post-card {
+    flex: 0 0 auto;
+
+    &__content {
+      flex: 0 0 auto;
+      max-height: 9999rem;
+    }
+  }
+}

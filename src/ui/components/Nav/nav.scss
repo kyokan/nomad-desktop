@@ -1,0 +1,114 @@
+@import "../../variables";
+
+.nav {
+  @extend %col-nowrap;
+  flex: 0 0 auto;
+  position: relative;
+  background-color: $menu-bg-gray;
+  border-right: 1px solid $menu-border-gray;
+  min-width: 4rem;
+  transition: background-color 100ms ease-in-out;
+  padding: .25rem 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &__group {
+    user-select: none;
+    padding: .125rem 0 .75rem;
+
+    &__header {
+      font-size: .6875rem;
+      padding: .125rem .625rem;
+      font-weight: 700;
+      color: rgba($dark-text-gray, .7);
+    }
+  }
+
+  &__row {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: 0 .5rem 0px 1rem;
+    user-select: none;
+    outline: none;
+    position: relative;
+
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: background-color 50ms ease-in;
+    }
+
+    &:active,
+    &:focus {
+      &:after {
+        background-color: rgba(#000, .1);
+      }
+    }
+
+    &:active {
+      &:after {
+        background-color: rgba(#000, .15);
+      }
+    }
+
+    .icon {
+      flex: 0 0 auto;
+      margin-right: .5rem;
+    }
+
+    &__title {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      flex: 1 1 auto;
+      width: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: .8125rem;
+      color: rgba($dark-text-gray, 1);
+      font-weight: 700;
+      letter-spacing: -.25px;
+      line-height: 26px;
+    }
+
+    &__unreads {
+      font-family: 'Roboto Mono';
+      flex: 0 0 auto;
+      font-size: .675rem;
+      font-weight: 500;
+      color: rgba($dark-text-gray, .5);
+    }
+
+    &--no-badge {
+      .nav__row__title {
+        font-weight: 400;
+      }
+    }
+
+    &--selected {
+      .nav__row__title {
+        font-weight: 500;
+      }
+      &:after {
+        background-color: rgba(#000, .1);
+      }
+    }
+  }
+}
+
+body.blur {
+  .nav {
+    background: $header-inactive-gray !important;
+
+    &__row {
+      &:active,
+      &:focus {
+        background-color: rgba(#000, .25);
+      }
+    }
+  }
+}

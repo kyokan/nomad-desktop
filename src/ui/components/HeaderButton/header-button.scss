@@ -1,0 +1,64 @@
+@import '../../variables';
+
+.header-button {
+  @extend %row-nowrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .375rem;
+  margin: 0;
+  height: 1.5rem;
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid $menu-btn-border;
+  background-color: $pure-white;
+  -webkit-app-region: no-drag;
+  transition: 100ms ease-in-out;
+  font-size: .6875rem;
+  line-height: 1.125rem;
+
+  &:active,
+  &--active {
+    background-color: transparent !important;
+    box-shadow: inset 1px 1px 0 0 rgba($pure-white, 0.1);
+  }
+
+  &:focus-within {
+    border: 1px solid darken($menu-btn-border, 25);
+    z-index: 200;
+  }
+
+  &:hover {
+    border: 1px solid $menu-btn-border;
+  }
+
+  &__caret {
+    margin-left: .35rem;
+  }
+
+  &--disabled {
+    opacity: .5;
+    .icon {
+      opacity: .5;
+    }
+
+    &:hover,
+    &:active {
+      background-color: $pure-white !important;
+    }
+  }
+
+  &--iconText {
+    .icon {
+      margin-right: .25rem;
+    }
+  }
+}
+
+body.blur {
+  .header-button {
+    background-color: transparent !important;
+    .icon {
+      opacity: .5;
+    }
+  }
+}

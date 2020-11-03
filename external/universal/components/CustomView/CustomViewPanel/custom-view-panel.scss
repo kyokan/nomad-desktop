@@ -1,0 +1,151 @@
+@import "../../../styles/variable";
+
+.custom-view-panel {
+  border: 1px solid $gray-100;
+  border-radius: .125rem;
+
+  &__title {
+    @extend %small-font;
+    @extend %heavy;
+    border-bottom: 1px solid $gray-100;
+    color: $dark-primary-text;
+    padding: .5rem .75rem;
+    user-select: none;
+  }
+
+  &__content {
+    padding: .25rem 0;
+  }
+}
+
+.custom-view-panel + .custom-view-panel{
+  margin-top: .5rem;
+}
+
+.user-info-panel {
+  @extend %col-nowrap;
+
+  &__row {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: .25rem .75rem;
+
+    div:nth-of-type(1) {
+      flex: 0 0 7rem;
+      font-size: .8125rem;
+      line-height: 1.125rem;
+      font-weight: 600;
+    }
+
+    div:nth-of-type(2) {
+      color: $gray-700;
+      font-size: .875rem;
+      line-height: 1.125rem;
+      font-weight: 400;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
+
+.topic-list-panel {
+  @extend %col-nowrap;
+
+  .custom-view-panel__content {
+    @extend %row-nowrap;
+    flex-wrap: wrap;
+    padding: .5rem 0;
+  }
+
+  &__row {
+    @extend %row-nowrap;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: .25rem .75rem;
+    font-size: .875rem;
+
+    .menuable {
+      margin-right: .5rem;
+    }
+
+    span {
+      color: $gray-700;
+      font-size: .875rem;
+      line-height: 1.125rem;
+      font-weight: 400;
+    }
+  }
+}
+
+.feed-control-panel {
+  &__row {
+    @extend %row-nowrap;
+    @extend %small-font;
+    user-select: none;
+    align-items: center;
+    padding: .125rem .5rem;
+
+    &__text {
+      margin-left: .75rem;
+    }
+  }
+
+  .custom-view-panel {
+    &__content {
+    }
+  }
+}
+
+.feed-summary-panel {
+  line-height: 1.3125;
+  user-select: none;
+
+  &__row {
+    @extend %col-nowrap;
+    padding: .25rem .5rem;
+
+    &__label {
+      @extend %tiny-font;
+      @extend %bolder;
+      color: $light-primary-text;
+      padding: .125rem .25rem 0;
+    }
+
+    &__symbol {
+      text-align: center;
+      margin: .5rem 1rem;
+
+      span {
+        font-size: .6875rem;
+        font-weight: 500;
+        background-color: $gray-100;
+        border-radius: 50%;
+        height: 1.6875rem;
+        width: 1.6875rem;
+        display: inline-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+        color: #555;
+        padding: .125rem;
+      }
+    }
+
+    &__value {
+      @extend %small-font;
+      padding: .25rem 0;
+    }
+  }
+
+  &__user-select {
+    @extend %row-nowrap;
+    display: inline-flex;
+    align-items: center;
+
+    &__label {
+      margin: 0 .75rem 0 .25rem;
+    }
+  }
+}

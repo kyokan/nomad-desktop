@@ -1,0 +1,94 @@
+@import "../../styles/variable";
+
+.nav {
+  @extend %col-nowrap;
+  flex: 1 0 auto;
+  user-select: none;
+  padding: .25rem 0;
+
+  &__group {
+    @extend %col-nowrap;
+
+    &__header {
+      @extend %small-font;
+      @extend %bold;
+      color: $light-primary-text;
+    }
+  }
+
+  &__row {
+    @extend %row-nowrap;
+    @extend %regular-font;
+    @extend %strong;
+    align-items: center;
+    outline: none;
+    position: relative;
+    color: $regular-primary-text;
+    padding: .75em 1.25em;
+    cursor: pointer;
+
+    &:before {
+      @extend %pseudo-preset;
+      width: calc(100% - .5em);
+      height: calc(100% - .25em);
+      top: .125rem;
+      left: .5rem;
+      transition:
+              font-weight 200ms ease-in-out,
+              background-color 200ms ease-in-out,
+              color 200ms ease-in-out;
+
+    }
+
+    &:hover,
+    &:focus {
+      &:before {
+        background-color: $blue-100;
+      }
+    }
+
+    &:active {
+      &:before {
+        background-color: $blue-200;
+        color: $black;
+      }
+    }
+
+    .icon {
+      margin-right: 1em;
+      position: relative;
+    }
+
+    &__title {
+      position: relative;
+    }
+
+    &__unreads {
+      position: relative;
+    }
+
+    &--no-badge {
+      .nav__row__title {
+      }
+    }
+
+    &--selected {
+      cursor: default;
+      .nav__row__title {
+        @extend %bold;
+        color: $blue;
+      }
+
+      &:before {
+        background-color: $blue-200;
+        color: $black;
+      }
+
+      &:hover {
+        &:before {
+          background-color: $blue-200;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,167 @@
+@import "../universal/styles/variable";
+
+
+.app {
+  @extend %col-nowrap;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  @extend %row-nowrap;
+  flex: 1 1 auto;
+  height: 0;
+  //max-width: 60rem;
+  //margin: auto calc(50% - 30rem);
+
+  &__body {
+    @extend %row-nowrap;
+    max-width: 60rem;
+    flex: 1 0 auto;
+    margin: 0 auto;
+  }
+
+  .custom-view {
+    flex: 0 0 auto;
+    width: 37.5rem;
+    height: 100%;
+  }
+
+  .panels {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.custom-view {
+  .custom-view-header__cover-img__title {
+    @extend %lite-font;
+    @extend %bold;
+    color: $dark-primary-text;
+    padding: 0 .75rem;
+    position: relative;
+  }
+
+  .custom-view__content__posts {
+    padding: 0;
+  }
+
+  .custom-view-header {
+    margin: 0;
+    width: 100%;
+    max-width: 80rem;
+    border: 0;
+  }
+
+  .custom-view__content {
+    max-width: 80rem;
+  }
+
+  .custom-view__content__posts .post-card {
+    border-radius: 0;
+    margin: 0;
+    border-bottom: 1px solid $gray-100;
+  }
+
+  .custom-view__list {
+    border-left: 1px solid $gray-100;
+    border-right: 1px solid $gray-100;
+  }
+
+  .custom-view__content__selected-post {
+    border-left: 1px solid $gray-100;
+    border-right: 1px solid $gray-100;
+    overflow-y: auto;
+  }
+
+  .custom-view__content__posts .post-card + .post-card {
+    margin: 0;
+  }
+
+  .user-view__followings {
+    padding: 0;
+  }
+
+  .media-view {
+    padding: 0;
+  }
+
+  .custom-view__content__panels {
+    padding: 0;
+    flex: 1 0 24rem;
+    max-width: 24rem;
+  }
+
+  .custom-view-panel {
+    background-color: $white;
+    border-radius: 0;
+    border: 0;
+    //width: 24rem;
+    margin-left: .125rem;
+  }
+
+  .custom-view-panel + .custom-view-panel {
+    margin-top: .125rem;
+  }
+
+  .custom-view__list {
+    flex: 1 2 auto;
+  }
+
+  .custom-view__content__posts__resizable {
+    width: auto;
+  }
+
+  .custom-view__content__selected-post {
+    flex: 1 1 auto;
+    width: auto;
+  }
+
+  .custom-view-panel__title {
+    @extend %lite-font;
+    @extend %bold;
+    background-color: $gray-50;
+    color: $dark-primary-text;
+    padding: .3125rem .75rem;
+  }
+}
+
+.custom-view--selected {
+  .custom-view-header {
+    .custom-view-header__cover-img {
+      height: 1.75rem !important;
+      background-color: $gray-50 !important;
+    }
+
+    .custom-view-header__cover-img__title {
+      @extend %regular-font;
+      @extend %bold;
+      color: $dark-primary-text;
+      padding: 0 .75rem;
+      position: relative;
+    }
+  }
+}
+
+//.app {
+//  button {
+//    &:hover,
+//    &:focus {
+//      border-color: $green-600;
+//      background-color: $green-200;
+//      color: $green;
+//    }
+//
+//    &:active {
+//      border-color: $green-800;
+//      background-color: $green-400;
+//      color: $green-800;
+//    }
+//  }
+//}
+
+
+

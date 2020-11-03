@@ -1,0 +1,17 @@
+@import "../../../electron/src/ui/variables";
+
+.profile-pic {
+  flex: 0 0 auto;
+  height: 3rem;
+  width: 3rem;
+  border-radius: .25rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 2px solid darken($menu-border-gray, 5);
+  background-color: darken($menu-bg-gray, 1);
+  background-position: center;
+
+  &--empty {
+    //display: none;
+  }
+}

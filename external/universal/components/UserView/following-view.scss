@@ -1,0 +1,59 @@
+@import "../../styles/variable";
+
+.following-view {
+  border-left: 1px solid $gray-100;
+  border-right: 1px solid $gray-100;
+  overflow-y: auto;
+
+  .user-card {
+    flex: 0 0 auto;
+    width: 100%;
+    border-bottom: 1px solid $gray-100;
+
+    &__info {
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: $gray-25;
+      .user-card__info__name__nickname {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.alt-user-header {
+  @extend %row-nowrap;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid $gray-100;
+
+  &__tab {
+    @extend %row-nowrap;
+    @extend %reset-btn;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    transition:
+            background-color 150ms ease-in-out,
+            color 150ms ease-in-out;
+    color: $gray-600;
+    font-weight: 500;
+
+    &:hover {
+      background-color: $gray-25;
+      color: $gray-800;
+    }
+
+    &:active {
+      background-color: $gray-50;
+      color: $blue-800;
+    }
+
+    &--selected {
+      color: $blue-800 !important;
+    }
+  }
+}

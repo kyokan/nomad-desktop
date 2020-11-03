@@ -1,0 +1,309 @@
+@import "../../styles/variable";
+
+.compose-container {
+  @extend %row-nowrap;
+  flex: 1 0 auto;
+  width: 0;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.compose {
+  @extend %col-nowrap;
+  flex: 1 1 auto;
+  //max-width: 36rem;
+  background-color: $white;
+  border: 1px solid $gray-100;
+  height: fit-content;
+  padding: 1rem 1.75rem;
+  border-radius: .125rem;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  max-width: 40rem;
+
+  &__header {
+    &__title {
+      @extend %bold;
+      user-select: none;
+      line-height: 1.3125;
+      padding-bottom: 1.5rem;
+    }
+  }
+
+  &__group {
+    @extend %col-nowrap;
+    margin-bottom: 1rem;
+
+    &__label {
+      @extend %tiny-font;
+      @extend %strong;
+      color: $gray-600;
+      user-select: none;
+      line-height: 1.3125;
+      margin-bottom: .125rem;
+    }
+
+    &__cover-image {
+      border: 1px solid $gray-100;
+      border-radius: 2px;
+      margin: .5rem 0;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: 16rem;
+      height: 9rem;
+    }
+
+  }
+
+  .markdown-editor {
+    height: auto;
+  }
+
+  .markdown-editor__content {
+    margin-left: 0;
+  }
+
+  .markdown-editor__content--preview {
+    min-height: 10.625rem;
+  }
+
+  .markdown-editor__textarea {
+    max-height: 70vh;
+    margin-left: 0;
+  }
+
+  .public-DraftEditor-content {
+    font-family: 'Open Sans', Roboto, Helvetica, Arial, sans-serif;
+    min-height: 12.375rem;
+    font-size: .875rem;
+    line-height: 1.3125;
+    color: $dark-primary-text;
+  }
+
+  .custom-rte-btn {
+    display: inline-block;
+    position: relative;
+    z-index: 10;
+    width: 29px;
+    height: 30px;
+    overflow: hidden;
+
+    input[type=file] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    &__icon {
+      display: inline-block;
+      margin: 0 5px 0 0;
+      padding: 3px 8px;
+      height: 30px;
+      line-height: 22px;
+      box-sizing: border-box;
+      background: linear-gradient(180deg,#fdfdfd 0,#f6f7f8);
+      border: 1px solid #999;
+      color: #333;
+      text-decoration: none;
+      font-size: 16px !important;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: 0;
+      border-radius: 0;
+      width: 100%;
+
+      &:disabled {
+        cursor: not-allowed;
+        background: none transparent;
+      }
+    }
+  }
+
+  &__error-message {
+    @extend %small-font;
+    color: $red-800;
+    text-align: center;
+    margin: .5rem 0;
+  }
+
+  &__tags {
+    @extend %row-nowrap;
+    @extend %small-font;
+    flex-flow: row wrap;
+
+    &__input-container {
+      @extend %row-nowrap;
+      @extend %small-font;
+      align-items: center;
+      position: relative;
+      box-shadow: none;
+      border: none;
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      margin-top: .375rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: $blue-100;
+      border-radius: .125rem;
+    }
+
+    &__input {
+      @extend %small-font;
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-shadow: none;
+      border: none;
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: transparent;
+      border-radius: .125rem;
+      opacity: 1;
+      width: 100%;
+      padding-left: .875rem;
+
+      &:focus-within {
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+
+    &__tag-input {
+      opacity: 0;
+    }
+
+    &__tag {
+      @extend %small-font;
+      color: $blue-800;
+      transition: 100ms background-color ease-in-out,
+      100ms color ease-in-out;
+
+      &:hover {
+        background-color: $blue-100;
+        border-radius: .125rem;
+      }
+    }
+
+    &__draft-tag {
+      @extend %small-font;
+      @extend %strong;
+
+      color: $blue-800;
+      cursor: pointer;
+      margin-right: .5rem;
+      margin-top: .375rem;
+      padding: .125rem .375rem;
+      user-select: none;
+      background-color: $blue-100;
+      border-radius: .125rem;
+      transition: 100ms background-color ease-in-out,
+      100ms color ease-in-out;
+
+      &:hover {
+        background-color: $red-100;
+        color: $red-800;
+      }
+    }
+  }
+
+  &__actions {
+    @extend %row-nowrap;
+
+    &__l {
+      @extend %row-nowrap;
+      align-items: flex-start;
+      flex: 1 1 auto;
+      justify-content: flex-start;
+
+      .button {
+        .material-icons {
+          font-size: 1.1875em;
+          padding: .0625rem;
+        }
+      }
+
+      .button + .button {
+        margin-left: .5em;
+      }
+    }
+
+    &__r {
+      @extend %row-nowrap;
+      align-items: flex-start;
+      flex: 1 0 auto;
+      justify-content: flex-end;
+
+      a {
+        @extend %lite-font;
+        margin: .375rem 1rem;
+      }
+    }
+  }
+}
+
+.rte {
+  margin-bottom: 1rem;
+
+  .public-DraftEditor-content {
+    font-family: 'Open Sans', Roboto, Helvetica, Arial, sans-serif;
+    min-height: 8.375rem;
+    font-size: .875rem;
+    line-height: 1.3125;
+    color: $dark-primary-text;
+  }
+
+  .custom-rte-btn {
+    display: inline-block;
+    position: relative;
+    z-index: 10;
+    width: 29px;
+    height: 30px;
+    overflow: hidden;
+
+    input[type=file] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    &__icon {
+      display: inline-block;
+      margin: 0 5px 0 0;
+      padding: 3px 8px;
+      height: 30px;
+      line-height: 22px;
+      box-sizing: border-box;
+      background: linear-gradient(180deg,#fdfdfd 0,#f6f7f8);
+      border: 1px solid #999;
+      color: #333;
+      text-decoration: none;
+      font-size: 16px !important;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: 0;
+      border-radius: 0;
+      width: 100%;
+
+      &:disabled {
+        cursor: not-allowed;
+        background: none transparent;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .compose {
+    padding: .5rem 1rem;
+    margin-top: 0;
+    border: 0;
+  }
+}
+
