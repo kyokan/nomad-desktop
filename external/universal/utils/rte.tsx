@@ -42,17 +42,7 @@ renderer.link = (href: string, title: string, text: string, level = 0): string =
 
 renderer.image = (href: string, title: string, text: string, level = 0): string => {
   try {
-    const {protocol, pathname} = new URL(href);
-
-    if (protocol === 'fnd:') {
-      const [_, __, username, hash] = pathname.split('/');
-      return `<img src="${INDEXER_API}/media/${hash}" />`;
-    }
-
-    if (protocol === 'ddrpref:') {
-      const [_, __, hash] = pathname.split('/');
-      return `<img src="${INDEXER_API}/media/${hash}" />`;
-    }
+    const {protocol} = new URL(href);
 
     const url = href.replace(`${protocol}//`, '');
     const linkText = url.length > 48

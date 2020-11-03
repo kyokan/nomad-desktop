@@ -31,10 +31,10 @@ import {initializeApp, isAppInitialized} from "../util/appData";
 import Timeout = NodeJS.Timeout;
 
 const appDataPath = app.getPath('userData');
-const ddrpdHome = path.join(appDataPath, '.ddrpd');
-const ddrpdPath = path.join(appDataPath, 'ddrpd');
-const ddrpdVersionPath = path.join(appDataPath, 'ddrpd_version');
-const ddrpdInitNoncePath = path.join(appDataPath, 'ddrpd_init_nonce');
+const fndHome = path.join(appDataPath, '.fnd');
+const fndPath = path.join(appDataPath, 'fnd');
+const fndVersionPath = path.join(appDataPath, 'fnd_version');
+const fndInitNoncePath = path.join(appDataPath, 'fnd_init_nonce');
 const handshakeStartHeight = path.join(appDataPath, 'hns_start_height');
 const handshakeEndHeight = path.join(appDataPath, 'hns_end_height');
 const logDir = path.join(appDataPath, 'logs');
@@ -193,7 +193,7 @@ export default class DDRPController {
     //   }
     // }
 
-    this.daemon = spawn(ddrpdPath, ['start', '--home', ddrpdHome]);
+    this.daemon = spawn(fndPath, ['start', '--home', fndHome]);
 
     this.updateDDRPStatus('on');
 
@@ -303,7 +303,7 @@ export default class DDRPController {
 
   getSize = async (): Promise<number> => {
     return new Promise((resolve, reject) => {
-      getSize(`${ddrpdHome}/blobs`, (err, size) => {
+      getSize(`${fndHome}/blobs`, (err, size) => {
         if (err) {
           reject(err);
           return;
@@ -315,7 +315,7 @@ export default class DDRPController {
   };
 
   getHeartbeat = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const heartbeatLine = splits[HEARTBEAT_LINE];
     const heartbeat = heartbeatLine.slice(9, heartbeatLine.length - 1);
@@ -323,14 +323,14 @@ export default class DDRPController {
   };
 
   setHeartbeat = async (url: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[HEARTBEAT_LINE] = `  url = "${url}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   getMoniker = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const monikerLine = splits[MONIKER_LINE];
     const moniker = monikerLine.slice(13, monikerLine.length - 1);
@@ -338,14 +338,14 @@ export default class DDRPController {
   };
 
   setMoniker = async (moniker: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[MONIKER_LINE] = `  moniker = "${moniker}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   getHost = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const hostLine = splits[HOST_LINE];
     const host = hostLine.slice(10, hostLine.length - 1);
@@ -353,14 +353,14 @@ export default class DDRPController {
   };
 
   setHost = async (host: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[HOST_LINE] = `  host = "${host}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   getAPIKey = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const apiKeyLine = splits[API_KEY_LINE];
     return apiKeyLine.slice(13, apiKeyLine.length - 1);
@@ -374,7 +374,7 @@ export default class DDRPController {
     basePath: string,
     port: number
   ) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[API_KEY_LINE] = `  api_key = "${rpcKey}"`;
     splits[HOST_LINE] = `  host = "${rpcUrl}"`;
@@ -382,49 +382,49 @@ export default class DDRPController {
     splits[MONIKER_LINE] = `  moniker = "${moniker}"`;
     splits[BASE_PATH_LINE] = `  base_path = "${basePath}"`;
     splits[PORT_LINE] = `  port = ${port}`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   setAPIKey = async (apiKey: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[API_KEY_LINE] = `  api_key = "${apiKey}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   setBasePath = async (basePath: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[BASE_PATH_LINE] = `  base_path = "${basePath}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   getBasePath = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const basePathLine = splits[BASE_PATH_LINE];
     return basePathLine.slice(15, basePathLine.length - 1);
   };
 
   getPort = async () => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     const portLine = splits[PORT_LINE];
     return portLine.slice(9, portLine.length);
   };
 
   setPort = async (port: string) => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[PORT_LINE] = `  port = ${port}`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   setLogLevel = async (level: 'info' | 'trace' | 'error') => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     splits[LOG_LEVEL_LINE] = `log_level = "${level}"`;
-    return await fs.promises.writeFile(`${ddrpdHome}/config.toml`, splits.join('\n'));
+    return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 
   getDDRPLog = async (): Promise<Buffer> => {
@@ -444,7 +444,7 @@ export default class DDRPController {
   };
 
   getLogLevel = async (): Promise<'info' | 'trace'> => {
-    const content = await fs.promises.readFile(`${ddrpdHome}/config.toml`);
+    const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
     if (splits[LOG_LEVEL_LINE].includes('info')) return 'info';
     if (splits[LOG_LEVEL_LINE].includes('trace')) return 'trace';
@@ -476,7 +476,7 @@ export default class DDRPController {
     await this.copyBinary();
     // eslint-disable-next-line no-console
     logger.info('copied binary');
-    await fs.promises.writeFile(ddrpdVersionPath, '0.1.6');
+    await fs.promises.writeFile(fndVersionPath, '0.1.6');
 
     if (!shouldInitDDRP) {
       return;
@@ -484,18 +484,18 @@ export default class DDRPController {
 
     try {
       // eslint-disable-next-line no-console
-      logger.info('removing .ddrpd');
-      deleteFolderRecursive(ddrpdHome);
-      logger.info('removed .ddrpd');
+      logger.info('removing .fnd');
+      deleteFolderRecursive(fndHome);
+      logger.info('removed .fnd');
     } catch (rmdirErr) {
       //
       logger.error(rmdirErr);
       logger.error(rmdirErr.message);
       return;
     }
-    const cmd = path.join(appDataPath, 'ddrpd');
+    const cmd = path.join(appDataPath, 'fnd');
 
-    await new Promise((resolve, reject) => execFile(cmd, ['init', '--home', ddrpdHome], async (err, stdout, stderr) => {
+    await new Promise((resolve, reject) => execFile(cmd, ['init', '--home', fndHome], async (err, stdout, stderr) => {
       if (err) {
         reject(err);
         return;
@@ -511,7 +511,7 @@ export default class DDRPController {
       await this.setBasePath('/api/hsd');
       await this.setPort('443');
 
-      await fs.promises.writeFile(ddrpdInitNoncePath, CURRENT_INIT_NONCE);
+      await fs.promises.writeFile(fndInitNoncePath, CURRENT_INIT_NONCE);
       resolve();
 
     }));
@@ -535,7 +535,7 @@ export default class DDRPController {
 
   private async shouldUpdateDDRP (): Promise<boolean> {
     try {
-      const resp = await fs.promises.readFile(ddrpdVersionPath);
+      const resp = await fs.promises.readFile(fndVersionPath);
       return resp.toString('utf-8') !== '0.1.9';
     } catch (e) {
       return true;
@@ -544,7 +544,7 @@ export default class DDRPController {
 
   private async shouldInitDDRP (): Promise<boolean> {
     try {
-      const resp = await fs.promises.readFile(ddrpdInitNoncePath);
+      const resp = await fs.promises.readFile(fndInitNoncePath);
       return resp.toString('utf-8') !== CURRENT_INIT_NONCE;
     } catch (e) {
       return true;
@@ -552,10 +552,10 @@ export default class DDRPController {
   }
 
   private async copyBinary () {
-    const file = `ddrpd-${process.platform}-${process.arch}`;
+    const file = `fnd-${process.platform}-${process.arch}`;
     const src = path.join(resourcesPath(), file);
-    await fs.promises.copyFile(src, ddrpdPath);
-    await fs.promises.chmod(ddrpdPath, 0o755);
+    await fs.promises.copyFile(src, fndPath);
+    await fs.promises.chmod(fndPath, 0o755);
   }
 
   private async tryPort (retries = 3) {

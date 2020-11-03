@@ -94,7 +94,7 @@ export enum APP_DATA_EVENT_TYPES {
 }
 
 export enum FND_EVENT_TYPES {
-  NODE_STATUS_CHANGED = 'ipc/ddrp/nodeStatusChanged',
+  NODE_STATUS_CHANGED = 'ipc/fnd/nodeStatusChanged',
 }
 
 export type IPCMessageRequest<payload> = {
