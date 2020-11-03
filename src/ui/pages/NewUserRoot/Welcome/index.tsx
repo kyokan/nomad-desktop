@@ -1,8 +1,8 @@
 import React, {InputHTMLAttributes, MouseEventHandler, ReactElement, ReactNode, useEffect} from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 import "./welcome.scss";
-import Button from "../../../../../../universal/components/Button";
-import SubdomainInput from "../../../../../../universal/components/SubdomainInput";
+import Button from "../../../../../external/universal/components/Button";
+import SubdomainInput from "../../../../../external/universal/components/SubdomainInput";
 
 type Props = {
   onTLDChange: (tld: string) => void;

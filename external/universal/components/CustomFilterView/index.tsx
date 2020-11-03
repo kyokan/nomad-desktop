@@ -14,8 +14,8 @@ import {
 import {CustomViewPanelProps, CustomViewPanelType} from "../CustomView/CustomViewPanel";
 import {useFullControlPanel, useQueryCustomFilter} from "../CustomView/util";
 import {CustomViewHeaderActionProps} from "../CustomView/CustomViewHeader";
-import Menuable from "../../../electron/src/ui/components/Menuable";
-import {undotName} from "../../../electron/src/ui/helpers/user";
+import Menuable from "../../../../src/ui/components/Menuable";
+import {undotName} from "../../../../src/ui/helpers/user";
 import "./custom-filter-view.scss";
 import {Filter} from "../../utils/filter";
 import {addTag} from "../../ducks/search";

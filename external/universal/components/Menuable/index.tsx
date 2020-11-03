@@ -2,8 +2,7 @@ import React, {Component, MouseEvent, ReactElement, ReactNode, CSSProperties} fr
 import c from "classnames";
 import './menuable.scss';
 import Icon from "../Icon";
-// @ts-ignore
-import RightArrowIcon from "../../../electron/static/assets/icons/right-arrow.svg";
+import RightArrowIcon from "../../static/assets/icons/right-arrow.svg";
 
 export enum MenuTypes {
   Context = "CONTEXT",

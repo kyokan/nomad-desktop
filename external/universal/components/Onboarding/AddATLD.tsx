@@ -4,14 +4,14 @@ import React, {ReactElement, useCallback, useState} from "react";
 import {withRouter, RouteComponentProps, Redirect} from "react-router";
 // @ts-ignore
 import c from 'classnames';
-import {generateNewCompressedKey} from "../../../electron/src/app/util/key";
+import {generateNewCompressedKey} from "../../../../src/app/util/key";
 import {parseUsername} from "../../utils/user";
 import Icon from "../Icon";
 // @ts-ignore
 import copy from "copy-to-clipboard";
 import Button from "../Button";
 import {OnboardingViewType} from "./index";
-import Anchor from "../../../electron/src/ui/components/Anchor";
+import Anchor from "../../../../src/ui/components/Anchor";
 
 
 type AddATLDProps = {

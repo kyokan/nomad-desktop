@@ -7,7 +7,7 @@ import {fetchPost, scanGlobalMeta} from "../../ducks/posts";
 import {fetchIdentity} from "../../ducks/users";
 import {ipcRenderer} from "electron";
 import {IPCMessageRequest, IPCMessageRequestType} from "../../../app/types";
-import DetailPane from "../../../../../universal/components/DetailPane";
+import DetailPane from "../../../../external/universal/components/DetailPane";
 
 export default function PostViewerRoot (): ReactElement {
   const [postHash, setPostHash] = useState('');

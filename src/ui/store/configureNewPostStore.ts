@@ -2,7 +2,7 @@ import {createStore, applyMiddleware, combineReducers} from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 import drafts from "../ducks/drafts";
-import users from "../../../../universal/ducks/users";
+import users from "../../../external/universal/ducks/users";
 import app, {AppActionType} from "../ducks/app";
 import posts, {PostsActionType} from "../ducks/posts";
 

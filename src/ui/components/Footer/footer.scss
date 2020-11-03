@@ -1,5 +1,5 @@
 @import "../../variables";
-@import "../universal/styles/variable";
+@import "./external/universal/styles/variable";
 .footer {
   @extend %header-bg-gradient;
   user-select: none;

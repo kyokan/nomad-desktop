@@ -5,9 +5,6 @@ import {SqliteEngine} from 'ddrp-indexer/dist/dao/Engine';
 
 import SECP256k1Signer from 'ddrp-js/dist/crypto/signer'
 import {Envelope as WireEnvelope} from "ddrp-js/dist/social/Envelope";
-// import {Post as WirePost} from "ddrp-js/dist/social/Post";
-// import {Connection as WireConnection} from "ddrp-js/dist/social/Connection";
-// import {Moderation as WireModeration} from "ddrp-js/dist/social/Moderation";
 
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
 import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
@@ -26,7 +23,7 @@ import DDRPController from "./ddrp";
 import {isTLD, parseUsername} from "../../ui/helpers/user";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 
-import {serializeUsername} from "../../../../universal/utils/user";
+import {serializeUsername} from "../../../external/universal/utils/user";
 import {SubdomainManager} from "../../../external/nomad-api/src/services/subdomains";
 import {Writer} from "../../../external/nomad-api/src/services/writer";
 import UserDataManager from "./userData";

@@ -19,7 +19,7 @@ import "./index.scss";
 import Input from "../Input";
 import Icon from "../Icon";
 import Button from "../Button";
-import {CustomViewProps} from "../../../electron/src/app/controllers/userData";
+import {CustomViewProps} from "../../../../src/app/controllers/userData";
 import {userCurrentUserData} from "../../ducks/users";
 import {
   addTagToView,

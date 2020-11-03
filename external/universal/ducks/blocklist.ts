@@ -1,9 +1,8 @@
 import {Dispatch} from "redux";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback} from "react";
-import {fetchCurrentUserData} from "./users";
 import {ThunkDispatch} from "redux-thunk";
-import {IPCMessageRequestType, IPCMessageResponse} from "../../electron/src/app/types";
+import {IPCMessageRequestType, IPCMessageResponse} from "../../../src/app/types";
 
 const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {
   return {
@@ -64,7 +63,7 @@ export const muteUser = (username: string) => async (dispatch: ThunkDispatch<any
     payload: username,
   }, true);
 
-  dispatch(fetchCurrentUserData());
+  // dispatch(fetchCurrentUserData());
 };
 
 export const unmuteUser = (username: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
@@ -73,7 +72,7 @@ export const unmuteUser = (username: string) => async (dispatch: ThunkDispatch<a
     payload: username,
   }, true);
 
-  dispatch(fetchCurrentUserData());
+  // dispatch(fetchCurrentUserData());
 };
 
 export default function mutelistReducer(state: BlocklistState = initialState, action: BlocklistAction<any>): BlocklistState {

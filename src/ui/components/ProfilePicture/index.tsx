@@ -1,8 +1,8 @@
 import React, {ReactElement} from "react";
 import './profile-pic.scss';
 import {useGlobalMeta} from "../../ducks/posts";
-import {getCSSImageURLFromPostHash} from "../../../../../universal/utils/posts";
-import {isHex} from "../../../../../universal/utils/hex";
+import {getCSSImageURLFromPostHash} from "../../../../external/universal/utils/posts";
+import {isHex} from "../../../../external/universal/utils/hex";
 
 type Props = {
   name: string;

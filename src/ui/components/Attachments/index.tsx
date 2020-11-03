@@ -1,7 +1,7 @@
 import React, {ReactElement, useState} from "react";
 import './attachments.scss';
 import {FullScreenModal} from "../FullScreenModal";
-import {getCSSImageURLFromPostHash, getImageURLFromPostHash} from "../../../../../universal/utils/posts";
+import {getCSSImageURLFromPostHash, getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
 
 export default function Attachments(props: {attachments: string[]}): ReactElement {
   const {

@@ -1,12 +1,9 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useState} from 'react';
-// @ts-ignore
-import AddIcon from '../../../electron/static/assets/icons/add.svg';
-// @ts-ignore
-import MinusIcon from '../../../electron/static/assets/icons/minus.svg';
+import AddIcon from '../../../../static/assets/icons/add.svg';
+import MinusIcon from '../../../../static/assets/icons/minus.svg';
 import c from 'classnames';
 import './thread.scss';
-import {useCommentsFromParentId, useFetchMoreComments, useLikePage, usePostId} from "../../ducks/posts";
+import {useCommentsFromParentId, useFetchMoreComments, usePostId} from "../../ducks/posts";
 import { withRouter, RouteComponentProps } from "react-router";
 import {RegularPost} from "../CustomView/CustomViewPosts";
 import Icon from "../Icon";
@@ -18,6 +15,7 @@ type OwnProps = {
   onLikePost?: (hash: string) => void;
   onSendReply?: (hash: string) => void;
   onBlockUser?: (hash: string) => void;
+  onFollowUser?: (hash: string) => void;
   onSelectPost?: (hash: string, creator: string, id: string) => void;
 }
 

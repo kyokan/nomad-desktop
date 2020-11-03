@@ -16,7 +16,7 @@ import {
   IPCMessageRequestType
 } from "../types";
 import {dotName, isSubdomain} from "../../ui/helpers/user";
-import logger from "../../../../indexer-api/src/util/logger";
+import logger from "../../../external/nomad-api/src/util/logger";
 import {
   getEndHeightFromLog,
   getHeightFromLog,
@@ -25,10 +25,9 @@ import {
   getNameFromLog,
   getStartHeightFromLog,
   getSyncedHeightFromLog,
-} from "../../../../indexer-api/src/services/ddrp";
+} from "../../../external/nomad-api/src/services/ddrp";
 import throttle from "lodash.throttle";
 import {initializeApp, isAppInitialized} from "../util/appData";
-// eslint-disable-next-line no-undef
 import Timeout = NodeJS.Timeout;
 
 const appDataPath = app.getPath('userData');

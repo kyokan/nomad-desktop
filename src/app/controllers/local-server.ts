@@ -3,10 +3,9 @@ import logger from "../util/logger";
 import {joinAppRootPath} from "../util/paths";
 import bodyParser from "body-parser";
 const jsonParser = bodyParser.json();
-// import {makeResponse} from "../../../../indexer-api/src/util/rest";
 import {isAppInitialized} from "../util/appData";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
-import {makeResponse} from "../../../../indexer-api/src/util/rest";
+import {makeResponse} from "../../../external/nomad-api/src/util/rest";
 const app = express();
 
 app.use(express.static(joinAppRootPath('imageCache')));

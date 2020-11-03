@@ -13,19 +13,19 @@ import {
   useCurrentUsername,
   UsersActionType,
   UsersState
-} from "../../../../universal/ducks/users";
+} from "../../../external/universal/ducks/users";
 import {RepliesState, setSendingReplies} from "../ducks/drafts/replies";
-import {appendNewComment, createNewPost, updatePost} from "../../../../universal/ducks/posts";
-import {PostType} from "../../../../universal/types/posts";
-import {parseUsername, serializeUsername} from "../../../../universal/utils/user";
+import {appendNewComment, createNewPost, updatePost} from "../../../external/universal/ducks/posts";
+import {PostType} from "../../../external/universal/types/posts";
+import {parseUsername, serializeUsername} from "../../../external/universal/utils/user";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import {INDEXER_API} from "../../../../universal/utils/api";
+import {INDEXER_API} from "../../../external/universal/utils/api";
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
 import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
 import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
-import {DraftPost} from "../../../../universal/ducks/drafts/type";
+import {DraftPost} from "../../../external/universal/ducks/drafts/type";
 import {mapDraftToPostPayload} from "../../app/util/posts";
 import {getIdentity} from "../../../../web-client/src/utils/localStorage";
 

@@ -13,7 +13,7 @@ import {
 } from "../../ducks/posts";
 import {RegularPost} from "../CustomView/CustomViewPosts";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
-import {IPCMessageResponse} from "../../../electron/src/app/types";
+import {IPCMessageResponse} from "../../../../src/app/types";
 import Thread from "../Thread";
 import {INDEXER_API} from "../../utils/api";
 

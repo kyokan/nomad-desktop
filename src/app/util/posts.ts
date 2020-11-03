@@ -4,7 +4,7 @@ import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
 import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
 import {ResponsePost} from "../types";
 import {serializeUsername} from "../../ui/helpers/user";
-import {RelayerPostModel} from "../../../../universal/types/posts";
+import {RelayerPostModel} from "../../../external/universal/types/posts";
 
 export const mapDraftToPostPayload = (draft?: DraftPost): RelayerPostModel => {
   if (!draft) {

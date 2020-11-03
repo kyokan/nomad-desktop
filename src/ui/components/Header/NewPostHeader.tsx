@@ -18,8 +18,8 @@ import {createNewDraft, DraftPost} from "../../ducks/drafts/type";
 import c from 'classnames';
 import MediaPickerMenuable from "../MediaPickerMenuable";
 import {useFileUpload, useQueryMediaForName} from "../../helpers/hooks";
-import {useCurrentUsername} from "../../../../../universal/ducks/users";
-import {undotName} from "../../../../../universal/utils/user";
+import {useCurrentUsername} from "../../../../external/universal/ducks/users";
+import {undotName} from "../../../../external/universal/utils/user";
 
 type Props = {
   onPreviewToggle?: () => void;

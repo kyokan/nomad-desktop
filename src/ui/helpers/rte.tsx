@@ -4,19 +4,14 @@ import Anchor from "../components/Anchor";
 import {DraftPost} from "../ducks/drafts/type";
 import marked from "marked";
 import DOMPurify from "dompurify";
-import {hash} from "../../../../universal/utils/hash";
+import {hash} from "../../../external/universal/utils/hash";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { markdownToDraft } = require('markdown-draft-js');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const hljs = require('highlight.js');
 
-// eslint-disable-next-line no-useless-escape
 export const YOUTUBE_REGEX = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-// eslint-disable-next-line no-useless-escape
 export const OTHER_VIDEO_SITES_REGEX = /^(https?\:\/\/)?(www\.)?(pornhub\.com)\/.+$/;
 export const IMG_EXT_REGEX = /\.(jpeg|jpg|gif|png)$/;
-// eslint-disable-next-line no-useless-escape
 export const DATA_IMAGE_REGEX = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
 
 export const decorator = new CompositeDecorator([

@@ -29,13 +29,11 @@ import {
 } from "../util/appData";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 import {extendFilter} from "../../../external/nomad-api/src/util/filter";
-import {serializeUsername} from "../../../../universal/utils/user";
+import {serializeUsername} from "../../../external/universal/utils/user";
 import crypto from "crypto";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ECKey = require('eckey');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const conv = require('binstring');
 
+const ECKey = require('eckey');
+const conv = require('binstring');
 const dbPath = path.join(electron.app.getPath('userData'), 'nomad.db');
 const namedbPath = path.join(electron.app.getPath('userData'), 'names.db');
 const pendingDbPath = path.join(electron.app.getPath('userData'), 'pending.db');

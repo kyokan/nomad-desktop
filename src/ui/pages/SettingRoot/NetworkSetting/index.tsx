@@ -3,10 +3,10 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {DDRPPeer, IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
 import {postIPCMain} from "../../../helpers/ipc";
 import "./network-setting.scss";
-import Button from "../../../../../../universal/components/Button";
+import Button from "../../../../../external/universal/components/Button";
 import {useStartDDRP, useStopDDRP} from "../../../helpers/hooks";
 import {useDDRPStatus, useFetchAppData} from "../../../ducks/app";
-import {INDEXER_API} from "../../../../../../universal/utils/api";
+import {INDEXER_API} from "../../../../../external/universal/utils/api";
 
 let watch: any | null;
 

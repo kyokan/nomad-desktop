@@ -7,17 +7,17 @@ import "../index.scss";
 import "./styles/menu.scss";
 import AppHeader from "../../components/Header/AppHeader";
 import {MessagePort} from "../../components/SystemMessage";
-import CustomFilterView, {CustomViewContainer} from "../../../../../universal/components/CustomFilterView";
-import UserView from "../../../../../universal/components/UserView";
-import DiscoverView from "../../../../../universal/components/DiscoverView";
+import {CustomViewContainer} from "../../../../external/universal/components/CustomFilterView";
+import UserView from "../../../../external/universal/components/UserView";
+import DiscoverView from "../../../../external/universal/components/DiscoverView";
 import {
   fetchUserFollowings,
   fetchUserLikes,
   useCurrentUsername,
   useFetchUser
-} from "../../../../../universal/ducks/users";
+} from "../../../../external/universal/ducks/users";
 import {useDispatch} from "react-redux";
-import HomeView from "../../../../../universal/components/HomeView";
+import HomeView from "../../../../external/universal/components/HomeView";
 import {
   sendReply,
   useBlockUser,
@@ -29,23 +29,23 @@ import {
 } from "../../helpers/hooks";
 import {useFetchAppData, useHydrated, useInitialized} from "../../ducks/app";
 import InitApp from "../../components/InitApp";
-import DiscoverPanels from "../../../../../universal/components/DiscoverPanels";
-import UserPanels from "../../../../../universal/components/UserPanels";
-import Onboarding, {OnboardingViewType} from "../../../../../universal/components/Onboarding";
+import DiscoverPanels from "../../../../external/universal/components/DiscoverPanels";
+import UserPanels from "../../../../external/universal/components/UserPanels";
+import Onboarding, {OnboardingViewType} from "../../../../external/universal/components/Onboarding";
 import {postIPCMain} from "../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../app/types";
-import SearchView from "../../../../../universal/components/SearchView";
-import SearchPanels from "../../../../../universal/components/SearchPanels";
-import SavedView from "../../../../../universal/components/SavedView";
-import SavedViewPanels from "../../../../../universal/components/SavedViewPanels";
-import BlocksView from "../../../../../universal/components/UserView/BlocksView";
-import FollowingView from "../../../../../universal/components/UserView/FollowingView";
-import FollowersView from "../../../../../universal/components/UserView/FollowersView";
-import ComposeView from "../../../../../universal/components/ComposeView";
-import {FullScreenModal} from "../../../../../universal/components/FullScreenModal";
-import Icon from "../../../../../universal/components/Icon";
+import SearchView from "../../../../external/universal/components/SearchView";
+import SearchPanels from "../../../../external/universal/components/SearchPanels";
+import SavedView from "../../../../external/universal/components/SavedView";
+import SavedViewPanels from "../../../../external/universal/components/SavedViewPanels";
+import BlocksView from "../../../../external/universal/components/UserView/BlocksView";
+import FollowingView from "../../../../external/universal/components/UserView/FollowingView";
+import FollowersView from "../../../../external/universal/components/UserView/FollowersView";
+import ComposeView from "../../../../external/universal/components/ComposeView";
+import {FullScreenModal} from "../../../../external/universal/components/FullScreenModal";
+import Icon from "../../../../external/universal/components/Icon";
 import Logo from "../../../../static/assets/icons/logo.svg";
-import Button from "../../../../../universal/components/Button";
+import Button from "../../../../external/universal/components/Button";
 
 export default function Root(): ReactElement {
   const dispatch = useDispatch();
@@ -280,7 +280,7 @@ function renderSummary(): ReactNode {
       </Route>
       <Route path="/write">
         <ComposeView
-          onFileUpload={() => null}
+          onFileUpload={() => Promise.resolve('')}
           onSendPost={sendPost}
           onFileUploadButtonClick={fileUpload}
         />

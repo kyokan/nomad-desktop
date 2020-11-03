@@ -1,17 +1,12 @@
-// @ts-ignore
-import React, {ChangeEvent, MouseEvent, ReactElement, ReactNode, useCallback, useState} from "react";
+import React, {MouseEvent, ReactElement, ReactNode, useCallback, useState} from "react";
 import './post-card.scss';
 import Markup from "../Markup";
 import PostButton from "../PostButton";
-// @ts-ignore
-import CommentBlackIcon from "../../../electron/static/assets/icons/reply-black.svg";
-// @ts-ignore
-import HeartIcon from "../../../electron/static/assets/icons/heart.svg";
-// @ts-ignore
-import MoreSmallIcon from "../../../electron/static/assets/icons/more.svg";
-// @ts-ignore
+import CommentBlackIcon from "../../../../static/assets/icons/reply-black.svg";
+import HeartIcon from "../../../../static/assets/icons/heart.svg";
+import MoreSmallIcon from "../../../../static/assets/icons/more.svg";
 import classNames from "classnames";
-import {PostMeta, useBlockUser, usePostId} from "../../ducks/posts";
+import {PostMeta, usePostId} from "../../ducks/posts";
 import {
   useCurrentBlocks,
   useCurrentFollowings,
@@ -19,7 +14,6 @@ import {
   useUsersMap
 } from "../../ducks/users";
 import {updateReplies, useReplies, useReplyId} from "../../ducks/drafts/replies";
-// @ts-ignore
 import {useDispatch} from "react-redux";
 import Icon from "../Icon";
 import PostCardHeader from "./PostCardHeader";
@@ -27,7 +21,6 @@ import Attachments from "../Attachments";
 import Menuable, {MenuProps} from "../Menuable";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
 import {undotName} from "../../utils/user";
-import MarkdownEditor from "../MarkdownEditor";
 import Button from "../Button";
 import {createNewDraft} from "../../ducks/drafts/type";
 import {RichTextEditor} from "../ComposeView";
@@ -506,11 +499,9 @@ export function renderQuickReplyEditor(hash: string, isShowingReply: boolean, se
             <RichTextEditor
               className="post__reply-editor"
               onChange={onChange}
-              value={content}
-              attachments={[]}
+              content={content}
               disabled={isSendingReplies}
               isShowingMarkdown={false}
-              embedded
             />
             <div className="post__reply-editor__actions">
               <Button

@@ -8,7 +8,7 @@ import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../helpers/filter";
 import {dotName, parseUsername, serializeUsername} from "../helpers/user";
-import {INDEXER_API} from "../../../../universal/utils/api";
+import {INDEXER_API} from "../../../external/universal/utils/api";
 import {UserProfile} from "../../../../indexer-api/src/constants";
 // @ts-ignore
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';

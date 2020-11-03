@@ -13,7 +13,7 @@ import Icon from "../Icon";
 import CloseIcon from "../../../../static/assets/icons/close-red.svg";
 import TickIcon from "../../../../static/assets/icons/tick-green.svg";
 import {isTLD} from "../../helpers/user";
-import {useCurrentUser} from "../../../../../universal/ducks/users";
+import {useCurrentUser} from "../../../../external/universal/ducks/users";
 
 type Props = {
   children?: ReactNode;

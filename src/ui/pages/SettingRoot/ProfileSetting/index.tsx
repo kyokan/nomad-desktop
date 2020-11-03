@@ -1,16 +1,16 @@
 import React, {ReactElement, useCallback, useEffect, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import "./profile-setting.scss";
-import {useCurrentUsername, useFetchUser, useUser} from "../../../../../../universal/ducks/users";
-import {RawUserCard} from "../../../../../../universal/components/UserCard";
-import {isSubdomain, parseUsername} from "../../../../../../universal/utils/user";
-import Button from "../../../../../../universal/components/Button";
+import {useCurrentUsername, useFetchUser, useUser} from "../../../../../external/universal/ducks/users";
+import {RawUserCard} from "../../../../../external/universal/components/UserCard";
+import {isSubdomain, parseUsername} from "../../../../../external/universal/utils/user";
+import Button from "../../../../../external/universal/components/Button";
 import {useFileUpload, useQueryMediaForName} from "../../../helpers/hooks";
 import MediaPickerMenuable from "../../../components/MediaPickerMenuable";
 import {postIPCMain} from "../../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../../app/types";
-import {createNewDraft} from "../../../../../../universal/ducks/drafts/type";
-import Menuable from "../../../../../../universal/components/Menuable";
+import {createNewDraft} from "../../../../../external/universal/ducks/drafts/type";
+import Menuable from "../../../../../external/universal/components/Menuable";
 type Props = {
 
 } & RouteComponentProps;

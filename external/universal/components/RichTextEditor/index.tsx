@@ -18,21 +18,21 @@ import {
 import c from "classnames";
 import Icon from "../Icon";
 // @ts-ignore
-import BoldIcon from "../../../electron/static/assets/icons/bold.svg";
+import BoldIcon from "../../../../static/assets/icons/bold.svg";
 // @ts-ignore
-import ItalicIcon from "../../../electron/static/assets/icons/italic.svg";
+import ItalicIcon from "../../../../static/assets/icons/italic.svg";
 // @ts-ignore
-import UnderlineIcon from "../../../electron/static/assets/icons/underline.svg";
+import UnderlineIcon from "../../../../static/assets/icons/underline.svg";
 // @ts-ignore
-import StrikethroughIcon from "../../../electron/static/assets/icons/strikethrough.svg";
+import StrikethroughIcon from "../../../../static/assets/icons/strikethrough.svg";
 // @ts-ignore
-import CodeBlockIcon from "../../../electron/static/assets/icons/code.png";
+import CodeBlockIcon from "../../../../static/assets/icons/code.png";
 // @ts-ignore
-import CodeIcon from "../../../electron/static/assets/icons/code.svg";
+import CodeIcon from "../../../../static/assets/icons/code.svg";
 // @ts-ignore
-import OrderedListIcon from "../../../electron/static/assets/icons/list.svg";
+import OrderedListIcon from "../../../../static/assets/icons/list.svg";
 // @ts-ignore
-import UnorderedListIcon from "../../../electron/static/assets/icons/list-2.svg";
+import UnorderedListIcon from "../../../../static/assets/icons/list-2.svg";
 import './rich-text-editor.scss';
 import {DraftPost} from "../../ducks/drafts/type";
 import {useDraftPost} from "../../ducks/drafts";

@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, {ButtonHTMLAttributes, ReactElement} from "react";
 import classNames from "classnames";
 import "./button.scss";

@@ -2,9 +2,9 @@
 import React, {ReactElement} from "react";
 import Icon from "../Icon";
 // @ts-ignore
-import StarIcon from "../../../electron/static/assets/icons/star.svg";
+import StarIcon from "../../../../static/assets/icons/star.svg";
 // @ts-ignore
-import UnstarIcon from "../../../electron/static/assets/icons/unstar.svg";
+import UnstarIcon from "../../../../static/assets/icons/unstar.svg";
 import './topic.scss'
 import Menuable from "../Menuable";
 import { withRouter, RouteComponentProps } from "react-router";

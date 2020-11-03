@@ -7,7 +7,7 @@ import {mapPostWithMetaToPost} from "../../../app/util/posts";
 import uniq from "lodash.uniq";
 import {useDispatch} from "react-redux";
 import './media-view.scss';
-import {updateRawPost} from "../../../../../universal/ducks/posts";
+import {updateRawPost} from "../../../../external/universal/ducks/posts";
 
 type Props = {
   queryNext: (username: string, next: number | null, list: PostWithMeta[]) => Promise<Pageable<PostWithMeta, number>>;

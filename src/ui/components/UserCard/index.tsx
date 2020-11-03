@@ -13,9 +13,9 @@ import "./user-card.scss";
 import {undotName} from "../../helpers/user";
 import classNames from "classnames";
 import moment from "moment";
-import {getCSSImageURLFromPostHash} from "../../../../../universal/utils/posts";
-import {isHex} from "../../../../../universal/utils/hex";
-import {useFollowUser} from "../../../../../universal/ducks/posts";
+import {getCSSImageURLFromPostHash} from "../../../../external/universal/utils/posts";
+import {isHex} from "../../../../external/universal/utils/hex";
+import {useFollowUser} from "../../../../external/universal/ducks/posts";
 
 type UserCardProps = {
   name: string;

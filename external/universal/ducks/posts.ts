@@ -1,39 +1,27 @@
-// @ts-ignore
 import {ThunkDispatch} from "redux-thunk";
+import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
+import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
+import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {Dispatch} from "redux";
+import {useCallback} from "react";
+import {PostType} from "../types/posts";
+import uniq from "lodash.uniq";
+import {addUserBlocks, addUserFollowings, addUserLikes, useCurrentUser, useCurrentUsername} from "./users";
+import {INDEXER_API} from "../utils/api";
+import {dotName, parseUsername, serializeUsername} from "../utils/user";
+import {createNewDraft, DraftPost} from "./drafts/type";
+import {mapDomainEnvelopeToPost, mapDraftToPostPayload} from "../utils/posts";
+import {TopicMeta} from "../../../src/app/controllers/signer";
 import {
   IPCMessageRequestType,
   IPCMessageResponse, RelayerNewBlockResponse, RelayerNewFollowResponse,
-  RelayerNewPostResponse, RelayerNewReactionResponse,
+  RelayerNewPostResponse,
+  RelayerNewReactionResponse,
   ResponsePost
-} from "../../electron/src/app/types";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-// @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
-// @ts-ignore
-import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {GlobalMeta} from "../../electron/src/app/controllers/signer";
-// @ts-ignore
-import {Dispatch} from "redux";
-import {mapDraftToPostPayload} from "../../electron/src/app/util/posts";
-// @ts-ignore
-import {useCallback} from "react";
-import {createNewDraft} from "../../electron/src/ui/ducks/drafts/type";
-import {markup} from "../../universal/utils/rte";
-import {PostType} from "../types/posts";
-// @ts-ignore
-import uniq from "lodash.uniq";
-import {addUserBlocks, addUserFollowings, addUserLikes, useCurrentUser, useCurrentUsername} from "./users";
-import {parseUsername} from "../../electron/src/ui/helpers/user";
-import {INDEXER_API, RELAYER_API} from "../utils/api";
-import {getIdentity} from "../../web-client/src/utils/localStorage";
-import {dotName, serializeUsername} from "../utils/user";
-import {DraftPost} from "./drafts/type";
-import {mapDomainEnvelopeToPost} from "../utils/posts";
+} from "../../../src/app/types";
 
-const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {
+const postIPCMain = async (a: any, b?: any): Promise<any> => {
   return {
     id: 0,
     payload: {},
@@ -93,6 +81,28 @@ export type PostOpts = {
   parent?: string;
   attachments?: string[];
   pending?: boolean;
+}
+
+export type GlobalMeta = {
+  topics: {
+    [topicName: string]: TopicMeta;
+  };
+  users: {
+    [username: string]: {
+      posts: number;
+      comments: number;
+      profilePictureUrl?: string;
+      lastProfilePictureUpdate?: number;
+      coverImageUrl?: string;
+      lastCoverImageUpdate?: number;
+      firstActivity: number;
+      lastActivity: number;
+      topics: {
+        [topic: string]: number;
+      };
+    };
+  };
+  lastScanned: number;
 }
 
 export type PostsState = {
@@ -199,21 +209,6 @@ export const addLikeCount = (hash: string, additionalLikeCounts: number): PostsA
   };
 };
 
-export const scanGlobalMeta = () => async (dispatch: Dispatch) => {
-  const resp: IPCMessageResponse<GlobalMeta> = await postIPCMain({
-    type: IPCMessageRequestType.SCAN_ALL_NAMES,
-  }, true);
-
-  if (resp.error) {
-    return Promise.reject(resp.payload);
-  }
-
-  dispatch({
-    type: PostsActionType.UPDATE_GLOBAL_META,
-    payload: resp.payload,
-  });
-};
-
 export const setUserProfilePicture = (name: string, profilePictureUrl: string): PostsAction<{ name: string; profilePictureUrl: string }> => {
   return {
     type: PostsActionType.SET_USER_PROFILE_PICTURE,
@@ -224,7 +219,10 @@ export const setUserProfilePicture = (name: string, profilePictureUrl: string): 
   };
 };
 
-export const setUserCoverImage = (name: string, coverImage: string): PostsAction<{ name: string; coverImage: string }> => {
+export const setUserCoverImage = (
+  name: string,
+  coverImage: string
+): PostsAction<{ name: string; coverImage: string }> => {
   return {
     type: PostsActionType.SET_USER_COVER_IMAGE,
     payload: {
@@ -291,22 +289,6 @@ const reduceUpdateComments = (state: PostsState, action: UpdateCommentsAction): 
   }
 };
 
-export const fetchPost = (name: string, guid: string) => async (dispatch: ThunkDispatch<{}, {}, PostsAction<any>>) => {
-  if (!name || !guid) {
-    return;
-  }
-
-  const resp: IPCMessageResponse<DomainEnvelope<DomainPost>> = await postIPCMain({
-    type: IPCMessageRequestType.GET_POST,
-    payload: { name, guid },
-  }, true);
-
-
-  if (!resp.error) {
-    dispatch(updateRawPost(mapDomainEnvelopeToPost(resp.payload)));
-  }
-};
-
 export const fetchPostByHash = (hash: string) => async (dispatch: ThunkDispatch<{}, {}, PostsAction<any>>) => {
   if (!hash) {
     return;
@@ -321,7 +303,10 @@ export const fetchPostByHash = (hash: string) => async (dispatch: ThunkDispatch<
 };
 
 
-export const fetchComments = (parent: string, order: 'ASC' | 'DESC' = 'DESC', start?: number) => async (dispatch: ThunkDispatch<{}, {}, PostsAction<any>>) => {
+export const fetchComments = (
+  parent: string, order: 'ASC' | 'DESC' = 'DESC',
+  start?: number
+) => async (dispatch: ThunkDispatch<{}, {}, PostsAction<any>>) => {
   const resp = await fetch(`${INDEXER_API}/posts/${parent}/comments?order=${order}${start ? '&offset=' + start : ''}`);
   const json: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>> = await resp.json();
   const comments: string[] = [];
@@ -335,7 +320,11 @@ export const fetchComments = (parent: string, order: 'ASC' | 'DESC' = 'DESC', st
 };
 
 export const useQueryMediaForName = () => {
-  return async function queryNext(username: string, next: number | null, list: DomainEnvelope<DomainPost>[] = []): Promise<Pageable<DomainEnvelope<DomainPost>, number>> {
+  return async function queryNext(
+    username: string,
+    next: number | null,
+    list: DomainEnvelope<DomainPost>[] = []
+  ): Promise<Pageable<DomainEnvelope<DomainPost>, number>> {
     const resp = await fetch(`${INDEXER_API}/users/${username}/timeline?order=DESC&next=${next}`);
     const json = await resp.json();
     if (json.error) {
@@ -345,7 +334,7 @@ export const useQueryMediaForName = () => {
     const payload = json.payload as Pageable<DomainEnvelope<DomainPost>, number>;
     list = list.concat(payload.items)
       .filter((postWithMeta) => {
-        const { post } = postWithMeta;
+        const { message: post } = postWithMeta;
         return post.topic === '.imageFile';
       });
 
@@ -385,7 +374,10 @@ export default function postsReducer(state: PostsState = initState, action: Post
   }
 }
 
-function reduceUpdatePostLikeCount(state: PostsState = initState, action: PostsAction<{hash: string; additionalLikeCounts: number}>): PostsState {
+function reduceUpdatePostLikeCount(
+  state: PostsState = initState,
+  action: PostsAction<{hash: string; additionalLikeCounts: number}>
+): PostsState {
   const { hash, additionalLikeCounts } = action.payload;
   const post = state.map[hash];
 
@@ -408,7 +400,10 @@ function reduceUpdatePostLikeCount(state: PostsState = initState, action: PostsA
   };
 }
 
-function reduceSetUserProfilePicture(state: PostsState = initState, action: PostsAction<{name: string; profilePictureUrl: string}>): PostsState {
+function reduceSetUserProfilePicture(
+  state: PostsState = initState,
+  action: PostsAction<{name: string; profilePictureUrl: string}>
+): PostsState {
   const { name, profilePictureUrl } = action.payload;
   const users = state.meta.users;
   const selectedUser = users[name] || {
@@ -434,7 +429,10 @@ function reduceSetUserProfilePicture(state: PostsState = initState, action: Post
   };
 }
 
-function reduceSetUserCoverImage(state: PostsState = initState, action: PostsAction<{name: string; coverImage: string}>): PostsState {
+function reduceSetUserCoverImage(
+  state: PostsState = initState,
+  action: PostsAction<{name: string; coverImage: string}>
+): PostsState {
   const { name, coverImage } = action.payload;
   const users = state.meta.users;
   const selectedUser = users[name] || {
@@ -460,7 +458,10 @@ function reduceSetUserCoverImage(state: PostsState = initState, action: PostsAct
   };
 }
 
-function reduceAppendNewComment(state: PostsState = initState, action: PostsAction<{parentHash: string; commentId: string}>): PostsState {
+function reduceAppendNewComment(
+  state: PostsState = initState,
+  action: PostsAction<{parentHash: string; commentId: string}>
+): PostsState {
   const { parentHash, commentId } = action.payload;
   const shouldIncrement = action.meta?.shouldIncrement;
   const parent = state.map[parentHash];
@@ -553,7 +554,7 @@ export const useSendPost = () => {
 
   return useCallback(async (draft: DraftPost): Promise<RelayerNewPostResponse> => {
     const payload = mapDraftToPostPayload(draft);
-    const { token } = getIdentity();
+    const token = '';
 
     const resp = await fetch(`${INDEXER_API}/subdomains/posts`, {
       method: 'POST',
@@ -599,7 +600,7 @@ export const useLikePage = () => {
   const dispatch = useDispatch();
   return useCallback(async (postHash: string) => {
     try {
-      const { token } = getIdentity();
+      const token = '';
 
       const resp = await fetch(`${INDEXER_API}/subdomains/moderations`, {
         method: 'post',
@@ -637,7 +638,7 @@ export const useFollowUser = () => {
   const currentUsername = useCurrentUsername();
 
   return useCallback(async (username: string) => {
-    const { token } = getIdentity();
+    const token = '';
     const parsed = parseUsername(username);
     const tld = dotName(parsed.tld);
     const subdomain = parsed.subdomain;
@@ -673,7 +674,7 @@ export const useBlockUser = () => {
   const currentUser = useCurrentUser();
 
   return useCallback(async (username: string) => {
-    const { token } = getIdentity();
+    const token = '';
     const parsed = parseUsername(username);
     const tld = dotName(parsed.tld);
     const subdomain = parsed.subdomain;

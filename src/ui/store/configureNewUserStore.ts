@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
-import {PostsActionType} from "../../../../universal/ducks/posts";
+import {PostsActionType} from "../../../external/universal/ducks/posts";
 import app, {AppActionType} from "../ducks/app";
 
 const rootReducer = combineReducers({

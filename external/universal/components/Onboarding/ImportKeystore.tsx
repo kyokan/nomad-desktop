@@ -9,7 +9,7 @@ import Icon from "../Icon";
 import Input from "../Input";
 import Button from "../Button";
 import {OnboardingViewType} from "./index";
-import {decrypt} from "../../../electron/src/app/util/key";
+import {decrypt} from "../../../../src/app/util/key";
 
 type ImportKeystoreProps = {
   onAddTLD: (tld: string, password: string, privateKey: string) => Promise<void>;

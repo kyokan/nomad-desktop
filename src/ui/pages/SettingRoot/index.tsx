@@ -7,7 +7,7 @@ import SettingHeader from "../../components/Header/SettingHeader";
 import NetworkSetting from "./NetworkSetting";
 import LogSetting from "./LogSetting";
 import ProfileSetting from "./ProfileSetting";
-import {useCurrentUsername} from "../../../../../universal/ducks/users";
+import {useCurrentUsername} from "../../../../external/universal/ducks/users";
 import {fetchIdentity} from "../../ducks/users";
 import {useDispatch} from "react-redux";
 

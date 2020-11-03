@@ -37,7 +37,7 @@ import uniq from "lodash.uniq";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
 import './user-view.scss';
 import Menuable from "../Menuable";
-import {IPCMessageResponse} from "../../../electron/src/app/types";
+import {IPCMessageResponse} from "../../../../src/app/types";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
 import {INDEXER_API} from "../../utils/api";
 import Avatar from "../Avatar";

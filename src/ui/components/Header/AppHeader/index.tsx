@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode, useCallback, useEffect} from "react";
+import React, {ReactElement, ReactNode, useCallback, useEffect, MouseEvent} from "react";
 import {RouteComponentProps, withRouter, Switch, Route} from "react-router-dom";
 import {postIPCMain} from "../../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../../app/types";
@@ -6,12 +6,12 @@ import "./app-header.scss";
 import {useDispatch} from "react-redux";
 import {fetchIdentity, useIdentities} from "../../../ducks/users";
 import Logo from "../../../../../static/assets/icons/logo-green.svg";
-import Icon from "../../../../../../universal/components/Icon";
-import {useCurrentUsername, useUser} from "../../../../../../universal/ducks/users";
-import Button from "../../../../../../universal/components/Button";
-import Avatar from "../../../../../../universal/components/Avatar";
-import Menuable from "../../../../../../universal/components/Menuable";
-import {parseUsername} from "../../../../../../universal/utils/user";
+import Icon from "../../../../../external/universal/components/Icon";
+import {useCurrentUsername, useUser} from "../../../../../external/universal/ducks/users";
+import Button from "../../../../../external/universal/components/Button";
+import Avatar from "../../../../../external/universal/components/Avatar";
+import Menuable from "../../../../../external/universal/components/Menuable";
+import {parseUsername} from "../../../../../external/universal/utils/user";
 
 function AppHeader(props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();
@@ -218,7 +218,7 @@ function renderMainAccount(props: RouteComponentProps, username: string, isLogge
         </div>
       </div>
       <Button
-        onClick={(e: MouseEvent) => {
+        onClick={(e: MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation();
           if (isLoggedIn) {
             onLogout && onLogout();

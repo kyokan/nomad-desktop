@@ -8,7 +8,7 @@ import {RawUserCard} from "../UserCard";
 import {isSubdomain, parseUsername} from "../../utils/user";
 import Button from "../Button";
 import {useQueryMediaForName, useSendPost} from "../../ducks/posts";
-import MediaPickerMenuable from "../../../electron/src/ui/components/MediaPickerMenuable";
+import MediaPickerMenuable from "../../../../src/ui/components/MediaPickerMenuable";
 import {createNewDraft} from "../../ducks/drafts/type";
 type Props = {
 

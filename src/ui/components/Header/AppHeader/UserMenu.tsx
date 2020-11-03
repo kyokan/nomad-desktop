@@ -15,8 +15,8 @@ import {addSystemMessage} from "../../../ducks/app";
 import {remote} from "electron";
 import fs from "fs";
 import {decrypt} from "../../../../app/util/key";
-import {useCurrentUsername, useUser} from "../../../../../../universal/ducks/users";
-import {getImageURLFromPostHash} from "../../../../../../universal/utils/posts";
+import {useCurrentUsername, useUser} from "../../../../../external/universal/ducks/users";
+import {getImageURLFromPostHash} from "../../../../../external/universal/utils/posts";
 
 function UserMenu(props: RouteComponentProps): ReactElement {
   const { identities } = useIdentity();

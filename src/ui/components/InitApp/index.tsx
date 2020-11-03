@@ -1,9 +1,9 @@
 import React, {ReactElement, ReactNode, useCallback, useState} from "react";
 import {Redirect, Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import "./init-app.scss";
-import Icon from "../../../../../universal/components/Icon";
+import Icon from "../../../../external/universal/components/Icon";
 import Logo from "../../../../static/assets/icons/logo.svg";
-import Button from "../../../../../universal/components/Button";
+import Button from "../../../../external/universal/components/Button";
 import {useStartDDRP, useStopDDRP} from "../../helpers/hooks";
 import {
   useDDRPStatus,

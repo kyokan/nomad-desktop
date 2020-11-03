@@ -7,7 +7,7 @@ import "./tld-instruction.scss";
 import RefreshIcon from "../../../../../static/assets/icons/refresh.svg";
 import CopyIcon from "../../../../../static/assets/icons/copy.svg";
 import Icon from "../../../components/Icon";
-import Button from "../../../../../../universal/components/Button";
+import Button from "../../../../../external/universal/components/Button";
 import Anchor from "../../../components/Anchor";
 
 type Props = {

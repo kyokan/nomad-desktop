@@ -21,7 +21,7 @@ import {INDEXER_API} from "../../utils/api";
 import {addTag, addUser} from "../../ducks/search";
 import {RawPost} from "../CustomView/CustomViewPosts";
 import PostCard from "../PostCard";
-import {ResponsePost} from "../../../electron/src/app/types";
+import {ResponsePost} from "../../../../src/app/types";
 
 
 type DiscoverViewProps = {

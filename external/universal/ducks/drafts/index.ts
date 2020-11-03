@@ -1,18 +1,11 @@
-// @ts-ignore
 import {ThunkDispatch} from "redux-thunk";
-// @ts-ignore
 import {Action} from "redux";
 import {createNewDraft, DraftPost} from "./type";
-// @ts-ignore
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {createNewPost, setUserCoverImage, setUserProfilePicture, updatePost} from "../posts";
-// @ts-ignore
+import {setUserCoverImage, setUserProfilePicture} from "../posts";
 import {useCallback} from "react";
-import {isTLD, serializeUsername} from "../../utils/user";
-import {IPCMessageRequestType, IPCMessageResponse, RelayerNewPostResponse} from "../../../electron/src/app/types";
-import {INDEXER_API, RELAYER_API} from "../../utils/api";
-import {getIdentity} from "../../../web-client/src/utils/localStorage";
-import {PostType} from "../../types/posts";
+import {IPCMessageRequestType, IPCMessageResponse, RelayerNewPostResponse} from "../../../../src/app/types";
+import {INDEXER_API} from "../../utils/api";
 import {mapDraftToPostPayload} from "../../utils/posts";
 const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {
   return {
@@ -62,7 +55,7 @@ const initialState = {
 
 export const useSendNewPost = () => {
   const dispatch = useDispatch();
-  const { token } = getIdentity();
+  const token = '';
   const draft = useDraftPost();
   const payload = mapDraftToPostPayload(draft);
 

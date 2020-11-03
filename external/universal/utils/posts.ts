@@ -1,11 +1,9 @@
-import {ResponsePost} from "../../electron/src/app/types";
-// @ts-ignore
+import {ResponsePost} from "../../../src/app/types";
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-// @ts-ignore
 import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-import {serializeUsername} from "../../electron/src/ui/helpers/user";
+import {serializeUsername} from "../../../src/ui/helpers/user";
 import {INDEXER_API} from "./api";
-import {DraftPost} from "../../electron/src/ui/ducks/drafts/type";
+import {DraftPost} from "../../../src/ui/ducks/drafts/type";
 import {RelayerPostModel} from "../types/posts";
 
 export function getCSSImageURLFromPostHash (hash: string): string {
@@ -32,7 +30,7 @@ export function getImageURLFromAvatarType (avatarType: string, username: string)
 
 export const mapDomainEnvelopeToPost = (env: DomainEnvelope<DomainPost>): ResponsePost => {
   return {
-    title: env.message.title,
+    title: env.message.title || '',
     guid: env.networkId || '',
     content: env.message.body || '',
     name: serializeUsername(env.subdomain, env.tld),

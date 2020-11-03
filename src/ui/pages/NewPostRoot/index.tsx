@@ -21,10 +21,10 @@ import {MessagePort} from "../../components/SystemMessage";
 import {fetchCurrentUserData, fetchIdentity, updateCurrentUser, useCurrentUser} from "../../ducks/users";
 import {ipcRenderer} from "electron";
 import {IPCMessageRequest, IPCMessageRequestType} from "../../../app/types";
-import {useUpdateDraft} from "../../../../../universal/ducks/drafts";
-import MarkdownEditor from "../../../../../universal/components/MarkdownEditor";
-import {useFetchUser} from "../../../../../universal/ducks/users";
-import Attachments from "../../../../../universal/components/Attachments";
+import {useUpdateDraft} from "../../../../external/universal/ducks/drafts";
+import MarkdownEditor from "../../../../external/universal/components/MarkdownEditor";
+import {useFetchUser} from "../../../../external/universal/ducks/users";
+import Attachments from "../../../../external/universal/components/Attachments";
 
 export default function NewPostRoot (): ReactElement {
   const dispatch = useDispatch();
@@ -171,6 +171,7 @@ function renderEditor(draftMode: EditorMode, isSendingPost: boolean, updateDraft
           disabled={isSendingPost}
           isShowingMarkdownPreview={isShowingMarkdownPreview}
           value={draftPost.content}
+          attachments={[]}
         />
       );
     default:

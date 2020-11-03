@@ -1,8 +1,8 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
-import posts, {PostsActionType} from "../../../../universal/ducks/posts";
-import users from "../../../../universal/ducks/users";
+import posts, {PostsActionType} from "../../../external/universal/ducks/posts";
+import users from "../../../external/universal/ducks/users";
 import fav from "../ducks/fav";
 import drafts from "../ducks/drafts";
 import replies from "../ducks/drafts/replies";
@@ -10,8 +10,8 @@ import bookmark from "../ducks/bookmark";
 import blocklist from "../ducks/blocklist";
 import preview from "../ducks/preview";
 import app, {AppActionType} from "../ducks/app";
-import search from "../../../../universal/ducks/search";
-import views from "../../../../universal/ducks/views";
+import search from "../../../external/universal/ducks/search";
+import views from "../../../external/universal/ducks/views";
 
 
 const rootReducer = combineReducers({

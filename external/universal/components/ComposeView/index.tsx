@@ -1,21 +1,15 @@
-// @ts-ignore
 import React, {ChangeEvent, ChangeEventHandler, ReactElement, useCallback, useState} from "react";
-// @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
 import MarkdownEditor from "../../components/MarkdownEditor";
 import "./compose.scss";
 import {addTag, removeTag, useDraftPost, useSendNewPost, useUpdateDraft} from "../../ducks/drafts";
 import Button from "../../components/Button";
-// @ts-ignore
 import {useDispatch} from "react-redux";
-// @ts-ignore
 import ReactRTE from "react-rte";
 import Icon from "../Icon";
 import {createNewDraft, DraftPost} from "../../ducks/drafts/type";
-import {RelayerNewPostResponse} from "../../../electron/src/app/types";
-import {getIdentity} from "../../../web-client/src/utils/localStorage";
+import {RelayerNewPostResponse} from "../../../../src/app/types";
 import {INDEXER_API} from "../../utils/api";
-import {markup} from "../../utils/rte";
 
 type Props = {
   onSendPost: (draft: DraftPost) => Promise<RelayerNewPostResponse>;
@@ -59,15 +53,17 @@ function ComposeView(props: Props): ReactElement {
   }, [draft]);
 
   const onSelectAndInsertFile = useCallback(async () => {
-    const refhash = await props.onFileUploadButtonClick();
-    const newContent = `${draft.content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
+    if (props.onFileUploadButtonClick) {
+      const refhash = await props.onFileUploadButtonClick();
+      const newContent = `${draft.content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
 
-    updateDraft({
-      ...draft,
-      content: newContent,
-    });
+      updateDraft({
+        ...draft,
+        content: newContent,
+      });
 
-    setDraftState(ReactRTE.createValueFromString(newContent, 'markdown'));
+      setDraftState(ReactRTE.createValueFromString(newContent, 'markdown'));
+    }
   }, [draft]);
 
   const togglePreview = useCallback(() => {
@@ -172,7 +168,7 @@ function ComposeView(props: Props): ReactElement {
                           !props.onFileUploadButtonClick && (
                             <input
                               type="file"
-                              onChange={onInsertFile}
+                              onChange={e => onInsertFile(e.target.files![0])}
                             />
                           )
                         }
@@ -266,14 +262,16 @@ export default withRouter(ComposeView);
 
 type RichTextEditorProps = {
   className?: string;
-  onFileUpload: (file: File) => Promise<string>;
+  onFileUpload?: (file: File) => Promise<string>;
   content: string;
   onChange: (content: string) => void;
   isShowingMarkdown?: boolean;
   disabled?: boolean;
 } & RouteComponentProps;
 
-export function RichTextEditor(props: RichTextEditorProps): ReactElement {
+export const RichTextEditor = withRouter(_RichTextEditor);
+
+function _RichTextEditor(props: RichTextEditorProps): ReactElement {
   const {
     className = '',
     content = '',
@@ -284,9 +282,11 @@ export function RichTextEditor(props: RichTextEditorProps): ReactElement {
   const [draftState, setDraftState] = useState(ReactRTE.createValueFromString(content, 'markdown'));
 
   const onInsertFile = useCallback(async (file: File) => {
-    const refhash = await props.onFileUpload(file);
-    const newContent = `${content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
-    props.onChange(newContent);
+    if (props.onFileUpload) {
+      const refhash = await props.onFileUpload(file);
+      const newContent = `${content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
+      props.onChange(newContent);
+    }
   }, [content]);
 
   const onDraftChange = useCallback(async (value: any ) => {
@@ -347,7 +347,7 @@ export function RichTextEditor(props: RichTextEditorProps): ReactElement {
                       )}
                       <input
                         type="file"
-                        onChange={onInsertFile}
+                        onChange={e => onInsertFile(e.target.files![0])}
                       />
                     </div>
 

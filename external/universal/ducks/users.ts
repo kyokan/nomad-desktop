@@ -1,37 +1,20 @@
-// @ts-ignore
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {
   IPCMessageRequestType,
   IPCMessageResponse,
-  RelayerLoginResponse,
-  RelayerSignupResponse
-} from "../../electron/src/app/types";
-// @ts-ignore
+} from "../../../src/app/types";
 import {ThunkDispatch} from "redux-thunk";
-// @ts-ignore
 import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
-import {CustomViewProps, UserData} from "../../electron/src/app/controllers/userData";
-// @ts-ignore
+import {CustomViewProps, UserData} from "../../../src/app/controllers/userData";
 import {useCallback} from "react";
-import {extendFilter} from "../../electron/src/ui/helpers/filter";
-import {INDEXER_API, RELAYER_API} from "../utils/api";
-import {
-  addSavedIdentity,
-  getIdentity,
-  getSavedIdentities,
-  removeIdentity,
-  setIdentity
-} from "../../web-client/src/utils/localStorage";
+import {extendFilter} from "../../../src/ui/helpers/filter";
+import {INDEXER_API} from "../utils/api";
 import {mapDomainEnvelopeToPost} from "../utils/posts";
-import {UserProfile} from "../../indexer-api/src/constants";
-import {dotName, parseUsername, serializeUsername} from "../utils/user";
-// @ts-ignore
+import {UserProfile} from "../../nomad-api/src/constants";
+import {parseUsername, serializeUsername} from "../utils/user";
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-// @ts-ignore
 import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-// @ts-ignore
 import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';
-import {updatePost, updateRawPost} from "./posts";
 
 const postIPCMain = async (a: any, b: any): Promise<IPCMessageResponse<any>> => {
   return {
@@ -148,6 +131,7 @@ const initialState: UsersState = {
     hiddenPostHashes: [],
     lastFlushed: 0,
     updateQueue: [],
+    offset: 0,
   },
   identities: {},
   map: {},
@@ -159,9 +143,8 @@ type FetchIdentityIPCResponse = IPCMessageResponse<{
 }>
 
 export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
-  const identities = getSavedIdentities();
+  const identities: string[] = [];
 
-  console.log({identities})
 
   identities!.forEach(name => dispatch({
     type: UsersActionType.ADD_IDENTITY,
@@ -198,7 +181,7 @@ export const fetchUserLikes = (name: string) => async (dispatch: ThunkDispatch<a
   dispatch(setUserLikes(name, {}));
   await queryLikes(0, {});
 
-  async function queryLikes(start: number, likes: {[hash: string]: string}) {
+  async function queryLikes(start: number | null, likes: {[hash: string]: string}) {
     const resp = await fetch(`${INDEXER_API}/users/${name}/likes?order=ASC${start ? '&offset=' + start : ''}`);
     const json: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>> = await resp.json();
     if (!json.error) {
@@ -207,31 +190,12 @@ export const fetchUserLikes = (name: string) => async (dispatch: ThunkDispatch<a
         likes[post.hash] = post.hash;
       });
 
-      if (json.payload.next > -1) {
+      if (json.payload.next && json.payload.next > -1) {
         setTimeout(() => queryLikes(json.payload.next, likes), 200);
       } else {
         dispatch(addUserLikes(name, likes));
       }
     }
-  }
-};
-
-export const fetchUserChannels = (name: string, limit = 20, offset?: number) => async (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
-  dispatch(setUserFollowings(name, {}));
-
-  const resp = await fetch(`${INDEXER_API}/users/${name}/channels?order=ASC&limit=${limit}${offset ? '&offset=' + offset : ''}`);
-  const json: IPCMessageResponse<Pageable<DomainPost, number>> = await resp.json();
-
-  if (!json.error) {
-    const newChannels = json.payload.items
-      // @ts-ignore
-      .reduce((acc: {[h: string]: string}, env) => {
-        const post = mapDomainEnvelopeToPost(env);
-        dispatch(updateRawPost(post));
-        acc[post.hash] = post.content;
-        return acc;
-      }, {});
-    dispatch(addUserChannels(name, newChannels));
   }
 };
 
@@ -250,29 +214,6 @@ export const fetchUserFollowings = (name: string, limit = 20, offset?: number) =
         return acc;
       }, {});
     dispatch(addUserFollowings(name, newFollowings));
-  }
-};
-
-export const fetchUserBlockee = (username: string) => (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
-  dispatch(setUserBlocks(username, {}));
-  queryBlockeeByUsername(0);
-
-  async function queryBlockeeByUsername(start: number) {
-    const resp = await fetch(`${INDEXER_API}/users/${username}/blockees?order=ASC${start ? '&offset=' + start : ''}`);
-    const json: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>> = await resp.json();
-
-    if (!json.error) {
-      // @ts-ignore
-      dispatch(addUserBlocks(username, json.payload.items.reduce((acc: {[h: string]: string}, { tld, subdomain }) => {
-        const username = serializeUsername(subdomain, tld);
-        acc[username] = username;
-        return acc;
-      }, {})));
-      if (json.payload.next > -1) {
-        // @ts-ignore
-        setTimeout(() => queryBlockeeByUsername(resp.payload.next), 200);
-      }
-    }
   }
 };
 
@@ -917,70 +858,6 @@ export const useRemoveUserFromViewIndex = () => {
   }, [postIPCMain, dispatch, savedViews]);
 };
 
-export const useSubdomainLogout = () => {
-  const dispatch = useDispatch();
-  return useCallback(async () => {
-    await removeIdentity();
-    await dispatch(setCurrentUser(''));
-  }, [dispatch]);
-};
-
-export const useSubdomainLogin = () => {
-  const dispatch = useDispatch();
-  return useCallback(async (tld: string, subdomain: string, password: string) => {
-    const resp = await fetch(`${INDEXER_API}/subdomains/login`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        tld: dotName(tld),
-        subdomain,
-        password,
-      }),
-    });
-
-    const json: IPCMessageResponse<RelayerLoginResponse | string> = await resp.json();
-
-    if (json.error) {
-      throw new Error(json.payload as string);
-    }
-
-    const { token, expiry } = (json?.payload as RelayerLoginResponse) || {};
-
-    await setIdentity(tld, subdomain, token, expiry);
-    await addSavedIdentity(tld, subdomain);
-    dispatch(setCurrentUser(serializeUsername(subdomain, tld)));
-  }, [dispatch])
-};
-
-export const useSubdomainSignup = () => {
-
-  const login = useSubdomainLogin();
-  return useCallback(async (tld: string, subdomain: string, email: string, password: string) => {
-    const resp = await fetch(`${INDEXER_API}/subdomains/signup`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        tld: dotName(tld),
-        subdomain,
-        password,
-        email,
-      }),
-    });
-
-    const json: IPCMessageResponse<RelayerSignupResponse | string> = await resp.json();
-
-    if (json.error) {
-      throw new Error(json.payload as string);
-    }
-
-    await login(tld, subdomain, password);
-  }, [login])
-};
-
 const USER_FETCHED_STATUS: {
   [username: string]: boolean,
 } = {};
@@ -1063,7 +940,7 @@ export const useDisplayName = (username: string): string => {
 
 export const useIdentities = (): string[] => {
   return useSelector(() => {
-    const identities = getSavedIdentities();
+    const identities: string[] = [];
     return identities;
   }, (a: any, b: any) => a.join('') === b.join(''));
 };

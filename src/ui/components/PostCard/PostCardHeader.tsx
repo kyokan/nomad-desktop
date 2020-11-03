@@ -2,8 +2,8 @@ import React, {ReactElement, useCallback} from "react";
 import {undotName} from "../../helpers/user";
 import moment from "moment";
 import {useGlobalMeta, usePostId} from "../../ducks/posts";
-import {isHex} from "../../../../../universal/utils/hex";
-import {getImageURLFromPostHash} from "../../../../../universal/utils/posts";
+import {isHex} from "../../../../external/universal/utils/hex";
+import {getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
 
 type Props = {
   hash?: string;

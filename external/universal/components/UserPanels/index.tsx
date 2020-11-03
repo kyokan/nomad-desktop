@@ -10,7 +10,7 @@ import {fetchUserFollowings, useFetchUser, useUser} from "../../ducks/users";
 import {parseUsername, serializeUsername} from "../../utils/user";
 import Avatar from "../Avatar";
 import {INDEXER_API} from "../../utils/api";
-import {IPCMessageResponse} from "../../../electron/src/app/types";
+import {IPCMessageResponse} from "../../../../src/app/types";
 // @ts-ignore
 import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
 // @ts-ignore

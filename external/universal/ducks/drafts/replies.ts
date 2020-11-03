@@ -1,15 +1,10 @@
-// @ts-ignore
 import {useCallback} from "react";
 import {createNewDraft, DraftPost} from "./type";
-// @ts-ignore
 import {shallowEqual, useSelector, useDispatch} from "react-redux";
-// @ts-ignore
 import {ThunkDispatch} from "redux-thunk";
-// @ts-ignore
 import {Action} from "redux";
-import {IPCMessageResponse, RelayerNewPostResponse} from "../../../electron/src/app/types";
-import {INDEXER_API, RELAYER_API} from "../../utils/api";
-import {getIdentity} from "../../../web-client/src/utils/localStorage";
+import {IPCMessageResponse, RelayerNewPostResponse} from "../../../../src/app/types";
+import {INDEXER_API} from "../../utils/api";
 import {appendNewComment, createNewPost, updatePost} from "../posts";
 import {PostType} from "../../types/posts";
 import {serializeUsername} from "../../utils/user";
@@ -41,7 +36,7 @@ type RepliesAction<payload> = {
 export const sendReply = (id: string) => async (dispatch: ThunkDispatch<{ replies: RepliesState }, any, Action>, getState: () => { replies: RepliesState }): Promise<void> => {
   dispatch(setSendingReplies(true));
 
-  const { token } = getIdentity();
+  const token = '';
   const { replies } = getState();
   const reply = replies.map[id];
 

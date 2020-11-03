@@ -20,7 +20,7 @@ import Input from "../Input";
 import {addUser, addTag, removeTag, removeUser, useSearchParams} from "../../ducks/search";
 import Icon from "../Icon";
 import Button from "../Button";
-import {CustomViewProps, UserData} from "../../../electron/src/app/controllers/userData";
+import {CustomViewProps, UserData} from "../../../../src/app/controllers/userData";
 import {extendFilter} from "../../utils/filter";
 import {userCurrentUserData} from "../../ducks/users";
 

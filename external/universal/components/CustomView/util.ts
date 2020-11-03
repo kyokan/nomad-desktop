@@ -9,14 +9,14 @@ import {useCurrentUser, userCurrentUserData} from "../../ducks/users";
 // @ts-ignore
 import {useDispatch} from "react-redux";
 import {CustomFilterViewProps} from "../CustomFilterView";
-import {IPCMessageResponse} from "../../../electron/src/app/types";
+import {IPCMessageResponse} from "../../../../src/app/types";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
 import {INDEXER_API} from "../../utils/api";
 // @ts-ignore
 import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
 // @ts-ignore
 import {Post as DomainPost} from 'ddrp-indexer/dist/social/Post';
-import {Filter} from "../../../electron/external/nomad-api/src/util/filter";
+import {Filter} from "../../../../external/nomad-api/src/util/filter";
 
 const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {
   return {

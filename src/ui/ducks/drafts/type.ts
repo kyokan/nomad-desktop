@@ -1,4 +1,4 @@
-import {PostType} from "../../../../../universal/types/posts";
+import {PostType} from "../../../../external/universal/types/posts";
 
 export type DraftPost = {
   type: PostType;

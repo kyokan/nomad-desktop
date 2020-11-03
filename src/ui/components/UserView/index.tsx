@@ -40,7 +40,7 @@ import {CustomViewProps} from "../../../app/controllers/userData";
 import MediaView from "./MediaView";
 import {FullScreenModal} from "../FullScreenModal";
 import {useQueryMediaForName} from "../../helpers/hooks";
-import {getImageURLFromPostHash} from "../../../../../universal/utils/posts";
+import {getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
 
 type Props = {
 
