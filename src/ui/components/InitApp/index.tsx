@@ -4,9 +4,9 @@ import "./init-app.scss";
 import Icon from "../../../../external/universal/components/Icon";
 import Logo from "../../../../static/assets/icons/logo.svg";
 import Button from "../../../../external/universal/components/Button";
-import {useStartDDRP, useStopDDRP} from "../../helpers/hooks";
+import {useStartFND, useStopFND} from "../../helpers/hooks";
 import {
-  useDDRPStatus,
+  useFNDStatus,
   useFetchAppData,
   useHandshakeEndHeight,
   useHandshakeStartHeight,
@@ -35,10 +35,10 @@ function InitApp(props: Props): ReactElement {
 export default withRouter(InitApp);
 
 function renderWelcome(props: RouteComponentProps) {
-  const startDDRP = useStartDDRP();
+  const startDDRP = useStartFND();
   const endHeight = useHandshakeEndHeight();
   const startHeight = useHandshakeStartHeight();
-  const ddrpStatus = useDDRPStatus();
+  const ddrpStatus = useFNDStatus();
 
   const next = useCallback(async () => {
     if (ddrpStatus !== 'on') {
@@ -108,8 +108,8 @@ function renderConnection(props: Props): ReactNode {
 function renderDone(props: Props): ReactNode {
   const [loading, setLoading] = useState(false);
   const fetchAppData = useFetchAppData();
-  const startDDRP = useStartDDRP();
-  const stopDDRP = useStopDDRP();
+  const startDDRP = useStartFND();
+  const stopDDRP = useStopFND();
   const restartDDRP = useCallback(async () => {
     if (loading) return;
     await stopDDRP();

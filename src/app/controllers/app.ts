@@ -11,7 +11,7 @@ import electron, {ipcMain, IpcMainEvent} from 'electron';
 import {APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
 import {DraftPost} from '../../ui/ducks/drafts/type';
 import {mapDraftToDomainPost} from '../util/posts';
-import DDRPController from './ddrp';
+import DDRPController from './fnd';
 import UserDataManager from './userData';
 import {decrypt} from "../util/key";
 import logger from "../util/logger";
@@ -45,7 +45,7 @@ export default class AppManager {
   windowsController: WindowsController;
   usersController: UsersController;
   userDataManager: UserDataManager;
-  ddrpController: DDRPController;
+  fndController: DDRPController;
   favsManager: FavsManager;
   blocklistManager: BlocklistManager;
   localServer: LocalServer;
@@ -72,16 +72,16 @@ export default class AppManager {
       dispatchMain: this.dispatchMain,
       dispatchSetting: this.dispatchSetting,
     });
-    this.ddrpController = new DDRPController({
+    this.fndController = new DDRPController({
       dispatchMain: this.dispatchMain,
       dispatchSetting: this.dispatchSetting,
       dispatchNewPost: this.dispatchNewPost,
       userDataManager: this.userDataManager,
     });
-    this.ddrpController.subscribe(this.onDDRPLogUpdate);
+    this.fndController.subscribe(this.onDDRPLogUpdate);
     this.signerManager = new SignerManager({
       usersController: this.usersController,
-      ddrpController: this.ddrpController,
+      fndController: this.fndController,
       indexerManager: this.indexerManager,
       userDataManager: this.userDataManager,
     });
@@ -94,12 +94,12 @@ export default class AppManager {
 
   onDDRPLogUpdate = (log: string) => {
     this.dispatchSetting({
-      type: IPCMessageRequestType.NEW_DDRP_LOG_ADDED,
+      type: IPCMessageRequestType.NEW_FND_LOG_ADDED,
       payload: log,
     });
 
     this.dispatchMain({
-      type: IPCMessageRequestType.NEW_DDRP_LOG_ADDED,
+      type: IPCMessageRequestType.NEW_FND_LOG_ADDED,
       payload: log,
     });
   };
@@ -156,12 +156,12 @@ export default class AppManager {
         return this.handleRequest(resetApp, evt, req);
       case IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER:
         return this.usersController.getCurrentUser()
-          .then(async currentUser => this.ddrpController.sendUpdate(currentUser)  )
+          .then(async currentUser => this.fndController.sendUpdate(currentUser)  )
           .then(resp => this.sendResponse(evt, req.id, resp, false))
           .catch(err => this.sendResponse(evt, req.id, err.message, true));
       case IPCMessageRequestType.SEND_UPDATE_FOR_NAME:
         return this.handleRequest(
-          this.ddrpController.sendUpdate.bind(
+          this.fndController.sendUpdate.bind(
             this,
             req.payload,
           ),
@@ -200,16 +200,16 @@ export default class AppManager {
           await this.indexerManager.streamAllBlobs();
           return await this.indexerManager.scanMetadata();
         }, evt, req);
-      case IPCMessageRequestType.BAN_DDRP_PEER:
+      case IPCMessageRequestType.BAN_FND_PEER:
         return this.handleRequest(
-          this.ddrpController.banPeer.bind(this, req.payload.peerId, req.payload.durationMS),
+          this.fndController.banPeer.bind(this, req.payload.peerId, req.payload.durationMS),
           evt, req,
         );
-      case IPCMessageRequestType.GET_DDRP_LOG_LEVEL:
-        return this.handleRequest(this.ddrpController.getLogLevel, evt, req);
-      case IPCMessageRequestType.GET_DDRP_PEERS:
+      case IPCMessageRequestType.GET_FND_LOG_LEVEL:
+        return this.handleRequest(this.fndController.getLogLevel, evt, req);
+      case IPCMessageRequestType.GET_FND_PEERS:
         return this.handleRequest(
-          this.ddrpController.getPeers.bind(
+          this.fndController.getPeers.bind(
             this,
             req.payload.includeConnected,
             req.payload.includeStored,
@@ -217,9 +217,9 @@ export default class AppManager {
           ),
           evt, req,
         );
-      case IPCMessageRequestType.UNBAN_DDRP_PEER:
+      case IPCMessageRequestType.UNBAN_FND_PEER:
         return this.handleRequest(
-          this.ddrpController.unbanPeer.bind(this, req.payload.peerId),
+          this.fndController.unbanPeer.bind(this, req.payload.peerId),
           evt, req,
         );
       case IPCMessageRequestType.SEND_NEW_POST:
@@ -323,18 +323,18 @@ export default class AppManager {
         return this.handleRequest(this.usersController.getUserKeystore.bind(this, req.payload), evt, req);
       case IPCMessageRequestType.GET_IDENTITY:
         return this.handleGetIdentity(evt, req);
-      case IPCMessageRequestType.START_DDRP:
-        return this.handleRequest(this.ddrpController.startDaemon, evt, req);
-      case IPCMessageRequestType.STOP_DDRP:
-        return this.handleRequest(this.ddrpController.stopDaemon, evt, req);
-      case IPCMessageRequestType.GET_DDRP_INFO:
+      case IPCMessageRequestType.START_FND:
+        return this.handleRequest(this.fndController.startDaemon, evt, req);
+      case IPCMessageRequestType.STOP_FND:
+        return this.handleRequest(this.fndController.stopDaemon, evt, req);
+      case IPCMessageRequestType.GET_FND_INFO:
         return this.handleGetDDRPInfo(evt, req);
-      case IPCMessageRequestType.SET_DDRP_INFO:
+      case IPCMessageRequestType.SET_FND_INFO:
         return this.handleSetDDRPInfo(evt, req);
-      case IPCMessageRequestType.DOWNLOAD_DDRP_LOG:
-        return this.handleRequest(this.ddrpController.getDDRPLog, evt, req);
-      case IPCMessageRequestType.SET_DDRP_LOG_LEVEL:
-        return this.handleRequest(this.ddrpController.setLogLevel.bind(this, req.payload), evt, req);
+      case IPCMessageRequestType.DOWNLOAD_FND_LOG:
+        return this.handleRequest(this.fndController.getDDRPLog, evt, req);
+      case IPCMessageRequestType.SET_FND_LOG_LEVEL:
+        return this.handleRequest(this.fndController.setLogLevel.bind(this, req.payload), evt, req);
       case IPCMessageRequestType.GET_BOOKMARKS:
         return this.handleRequest(
           this.favsManager.getBookmarks.bind(
@@ -501,7 +501,7 @@ export default class AppManager {
         port = 12037,
       } = req.payload;
 
-      const resp = await this.ddrpController.setDDRPInfo(rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port);
+      const resp = await this.fndController.setDDRPInfo(rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port);
       this.sendResponse(evt, req.id, resp);
     } catch (err) {
       this.sendResponse(evt, req.id, err.message, true);
@@ -520,20 +520,20 @@ export default class AppManager {
       handshakeStartHeight,
       handshakeEndHeight,
       lastSync,
-      ddrpStatus: this.ddrpController.nodeStatus,
+      ddrpStatus: this.fndController.nodeStatus,
     });
   };
 
   private handleGetDDRPInfo = async (evt: IpcMainEvent, req: IPCMessageRequest<any>) => {
     try {
-      const rpcUrl = await this.ddrpController.getHost();
-      const rpcKey = await this.ddrpController.getAPIKey();
-      const heartbeatUrl = await this.ddrpController.getHeartbeat();
-      const ddrpStatus = await this.ddrpController.nodeStatus;
-      const moniker = await this.ddrpController.getMoniker();
-      const port = await this.ddrpController.getPort();
-      const basePath = await this.ddrpController.getBasePath();
-      const { startHeight, endHeight } = await this.ddrpController.getHandshakeBlockInfo();
+      const rpcUrl = await this.fndController.getHost();
+      const rpcKey = await this.fndController.getAPIKey();
+      const heartbeatUrl = await this.fndController.getHeartbeat();
+      const ddrpStatus = await this.fndController.nodeStatus;
+      const moniker = await this.fndController.getMoniker();
+      const port = await this.fndController.getPort();
+      const basePath = await this.fndController.getBasePath();
+      const { startHeight, endHeight } = await this.fndController.getHandshakeBlockInfo();
 
       this.sendResponse(evt, req.id, {
         rpcUrl,
@@ -783,9 +783,9 @@ export default class AppManager {
   async init () {
     const initialized = await isAppInitialized();
     const { handshakeEndHeight } = await getHandshakeBlockInfo();
-    await this.ddrpController.init();
+    await this.fndController.init();
     if (initialized || handshakeEndHeight) {
-      await this.ddrpController.startDaemon();
+      await this.fndController.startDaemon();
     }
     await this.indexerManager.start();
     await this.usersController.init();
@@ -795,7 +795,7 @@ export default class AppManager {
     await this.blocklistManager.init();
     await this.localServer.init();
 
-    this.ddrpController.onNameSynced(async (tld) => {
+    this.fndController.onNameSynced(async (tld) => {
       this.indexerManager.maybeStreamBlob(tld);
       const now = Date.now();
       await writeLastSync(now);

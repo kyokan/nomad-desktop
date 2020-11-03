@@ -29,9 +29,7 @@ node_modules/
 jspm_packages/&1yO&vY20707
 
 
-electron/resources/ddrpd-*
-*/resources/ddrpd-*
-resources/ddrpd-*
+resources/fnd-*
 
 .build
 release

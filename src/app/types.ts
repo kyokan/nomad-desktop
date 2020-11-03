@@ -3,8 +3,8 @@ import {PostMeta} from "../../external/universal/ducks/posts";
 export enum IPCMessageRequestType {
   PLACEHOLDER = 'ipc/placeholder',
   PROXY = 'ipc/proxy',
-  GET_DDRP_INFO = 'ipc/getDDRPInfo',
-  SET_DDRP_INFO = 'ipc/setDDRPInfo',
+  GET_FND_INFO = 'ipc/getFNDInfo',
+  SET_FND_INFO = 'ipc/setFNDInfo',
   SET_POST_VIEWER_HASH = 'ipc/setPostViewHash',
   FETCH_LINK_PREVIEW = 'ipc/fetchLinkPreview',
   OPEN_NEW_POST_WINDOW = 'ipc/openNewPostWindow',
@@ -34,16 +34,16 @@ export enum IPCMessageRequestType {
   GET_IDENTITY = 'ipc/getIdentity',
   NEW_INDEXER_LOG_ENTRY = 'ipc/newIndexerLogEntry',
   GET_USER_KEYSTORE = 'ipc/getUserKeystore',
-  START_DDRP = 'ipc/startDDRP',
-  STOP_DDRP = 'ipc/stopDDRP',
-  SET_DDRP_LOG_LEVEL = 'ipc/setDDRPLogLevel',
-  GET_DDRP_LOG_LEVEL = 'ipc/getDDRPLogLevel',
-  DOWNLOAD_DDRP_LOG = 'ipc/downloadDDRPLog',
-  GET_DDRP_STATUS = 'ipc/getDDRPStatus',
-  NEW_DDRP_LOG_ADDED = 'ipc/newDDRPLogAdded', // Main -> Renderer
-  GET_DDRP_PEERS = 'ipc/getDDRPPeers',
-  BAN_DDRP_PEER = 'ipc/banDDRPPeer',
-  UNBAN_DDRP_PEER = 'ipc/unbanDDRPPeer',
+  START_FND = 'ipc/startFND',
+  STOP_FND = 'ipc/stopFND',
+  SET_FND_LOG_LEVEL = 'ipc/setFNDLogLevel',
+  GET_FND_LOG_LEVEL = 'ipc/getFNDLogLevel',
+  DOWNLOAD_FND_LOG = 'ipc/downloadFNDLog',
+  GET_FND_STATUS = 'ipc/getFNDStatus',
+  NEW_FND_LOG_ADDED = 'ipc/newFNDLogAdded', // Main -> Renderer
+  GET_FND_PEERS = 'ipc/getFNDPeers',
+  BAN_FND_PEER = 'ipc/banFNDPeer',
+  UNBAN_FND_PEER = 'ipc/unbanFNDPeer',
   GET_FAVORITES = 'ipc/getFavorites',
   GET_BOOKMARKS = 'ipc/getBookmarks',
   ADD_BOOKMARK = 'ipc/addBookmark',
@@ -93,13 +93,13 @@ export enum APP_DATA_EVENT_TYPES {
   INITIALIZED_UPDATED = 'ipc/appData/initializedUpdated',
 }
 
-export enum DDRP_EVENT_TYPES {
+export enum FND_EVENT_TYPES {
   NODE_STATUS_CHANGED = 'ipc/ddrp/nodeStatusChanged',
 }
 
 export type IPCMessageRequest<payload> = {
   id?: number;
-  type: IPCMessageRequestType | APP_DATA_EVENT_TYPES | DDRP_EVENT_TYPES;
+  type: IPCMessageRequestType | APP_DATA_EVENT_TYPES | FND_EVENT_TYPES;
   payload: payload;
   error?: boolean;
   meta?: any;
@@ -221,7 +221,7 @@ export type RelayerNewBlockResponse = {
   type: 'BLOCK';
 }
 
-export type DDRPPeer = {
+export type FNDPeer = {
   ip: string;
   isBanned: boolean;
   isConnected: boolean;

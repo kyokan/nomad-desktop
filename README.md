@@ -1,6 +1,6 @@
 ## nomad-ui 
 
-**Nomad** is a peer-to-peer, ownerless social network built on top of [Handshake](https://github.com/handshake-org) and [DDRP](https://github.com/ddrp-org/ddrp). It allows you to view and interact with content from owners of Handshake TLDs or Subdomains.
+**Nomad** is a peer-to-peer, ownerless social network built on top of [Handshake](https://github.com/handshake-org) and [Footnote](https://github.com/kyokan/footnote). It allows you to view and interact with content from owners of Handshake names.
 
 ## Getting Started
 

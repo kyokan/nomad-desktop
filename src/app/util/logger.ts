@@ -27,23 +27,23 @@ const logger = winston.createLogger({
   ],
 });
 
-const ddrpLogger = winston.createLogger({
+const fndLogger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  defaultMeta: { service: 'ddrp' },
+  defaultMeta: { service: 'fnd' },
   transports: [
     //
     // - Write all logs with level `error` and below to `error.log`
     // - Write all logs with level `info` and below to `combined.log`
     //
     new winston.transports.File({
-      filename: `${logPath}/ddrp-error.log`,
+      filename: `${logPath}/fnd-error.log`,
       level: 'error',
       maxsize: 2e+6,
       maxFiles: 1,
     }),
     new winston.transports.File({
-      filename: `${logPath}/ddrp-combined.log`,
+      filename: `${logPath}/fnd-combined.log`,
       maxsize: 2e+6,
       maxFiles: 1,
     })
@@ -58,12 +58,12 @@ if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.simple()
   }));
-  ddrpLogger.add(new winston.transports.Console({
+  fndLogger.add(new winston.transports.Console({
     format: winston.format.simple()
   }));
 }
 
 export default logger;
 export const loggers = {
-  ddrp: ddrpLogger,
+  fnd: fndLogger,
 };

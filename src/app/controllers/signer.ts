@@ -15,7 +15,7 @@ import fs from 'fs';
 import {resourcesPath} from '../util/paths';
 import logger from "../util/logger";
 import UsersManager from "./users";
-import DDRPController from "./ddrp";
+import FNDController from "./fnd";
 import {isTLD, parseUsername} from "../../ui/helpers/user";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 import {SubdomainManager} from "../../../external/nomad-api/src/services/subdomains";
@@ -70,20 +70,20 @@ export default class SignerManager {
   subdomains?: SubdomainManager;
   signer?: SECP256k1Signer;
   usersController: UsersManager;
-  ddrpController: DDRPController;
+  fndController: FNDController;
   indexerManager: IndexerManager;
   userDataManager: UserDataManager;
 
   constructor (opts: {
     usersController: UsersManager;
-    ddrpController: DDRPController;
+    fndController: FNDController;
     indexerManager: IndexerManager;
     userDataManager: UserDataManager;
   }) {
     this.pkHex = '';
     this.userDataManager = opts.userDataManager;
     this.usersController = opts.usersController;
-    this.ddrpController = opts.ddrpController;
+    this.fndController = opts.fndController;
     this.indexerManager = opts.indexerManager;
   }
 

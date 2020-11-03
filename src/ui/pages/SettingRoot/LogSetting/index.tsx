@@ -21,7 +21,7 @@ function LogSetting(props: RouteComponentProps): ReactElement {
   useEffect(() => {
     (async function onLogSettingMount() {
       const json = await postIPCMain({
-        type: IPCMessageRequestType.GET_DDRP_LOG_LEVEL,
+        type: IPCMessageRequestType.GET_FND_LOG_LEVEL,
         payload: null,
       }, true);
 
@@ -33,13 +33,13 @@ function LogSetting(props: RouteComponentProps): ReactElement {
     (async function onLogSettingMount() {
       appendLog();
       ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
-        if (IPCMessageRequestType.NEW_DDRP_LOG_ADDED && !message.error) {
+        if (IPCMessageRequestType.NEW_FND_LOG_ADDED && !message.error) {
           appendLog();
         }
       });
       if (listened) return;
       ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
-        if (IPCMessageRequestType.NEW_DDRP_LOG_ADDED && !message.error) {
+        if (IPCMessageRequestType.NEW_FND_LOG_ADDED && !message.error) {
           LOGS_CACHE.push(message.payload);
         }
       });
@@ -51,20 +51,20 @@ function LogSetting(props: RouteComponentProps): ReactElement {
     const checked = e.target.checked;
 
     await postIPCMain({
-      type: IPCMessageRequestType.SET_DDRP_LOG_LEVEL,
+      type: IPCMessageRequestType.SET_FND_LOG_LEVEL,
       payload: checked ? 'trace' : 'info',
     }, true);
 
     setLogLevel(checked ? 'trace' : 'info');
 
     await postIPCMain({
-      type: IPCMessageRequestType.STOP_DDRP,
+      type: IPCMessageRequestType.STOP_FND,
       payload: null,
     }, true);
 
     setTimeout(async () => {
       await postIPCMain({
-        type: IPCMessageRequestType.START_DDRP,
+        type: IPCMessageRequestType.START_FND,
         payload: null,
       }, true)
     }, 50);
@@ -73,7 +73,7 @@ function LogSetting(props: RouteComponentProps): ReactElement {
 
   const downloadLog = useCallback(async () => {
     const json = await postIPCMain({
-      type: IPCMessageRequestType.DOWNLOAD_DDRP_LOG,
+      type: IPCMessageRequestType.DOWNLOAD_FND_LOG,
       payload: null,
     }, true);
     download('nomad.log', 'text/log', json.payload.toString('utf-8'));

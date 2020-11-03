@@ -21,13 +21,11 @@ import {parseUsername, serializeUsername} from "../../../external/universal/util
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {INDEXER_API} from "../../../external/universal/utils/api";
-import {Envelope as DomainEnvelope} from '../../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../../external/indexer/domain/Post';
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "../../../external/universal/ducks/drafts/type";
-import {mapDraftToPostPayload} from "../../app/util/posts";
-import {getIdentity} from "../../../../web-client/src/utils/localStorage";
 
 export const useFileUpload = (): () => Promise<string> => {
   const dispatch = useDispatch();
@@ -50,7 +48,7 @@ export const useFileUpload = (): () => Promise<string> => {
     if (!fileType?.mime) {
       return Promise.reject(new Error('unknown mime type'));
     }
-    console.log(fileName, file, fileType)
+    // console.log(fileName, file, fileType)
     const json: IPCMessageResponse<any> = await uploadImage(fileName, file, fileType?.mime);
 
     if (json.error) {
@@ -62,19 +60,19 @@ export const useFileUpload = (): () => Promise<string> => {
 };
 
 // Callback
-export const useStartDDRP = () => {
+export const useStartFND = () => {
   return useCallback(async (): Promise<void> => {
     return await postIPCMain({
-      type: IPCMessageRequestType.START_DDRP,
+      type: IPCMessageRequestType.START_FND,
       payload: null,
     }, true);
   }, [postIPCMain]);
 };
 
-export const useStopDDRP = () => {
+export const useStopFND = () => {
   return useCallback(async (): Promise<void> => {
     return await postIPCMain({
-      type: IPCMessageRequestType.STOP_DDRP,
+      type: IPCMessageRequestType.STOP_FND,
       payload: null,
     }, true);
   }, [postIPCMain]);

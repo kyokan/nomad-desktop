@@ -23,7 +23,7 @@ type Opts = {
 }
 
 const identityDir = joinAppDataPath('.identity');
-export const RELAYER_API = 'https://relayer.ddrp.network';
+export const RELAYER_API = '';
 
 export default class UsersManager {
   identity: IdentityMap;

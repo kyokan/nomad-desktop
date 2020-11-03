@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import {app} from 'electron';
 import {ChildProcess, execFile, spawn} from 'child_process';
-import DDRPDClient from 'fn-client/dist/fnd/FootnoteClient';
+import FNDClient from 'fn-client/dist/fnd/FootnoteClient';
 import {resourcesPath} from '../util/paths';
 import net from 'net';
 import getSize from 'get-folder-size';
@@ -10,7 +10,7 @@ import {loggers} from "../util/logger";
 import UserDataManager from "./userData";
 import {
   APP_DATA_EVENT_TYPES,
-  DDRP_EVENT_TYPES,
+  FND_EVENT_TYPES,
   DEFAULT_FLUSH_TIMEOUT,
   IPCMessageRequest,
   IPCMessageRequestType
@@ -25,7 +25,7 @@ import {
   getNameFromLog,
   getStartHeightFromLog,
   getSyncedHeightFromLog,
-} from "../../../external/nomad-api/src/services/ddrp";
+} from "../../../external/nomad-api/src/services/fnd";
 import throttle from "lodash.throttle";
 import {initializeApp, isAppInitialized} from "../util/appData";
 import Timeout = NodeJS.Timeout;
@@ -126,7 +126,7 @@ const deleteFolderRecursive = function(dir: string) {
 export default class DDRPController {
   private daemon: ChildProcess | null = null;
   private subscribers: ((log: string) => void)[];
-  client: DDRPDClient;
+  client: FNDClient;
   userDataManager: UserDataManager;
   dispatchMain: (msg: IPCMessageRequest<any>) => void;
   dispatchSetting: (msg: IPCMessageRequest<any>) => void;
@@ -140,7 +140,7 @@ export default class DDRPController {
     this.dispatchSetting = opts.dispatchSetting;
     this.dispatchNewPost = opts.dispatchNewPost;
     this.subscribers = [];
-    this.client = new DDRPDClient('127.0.0.1:9098');
+    this.client = new FNDClient('127.0.0.1:9098');
     this.nodeStatus = 'off';
   }
 
@@ -155,11 +155,11 @@ export default class DDRPController {
   updateDDRPStatus(ddrpStatus: 'on' | 'off' | 'error') {
     this.nodeStatus = ddrpStatus;
     this.dispatchMain({
-      type: DDRP_EVENT_TYPES.NODE_STATUS_CHANGED,
+      type: FND_EVENT_TYPES.NODE_STATUS_CHANGED,
       payload: this.nodeStatus,
     });
     this.dispatchSetting({
-      type: DDRP_EVENT_TYPES.NODE_STATUS_CHANGED,
+      type: FND_EVENT_TYPES.NODE_STATUS_CHANGED,
       payload: this.nodeStatus,
     });
   }
@@ -199,7 +199,7 @@ export default class DDRPController {
 
     this.daemon.stderr!.on('data', async (data) => {
       const dataString = data.toString('utf-8');
-      loggers.ddrp!.info(dataString);
+      loggers.fnd!.info(dataString);
       this.dispatchLogUpdate(dataString);
       const logs = dataString.split('\n');
       logs.forEach((log: string) => {
@@ -237,7 +237,7 @@ export default class DDRPController {
 
     this.daemon.stdout!.on('data', (data) => {
       const log = data.toString('utf-8');
-      loggers.ddrp!.info(log);
+      loggers.fnd!.info(log);
     });
     await this.tryPort();
   };
@@ -431,7 +431,7 @@ export default class DDRPController {
     const dir = await fs.promises.readdir(logDir);
     let latest = 0;
     dir.forEach(filename => {
-      const [test, parsed] = filename.split('ddrp-combined');
+      const [test, parsed] = filename.split('fnd-combined');
 
       if (!test && parsed) {
         const [v] = parsed.split('.');

@@ -10,12 +10,12 @@ export enum AppActionType {
   UPDATE_FOOTER = 'app/updateFooter',
   ADD_SYSTEM_MESSAGE = 'app/addSystemMessage',
   REMOVE_SYSTEM_MESSAGE = 'app/removeSystemMessage',
-  ADD_DDRP_LOG = 'app/addDDRPLog',
+  ADD_FND_LOG = 'app/addFNDLog',
   SET_APP_DATA = 'app/setAppData',
   SET_HANDSHAKE_START_HEIGHT = 'app/setHandshakeStartHeight',
   SET_HANDSHAKE_END_HEIGHT = 'app/setHandshakeEndHeight',
   SET_LAST_SYNC = 'app/setLastSync',
-  SET_DDRP_STATUS = 'app/setDDRPStatus',
+  SET_FND_STATUS = 'app/setFNDStatus',
   SET_HYDRATED = 'app/setHydrated',
   SET_INITIALIZED = 'app/setInitialized',
 }
@@ -102,7 +102,7 @@ export const removeSystemMessage = (message: SystemMessage<any>): AppAction<Syst
 
 export const addDDRPLog = (log: string): AppAction<string> => {
   return {
-    type: AppActionType.ADD_DDRP_LOG,
+    type: AppActionType.ADD_FND_LOG,
     payload: log,
   };
 };
@@ -142,9 +142,9 @@ export const setLastSync = (lastSync: number): AppAction<number> => {
   };
 };
 
-export const setDDRPStatus = (ddrpStatus: 'on' | 'off' | 'error'): AppAction<'on' | 'off' | 'error'> => {
+export const setFNDStatus = (ddrpStatus: 'on' | 'off' | 'error'): AppAction<'on' | 'off' | 'error'> => {
   return {
-    type: AppActionType.SET_DDRP_STATUS,
+    type: AppActionType.SET_FND_STATUS,
     payload: ddrpStatus,
   };
 };
@@ -167,7 +167,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         ...state,
         messages: state.messages.filter(message => message !== action.payload),
       };
-    case AppActionType.ADD_DDRP_LOG:
+    case AppActionType.ADD_FND_LOG:
       return {
         ...state,
         ddrpLogs: [action.payload, ...state.ddrpLogs],
@@ -187,7 +187,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         ...state,
         lastSync: action.payload,
       };
-    case AppActionType.SET_DDRP_STATUS:
+    case AppActionType.SET_FND_STATUS:
       return {
         ...state,
         ddrpStatus: action.payload,
@@ -258,7 +258,7 @@ export const useAppInitialized = () => {
   }, shallowEqual);
 };
 
-export const useDDRPStatus = () => {
+export const useFNDStatus = () => {
   return useSelector((state: { app: AppState }) => {
     const {
       ddrpStatus,
@@ -347,7 +347,7 @@ async function fetchConnectedPeers(): Promise<number> {
 
     try {
       const resp = await postIPCMain({
-        type: IPCMessageRequestType.GET_DDRP_PEERS,
+        type: IPCMessageRequestType.GET_FND_PEERS,
         payload: {
           includeConnected: true,
           includeStored: false,

@@ -44,7 +44,7 @@ renderer.image = (href: string, title: string, text: string, level = 0): string 
   try {
     const {protocol, pathname} = new URL(href);
 
-    if (protocol === 'ddrp:') {
+    if (protocol === 'fnd:') {
       const [_, __, username, hash] = pathname.split('/');
       return `<img src="${INDEXER_API}/media/${hash}" />`;
     }

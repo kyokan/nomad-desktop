@@ -1,20 +1,20 @@
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {DDRPPeer, IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
+import {FNDPeer, IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
 import {postIPCMain} from "../../../helpers/ipc";
 import "./network-setting.scss";
 import Button from "../../../../../external/universal/components/Button";
-import {useStartDDRP, useStopDDRP} from "../../../helpers/hooks";
-import {useDDRPStatus, useFetchAppData} from "../../../ducks/app";
+import {useStartFND, useStopFND} from "../../../helpers/hooks";
+import {useFNDStatus, useFetchAppData} from "../../../ducks/app";
 import {INDEXER_API} from "../../../../../external/universal/utils/api";
 
 let watch: any | null;
 
 function NetworkSetting(props: RouteComponentProps): ReactElement {
   const fetchAppData = useFetchAppData();
-  const ddrpStatus = useDDRPStatus();
-  const [connectedPeers, setConnectedPeers] = useState<DDRPPeer[]>([]);
-  const [bannedPeers, setBannedPeers] = useState<DDRPPeer[]>([]);
+  const ddrpStatus = useFNDStatus();
+  const [connectedPeers, setConnectedPeers] = useState<FNDPeer[]>([]);
+  const [bannedPeers, setBannedPeers] = useState<FNDPeer[]>([]);
 
   const [rpcUrl, setRpcUrl] = useState('');
   const [rpcKey, setRpcKey] = useState('');
@@ -66,7 +66,7 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
     setUpdatingDDRPInfo(true);
 
     await postIPCMain({
-      type: IPCMessageRequestType.SET_DDRP_INFO,
+      type: IPCMessageRequestType.SET_FND_INFO,
       payload: {
         rpcUrl,
         rpcKey,
@@ -101,7 +101,7 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
         startHeight: number;
         endHeight: number;
       }> = await postIPCMain({
-        type: IPCMessageRequestType.GET_DDRP_INFO,
+        type: IPCMessageRequestType.GET_FND_INFO,
         payload: null,
       }, true);
 
@@ -187,8 +187,8 @@ type EditableOpts = {
 }
 
 function renderEditables(opts: EditableOpts): ReactNode {
-  const startDDRP = useStartDDRP();
-  const stopDDRP = useStopDDRP();
+  const startDDRP = useStartFND();
+  const stopDDRP = useStopFND();
 
   const restartDDRP = useCallback(async () => {
     await stopDDRP();
@@ -333,7 +333,7 @@ function renderEditables(opts: EditableOpts): ReactNode {
   )
 }
 
-async function queryPeers(includeConnected: boolean, includeStored: boolean, includeBanned: boolean): Promise<DDRPPeer[]> {
+async function queryPeers(includeConnected: boolean, includeStored: boolean, includeBanned: boolean): Promise<FNDPeer[]> {
   let resolved = false;
   return new Promise(async (resolve) => {
     const timeout = setTimeout(() => {
@@ -343,8 +343,8 @@ async function queryPeers(includeConnected: boolean, includeStored: boolean, inc
       }
     }, 1000);
 
-    const json: IPCMessageResponse<DDRPPeer[]> = await postIPCMain({
-      type: IPCMessageRequestType.GET_DDRP_PEERS,
+    const json: IPCMessageResponse<FNDPeer[]> = await postIPCMain({
+      type: IPCMessageRequestType.GET_FND_PEERS,
       payload: {
         includeConnected,
         includeStored,
@@ -395,7 +395,7 @@ function renderNetworkInfoGroup(discoveredTLDs: number, startHeight: number, end
   )
 }
 
-function renderPeerInfoGroup(connectedPeers: DDRPPeer[], bannedPeers: DDRPPeer[]): ReactNode {
+function renderPeerInfoGroup(connectedPeers: FNDPeer[], bannedPeers: FNDPeer[]): ReactNode {
   return (
     <div className="setting__group">
       <div className="table network-setting__peers-table">

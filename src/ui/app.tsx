@@ -6,7 +6,7 @@ import Root from './pages/AppRoot';
 import {ipcRenderer} from "electron";
 import {
   APP_DATA_EVENT_TYPES,
-  DDRP_EVENT_TYPES,
+  FND_EVENT_TYPES,
   IPCMessageRequest,
   IPCMessageRequestType,
   ResponsePost
@@ -22,7 +22,13 @@ import {
   updateCurrentLastFlushed,
   updateCurrentUser
 } from "./ducks/users";
-import {setDDRPStatus, setHandshakeEndHeight, setHandshakeStartHeight, setInitialized, setLastSync} from "./ducks/app";
+import {
+  setFNDStatus,
+  setHandshakeEndHeight,
+  setHandshakeStartHeight,
+  setInitialized,
+  setLastSync,
+} from "./ducks/app";
 // const Matomo = require("matomo-tracker");
 // const matomo = new Matomo(2, 'http://34.106.54.216/matomo.php');
 // matomo.track({
@@ -91,8 +97,8 @@ ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
       return store.dispatch(setLastSync(message.payload));
     case APP_DATA_EVENT_TYPES.INITIALIZED_UPDATED:
       return store.dispatch(setInitialized(true));
-    case DDRP_EVENT_TYPES.NODE_STATUS_CHANGED:
-      return store.dispatch(setDDRPStatus(message.payload));
+    case FND_EVENT_TYPES.NODE_STATUS_CHANGED:
+      return store.dispatch(setFNDStatus(message.payload));
     default:
       return;
   }

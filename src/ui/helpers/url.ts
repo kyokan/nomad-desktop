@@ -131,7 +131,7 @@ export const fetchDDRPLinkPreview = (href: string, title: string, text: string, 
     icon = VideoIcon;
   } else if (IMG_EXT_REGEX.test(href) || DATA_IMAGE_REGEX.test(href)) {
     icon = ImageIcon;
-  } else if (url && url.protocol === 'ddrp:') {
+  } else if (url && url.protocol === 'fnd:') {
     replaceDDRPFooterHTML(id, url, level, expandAll);
   }
 

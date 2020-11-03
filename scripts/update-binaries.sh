@@ -9,10 +9,10 @@ function gh_curl() {
 }
 
 function download_binaries() {
-  REPO="kyokan/ddrp"
+  REPO="kyokan/fnd"
   PLATFORM=$1
   ARCH=$2
-  FILE="ddrpd-$PLATFORM-$ARCH"      # the name of your release asset file, e.g. build.tar.gz
+  FILE="fnd-$PLATFORM-$ARCH"      # the name of your release asset file, e.g. build.tar.gz
   VERSION=staging                       # tag name or the word "latest"
   GITHUB_API_ENDPOINT="api.github.com"
 

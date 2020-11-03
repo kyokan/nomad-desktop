@@ -1,7 +1,7 @@
 import React, {ReactElement, ReactNode} from "react";
 import c from "classnames";
 import "./footer.scss";
-import {useDDRPStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
+import {useFNDStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
 import moment from "moment";
 import Icon from "../../../../external/universal/components/Icon";
 import {postIPCMain} from "../../helpers/ipc";
@@ -22,7 +22,7 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
   const lastSync = useLastSync();
   const startHeight = useHandshakeStartHeight();
   const endHeight = useHandshakeEndHeight();
-  const ddrpStatus = useDDRPStatus();
+  const ddrpStatus = useFNDStatus();
 
   let displayText = '';
 
@@ -164,7 +164,7 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
  time="2020-02-21T19:02:39-08:00" level=info msg="created new centralized resolver" host="104.248.106.150:8080" module=centralized-resolver
  time="2020-02-21T19:02:39-08:00" level=info msg="starting peer manager" module=peer-manager peer_id=62649aecfd71bbce2789484100a7164a84d13fc21a3e7785d423d358623894df
  time="2020-02-21T19:02:39-08:00" level=info msg="discovered external IP" external_ip=73.93.36.228 internet_visible=false module=main
- time="2020-02-21T19:02:39-08:00" level=info msg="starting ddrp" git_commit=ada879ff566f0b16b6c6b0a8dec3062f7f1ebba2 module=main
+ time="2020-02-21T19:02:39-08:00" level=info msg="starting fnd" git_commit=ada879ff566f0b16b6c6b0a8dec3062f7f1ebba2 module=main
  * @param text
  */
 function getModuleFromLog(text: string) {
