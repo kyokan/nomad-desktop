@@ -1,4 +1,4 @@
-import {Filter as F} from 'ddrp-indexer/dist/dao/Filter';
+import {Filter as F} from '../../../../external/indexer/dao/Filter';
 
 export type Filter = F;
 

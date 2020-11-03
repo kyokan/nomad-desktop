@@ -12,11 +12,11 @@ import Avatar from "../Avatar";
 import {INDEXER_API} from "../../utils/api";
 import {IPCMessageResponse} from "../../../../src/app/types";
 // @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 // @ts-ignore
-import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
 // @ts-ignore
-import {Media as DomainMedia} from 'ddrp-indexer/dist/domain/Media';
+import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
 
 function UserPanels(props: RouteComponentProps<{username: string}>): ReactElement {
   const username = props.match.params.username;

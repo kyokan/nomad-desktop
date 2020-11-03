@@ -1,6 +1,6 @@
 import {ResponsePost} from "../../../src/app/types";
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {serializeUsername} from "../../../src/ui/helpers/user";
 import {INDEXER_API} from "./api";
 import {DraftPost} from "../../../src/ui/ducks/drafts/type";
@@ -31,7 +31,6 @@ export function getImageURLFromAvatarType (avatarType: string, username: string)
 export const mapDomainEnvelopeToPost = (env: DomainEnvelope<DomainPost>): ResponsePost => {
   return {
     title: env.message.title || '',
-    guid: env.networkId || '',
     content: env.message.body || '',
     name: serializeUsername(env.subdomain, env.tld),
     timestamp: env.createdAt || 0,

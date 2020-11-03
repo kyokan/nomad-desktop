@@ -3,17 +3,15 @@ import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse} from "../../app/types";
 import {ThunkDispatch} from "redux-thunk";
 // @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../helpers/filter";
-import {dotName, parseUsername, serializeUsername} from "../helpers/user";
+import {serializeUsername} from "../helpers/user";
 import {INDEXER_API} from "../../../external/universal/utils/api";
-import {UserProfile} from "../../../../indexer-api/src/constants";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
 
 type User = {
   name: string;
@@ -79,6 +77,7 @@ const initialState: UsersState = {
     hiddenPostHashes: [],
     lastFlushed: 0,
     updateQueue: [],
+    offset: 0,
   },
   identities: {},
   map: {},
@@ -164,10 +163,15 @@ export const fetchCurrentUserLikes = () => async (dispatch: ThunkDispatch<any, a
     const json: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>> = await resp.json();
 
     if (!json.error) {
-      dispatch(addUserLikes(name, json.payload.items.reduce((acc: {[h: string]: string}, { refhash }) => {
-        acc[refhash] = refhash;
-        return acc;
-      }, {})));
+      dispatch(
+        addUserLikes(
+          currentUser,
+          json.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainPost>) => {
+            acc[env.refhash] = env.refhash;
+            return acc;
+          }, {})
+        )
+      );
 
       // @ts-ignore
       if (json.payload.next > -1) {
@@ -187,10 +191,15 @@ export const fetchUserLikes = (username: string) => async (dispatch: ThunkDispat
     const json: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>> = await resp.json();
 
     if (!json.error) {
-      dispatch(addUserLikes(name, json.payload.items.reduce((acc: {[h: string]: string}, { refhash }) => {
-        acc[refhash] = refhash;
-        return acc;
-      }, {})));
+      dispatch(
+        addUserLikes(
+          username,
+          json.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainPost>) => {
+            acc[env.refhash] = env.refhash;
+            return acc;
+          }, {})
+        )
+      );
 
       // @ts-ignore
       if (json.payload.next > -1) {
@@ -218,10 +227,16 @@ export const fetchUserFollowings = (name: string) => (dispatch: ThunkDispatch<an
     postIPCMain(ipcEvt, true)
       .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>>) => {
         if (!resp.error) {
-          dispatch(addUserFollowings(name, resp.payload.items.reduce((acc: {[h: string]: string}, { followeeTld }) => {
-            acc[followeeTld] = followeeTld;
-            return acc;
-          }, {})));
+          dispatch(
+            addUserFollowings(
+              name,
+              resp.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainConnection>) => {
+                acc[env.refhash] = env.refhash;
+                acc[env.message.tld] = env.message.tld;
+                return acc;
+              }, {})
+            )
+          );
           if (resp.payload.next) {
             // @ts-ignore
             setTimeout(() => queryFollowings(resp.payload.next), 200);
@@ -246,13 +261,19 @@ export const fetchUserBlockee = (username: string) => (dispatch: ThunkDispatch<a
     };
 
     postIPCMain(ipcEvt, true)
-      .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>>) => {
+      .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainConnection>, number>>) => {
         if (!resp.error) {
-          dispatch(addUserBlocks(username, resp.payload.items.reduce((acc: {[h: string]: string}, { blockeeTld, blockeeSubdomain }) => {
-            const username = serializeUsername(blockeeSubdomain, blockeeTld);
-            acc[username] = username;
-            return acc;
-          }, {})));
+          dispatch(
+            addUserBlocks(
+              username,
+              resp.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainConnection>) => {
+                const {subdomain, tld} = env.message;
+                const username = serializeUsername(subdomain, tld);
+                acc[username] = username;
+                return acc;
+              }, {})
+            )
+          );
           if (resp.payload.next) {
             // @ts-ignore
             setTimeout(() => queryBlockeeByUsername(resp.payload.next), 200);
@@ -583,10 +604,11 @@ export const useUsers = (): {users: string[]; currentUser: string} => {
   });
 };
 
-export const useIdentity = (): {identities: UsersState["identities"]} => {
+export const useIdentity = (): {identities: UsersState["identities"], currentUser: string} => {
   return useSelector((state: { users: UsersState}) => {
     return {
       identities: state.users.identities,
+      currentUser: state.users.currentUser,
     };
   }, shallowEqual);
 };

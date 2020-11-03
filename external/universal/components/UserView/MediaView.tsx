@@ -1,8 +1,8 @@
 // @ts-ignore
 import React, {ReactElement, MouseEvent, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {PostWithMeta} from '../../../external/indexer/dao/PostWithMeta';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {updateRawPost} from "../../ducks/posts";
 // @ts-ignore
 import uniq from "lodash.uniq";

@@ -1,7 +1,6 @@
 import {DraftPost} from "../../ui/ducks/drafts/type";
-import {Post as WirePost} from 'ddrp-js/dist/social/Post';
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {ResponsePost} from "../types";
 import {serializeUsername} from "../../ui/helpers/user";
 import {RelayerPostModel} from "../../../external/universal/types/posts";
@@ -76,7 +75,7 @@ export const mapDraftToDomainPost = (draft: DraftPost): DomainPost => {
 
 export const mapPostWithMetaToPost = (env: DomainEnvelope<DomainPost>): ResponsePost => {
   return {
-    guid: String(env.networkId) || '',
+    title: env.message.title || '',
     content: env.message.body || '',
     name: serializeUsername(env.subdomain, env.tld),
     timestamp: env.createdAt || 0,

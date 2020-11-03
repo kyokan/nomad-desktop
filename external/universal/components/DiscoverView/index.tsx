@@ -3,11 +3,11 @@ import React, {ReactElement, useCallback, useEffect, useState} from "react";
 // @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
 // @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
 // @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/social/Post';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 // @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import CustomView from "../CustomView";
 // @ts-ignore
 import {useDispatch} from "react-redux";

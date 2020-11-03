@@ -1,29 +1,23 @@
-import {PostsDAOImpl} from 'ddrp-indexer/dist/dao/PostsDAO';
-import {ModerationsDAOImpl} from 'ddrp-indexer/dist/dao/ModerationsDAO';
-import {ConnectionsDAOImpl} from 'ddrp-indexer/dist/dao/ConnectionsDAO';
-import {SqliteEngine} from 'ddrp-indexer/dist/dao/Engine';
-
-import SECP256k1Signer from 'ddrp-js/dist/crypto/signer'
-import {Envelope as WireEnvelope} from "ddrp-js/dist/social/Envelope";
-
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';
-import {Moderation as DomainModeration} from 'ddrp-indexer/dist/domain/Moderation';
-import {Media as DomainMedia} from 'ddrp-indexer/dist/domain/Media';
+import {PostsDAOImpl} from '../../../external/indexer/dao/PostsDAO';
+import {ModerationsDAOImpl} from '../../../external/indexer/dao/ModerationsDAO';
+import {ConnectionsDAOImpl} from '../../../external/indexer/dao/ConnectionsDAO';
+import {SqliteEngine} from '../../../external/indexer/dao/Engine';
+import SECP256k1Signer from 'fn-client/dist/crypto/signer'
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
+import {Moderation as DomainModeration} from '../../../external/indexer/domain/Moderation';
+import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
 
 import electron from 'electron';
 import * as path from 'path';
 import fs from 'fs';
 import {resourcesPath} from '../util/paths';
 import logger from "../util/logger";
-
 import UsersManager from "./users";
 import DDRPController from "./ddrp";
 import {isTLD, parseUsername} from "../../ui/helpers/user";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
-
-import {serializeUsername} from "../../../external/universal/utils/user";
 import {SubdomainManager} from "../../../external/nomad-api/src/services/subdomains";
 import {Writer} from "../../../external/nomad-api/src/services/writer";
 import UserDataManager from "./userData";

@@ -1,16 +1,15 @@
 import React, {ReactElement, MouseEvent, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Post} from '../../../../external/indexer/domain/Post';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
-// import {updateRawPost} from "../../ducks/posts";
 import uniq from "lodash.uniq";
 import {useDispatch} from "react-redux";
 import './media-view.scss';
 import {updateRawPost} from "../../../../external/universal/ducks/posts";
 
 type Props = {
-  queryNext: (username: string, next: number | null, list: PostWithMeta[]) => Promise<Pageable<PostWithMeta, number>>;
+  queryNext: (username: string, next: number | null, list: Post[]) => Promise<Pageable<Post, number>>;
   username?: string;
   onSelectMedia?: (e: MouseEvent<HTMLDivElement>, hash: string) => void;
 } & RouteComponentProps<{username: string}>;

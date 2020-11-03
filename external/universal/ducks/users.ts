@@ -4,7 +4,7 @@ import {
   IPCMessageResponse,
 } from "../../../src/app/types";
 import {ThunkDispatch} from "redux-thunk";
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../../src/app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../../../src/ui/helpers/filter";
@@ -12,9 +12,9 @@ import {INDEXER_API} from "../utils/api";
 import {mapDomainEnvelopeToPost} from "../utils/posts";
 import {UserProfile} from "../../nomad-api/src/constants";
 import {parseUsername, serializeUsername} from "../utils/user";
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
 
 const postIPCMain = async (a: any, b: any): Promise<IPCMessageResponse<any>> => {
   return {

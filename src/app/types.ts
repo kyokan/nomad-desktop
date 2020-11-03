@@ -1,4 +1,4 @@
-import {PostMeta} from "../../../universal/ducks/posts";
+import {PostMeta} from "../../external/universal/ducks/posts";
 
 export enum IPCMessageRequestType {
   PLACEHOLDER = 'ipc/placeholder',
@@ -114,7 +114,6 @@ export type IPCMessageResponse<payload> = {
 export type ResponsePost = {
   hash: string;
   name: string;
-  guid: string;
   timestamp: Date;
   parent: string;
   context: string;

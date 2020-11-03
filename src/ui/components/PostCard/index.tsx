@@ -6,7 +6,7 @@ import CommentBlackIcon from "../../../../static/assets/icons/reply-black.svg";
 import HeartIcon from "../../../../static/assets/icons/heart.svg";
 import MoreSmallIcon from "../../../../static/assets/icons/more.svg";
 import classNames from "classnames";
-import {PostMeta, useBlockUser, usePostId} from "../../ducks/posts";
+import {PostMeta, usePostId} from "../../ducks/posts";
 import {
   useCurrentBlocks,
   useCurrentFollowings,
@@ -25,6 +25,7 @@ import PostCardHeader from "./PostCardHeader";
 import Attachments from "../Attachments";
 import Menuable from "../Menuable";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
+import {useBlockUser} from "../../helpers/hooks";
 
 type Props = {
   type: 'card' | 'compact' | 'title';

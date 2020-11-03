@@ -3,11 +3,11 @@ import React, {ReactElement, ReactNode, useCallback, useEffect, useState, UIEven
 // @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
 // @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
 // @ts-ignore
-import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';;
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';;
 // @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import "./following-view.scss";
 import {useUser} from "../../ducks/users";
 import UserCard from "../UserCard";

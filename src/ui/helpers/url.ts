@@ -1,6 +1,6 @@
 import {postIPCMain} from "./ipc";
 import {IPCMessageRequestType, IPCMessageResponse} from "../../app/types";
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
+import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
 import {mapRawToPost} from "../ducks/posts";
 import {mapPostWithMetaToPost} from "../../app/util/posts";
 import moment, {Moment} from "moment";

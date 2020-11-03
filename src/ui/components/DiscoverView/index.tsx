@@ -1,10 +1,8 @@
 import React, {ReactElement, useCallback, useEffect, useState} from "react";
 import {withRouter, RouteComponentProps} from "react-router";
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
-import {ReactionType} from 'ddrp-indexer/dist/social/ReactionType';
-// @ts-ignore
-import CustomView from "../CustomView";
+import {Post} from '../../../../external/indexer/domain/Post';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import CustomView from "../../../../external/universal/components/CustomView";
 import {useDispatch} from "react-redux";
 import {addLikeCount, updateRawPost, usePostsMap, useSelectPost} from "../../ducks/posts";
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
@@ -14,6 +12,7 @@ import {IPCMessageRequestType} from "../../../app/types";
 import {useCurrentBlocks, userCurrentUserData} from "../../ducks/users";
 import {serializeUsername} from "../../helpers/user";
 import {useLikePage} from "../../helpers/hooks";
+import {Envelope} from "../../../../external/indexer/domain/Envelope";
 
 type DiscoverViewProps = {
 
@@ -96,7 +95,7 @@ function DiscoverView(props: DiscoverViewProps): ReactElement {
 
 export default withRouter(DiscoverView);
 
-async function queryNext(next: number | null, list: PostWithMeta[] = [], muted: {[u: string]: string} = {}): Promise<Pageable<PostWithMeta, number>> {
+async function queryNext(next: number | null, list: Envelope<Post>[] = [], muted: {[u: string]: string} = {}): Promise<Pageable<Envelope<Post>, number>> {
   const resp = await postIPCMain({
     type: IPCMessageRequestType.QUERY_POPULAR_POSTS,
     payload: {
@@ -110,10 +109,11 @@ async function queryNext(next: number | null, list: PostWithMeta[] = [], muted: 
     return Promise.reject(resp.error);
   }
 
-  const payload = resp.payload as Pageable<PostWithMeta, number>;
+  const payload = resp.payload as Pageable<Envelope<Post>, number>;
   list = list.concat(payload.items)
-    .filter(({ post }) => {
-      return !muted[serializeUsername(post.subdomain, post.tld)] && !post.parent && (!post.topic || post.topic[0] !== '.');
+    .filter((env: Envelope<Post>) => {
+      const post = env.message;
+      return !muted[serializeUsername(env.subdomain, env.tld)] && !post.reference && (!post.topic || post.topic[0] !== '.');
     });
 
   if (list.length < 20 && payload.next) {

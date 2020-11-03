@@ -1,8 +1,8 @@
 import WindowsController from './windows';
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Connection as DomainConnection} from 'ddrp-indexer/dist/domain/Connection';
-import {Media as DomainMedia} from 'ddrp-indexer/dist/domain/Media';
-import {Moderation as DomainModeration, ModerationType} from 'ddrp-indexer/dist/domain/Moderation';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
+import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
+import {Moderation as DomainModeration, ModerationType} from '../../../external/indexer/domain/Moderation';
 import UsersController from './users';
 import SignerManager from './signer';
 import FavsManager from './favorites';

@@ -1,7 +1,7 @@
 import React, {CSSProperties, MouseEventHandler, ReactElement, ReactNode, useState} from "react";
 import Menuable, {MenuProps} from "../Menuable";
-// import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+// import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
 // import * as appActions from "../../ducks/app";
 import {useDispatch} from "react-redux";
 import {ThunkDispatch} from "redux-thunk";

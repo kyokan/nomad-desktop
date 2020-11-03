@@ -1,21 +1,15 @@
-// @ts-ignore
 import {useCallback, useState} from "react";
-// @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {updateRawPost, usePostsMap} from "../../ducks/posts";
-// @ts-ignore
 import uniq from "lodash.uniq";
 import {useCurrentUser, userCurrentUserData} from "../../ducks/users";
-// @ts-ignore
 import {useDispatch} from "react-redux";
 import {CustomFilterViewProps} from "../CustomFilterView";
 import {IPCMessageResponse} from "../../../../src/app/types";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
 import {INDEXER_API} from "../../utils/api";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/social/Post';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {Filter} from "../../../../external/nomad-api/src/util/filter";
 
 const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {
@@ -155,7 +149,7 @@ async function queryNext(
       return (!env.message.topic || env.message.topic[0] !== '.');
     });
 
-  if (list.length < 20 && payload.next > -1) {
+  if (list.length < 20 && payload.next && payload.next > -1) {
     return await queryNext(filter, payload.next, list);
   } else {
     return {

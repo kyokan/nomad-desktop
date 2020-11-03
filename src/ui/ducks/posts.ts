@@ -1,5 +1,5 @@
 import {ThunkDispatch} from "redux-thunk";
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
+import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
 import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse, ResponsePost} from "../../app/types";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
@@ -9,7 +9,7 @@ import {mapPostWithMetaToPost} from "../../app/util/posts";
 import {useCallback} from "react";
 import {addUserFollowings, useCurrentUser} from "./users";
 import {markup} from "../helpers/rte";
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
 import {parseUsername} from "../helpers/user";
 import uniq from "lodash.uniq";
 

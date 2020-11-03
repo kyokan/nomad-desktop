@@ -1,13 +1,8 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useEffect, useState} from 'react';
-// @ts-ignore
 import {RouteComponentProps, withRouter} from 'react-router';
-// @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/social/Post';
-// @ts-ignore
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Pageable} from  '../../../external/indexer/dao/Pageable';
 import CustomView from "../CustomView";
 import {
   useCurrentFollowings,
@@ -191,7 +186,7 @@ async function queryNext(filter: Filter, next: number | null, list: DomainEnvelo
       );
     });
 
-  if (list.length < 20 && payload.next > -1) {
+  if (list.length < 20 && payload.next && payload.next > -1) {
     return await queryNext(filter, payload.next, list);
   } else {
     return {

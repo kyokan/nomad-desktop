@@ -1,8 +1,8 @@
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {PostWithMeta} from 'ddrp-indexer/dist/dao/PostWithMeta';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
-import CustomView from "../CustomView";
+import {Post} from '../../../../external/indexer/domain/Post';
+import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import CustomView from "../../../../external/universal/components/CustomView";
 import {
   fetchUserBlockee,
   fetchUserFollowings, useAddUserToViewIndex, useCreateNewView, useCurrentBlocks,
@@ -13,10 +13,7 @@ import {
 import {dotName, isTLD, undotName} from "../../helpers/user";
 import {
   updateRawPost,
-  useBlockUser,
-  useFollowUser,
   useGlobalMeta,
-  useLikePage,
   usePostsMap,
 } from "../../ducks/posts";
 import {
@@ -32,15 +29,16 @@ import {IPCMessageRequestType} from "../../../app/types";
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
 import uniq from "lodash.uniq";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
-import {CustomViewPanelType} from "../CustomView/CustomViewPanel";
+import {CustomViewPanelType} from "../../../../external/universal/components/CustomView/CustomViewPanel";
 import './user-view.scss';
 import UserCard from "../UserCard";
 import Menuable, {MenuProps} from "../Menuable";
 import {CustomViewProps} from "../../../app/controllers/userData";
 import MediaView from "./MediaView";
 import {FullScreenModal} from "../FullScreenModal";
-import {useQueryMediaForName} from "../../helpers/hooks";
+import {useBlockUser, useFollowUser, useLikePage, useQueryMediaForName} from "../../helpers/hooks";
 import {getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
+import {Envelope} from "../../../../external/indexer/domain/Envelope";
 
 type Props = {
 
@@ -483,7 +481,7 @@ function UserView(props: Props): ReactElement {
 
 export default withRouter(UserView);
 
-async function queryNext(username: string, next: number | null, list: PostWithMeta[] = [], blockedUsers: {[u: string]: string} = {}, showRepliesAndLikes: boolean, showLikes: boolean, showReplies: boolean): Promise<Pageable<PostWithMeta, number>> {
+async function queryNext(username: string, next: number | null, list: Envelope<Post>[] = [], blockedUsers: {[u: string]: string} = {}, showRepliesAndLikes: boolean, showLikes: boolean, showReplies: boolean): Promise<Pageable<Envelope<Post>, number>> {
   const resp = await postIPCMain({
     type: IPCMessageRequestType.QUERY_POST_HASHES_FOR_FILTER,
     payload: {
@@ -504,10 +502,10 @@ async function queryNext(username: string, next: number | null, list: PostWithMe
     return Promise.reject(resp.error);
   }
 
-  const payload = resp.payload as Pageable<PostWithMeta, number>;
+  const payload = resp.payload as Pageable<Envelope<Post>, number>;
   list = list.concat(payload.items)
     .filter((postWithMeta) => {
-      const { post } = postWithMeta;
+      const { message: post } = postWithMeta;
       return (!post.topic || (post.topic[0] !== '.'));
     });
 

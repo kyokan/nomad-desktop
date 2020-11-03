@@ -1,7 +1,7 @@
 import {ThunkDispatch} from "redux-thunk";
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/domain/Envelope';
-import {Post as DomainPost} from 'ddrp-indexer/dist/domain/Post';
-import {Pageable} from 'ddrp-indexer/dist/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../indexer/domain/Envelope';
+import {Post as DomainPost} from '../../indexer/domain/Post';
+import {Pageable} from '../../indexer/dao/Pageable';
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {Dispatch} from "redux";
 import {useCallback} from "react";

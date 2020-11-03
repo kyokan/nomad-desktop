@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import {app} from 'electron';
 import {ChildProcess, execFile, spawn} from 'child_process';
-import DDRPDClient from 'ddrp-js/dist/ddrp/DDRPDClient';
+import DDRPDClient from 'fn-client/dist/fnd/FootnoteClient';
 import {resourcesPath} from '../util/paths';
 import net from 'net';
 import getSize from 'get-folder-size';

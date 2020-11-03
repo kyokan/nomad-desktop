@@ -4,9 +4,9 @@ import './detail.scss';
 // @ts-ignore
 import {RouteComponentProps, withRouter} from "react-router";
 // @ts-ignore
-import {Envelope as DomainEnvelope} from 'ddrp-indexer/dist/social/Envelope';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
 // @ts-ignore
-import {Post as DomainPost} from 'ddrp-indexer/dist/social/Post';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {
   useCommentsFromParentId,
   useFetchMoreComments,
