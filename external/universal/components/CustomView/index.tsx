@@ -107,7 +107,6 @@ function CustomView(props: Props): ReactElement {
       <CustomViewHeader
         title={title}
         titleFn={titleFn}
-        // heroImageUrl={heroImageUrl}
         nameDecoration={nameDecoration}
         avatarUrl={avatarUrl}
         canUploadHero={canUploadHero}

@@ -504,11 +504,11 @@ export default class DDRPController {
       logger.info('out', stdout);
       // eslint-disable-next-line no-console
       logger.info('err', stderr);
-      await this.setHost('https://mainnet.handshakeapi.com');
+      await this.setHost('https://5pi.io');
       await this.setHeartbeat('');
-      await this.setMoniker('Nomad Explorer');
-      await this.setAPIKey('xtnd3GIKPANwcZn1bstXSc2Gm6vIkxHxD90Y1pXaxeRaemTG9WucxyEpViO5YRYv');
-      await this.setBasePath('/api/hsd');
+      await this.setMoniker('');
+      await this.setAPIKey('f8e9fbd3067ae4eece89d737ebf76c90');
+      await this.setBasePath('/hsd');
       await this.setPort('443');
 
       await fs.promises.writeFile(fndInitNoncePath, CURRENT_INIT_NONCE);
