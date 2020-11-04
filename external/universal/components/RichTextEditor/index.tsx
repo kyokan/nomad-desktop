@@ -1,5 +1,4 @@
-// @ts-ignore
-import React, {
+import {
   ButtonHTMLAttributes,
   memo,
   MouseEventHandler,
@@ -18,7 +17,7 @@ import {
 import c from "classnames";
 import Icon from "../Icon";
 // @ts-ignore
-import BoldIcon from "../../../../static/assets/icons/bold.svg";
+import BoldIcon from '../../../../static/assets/icons/bold.svg';
 // @ts-ignore
 import ItalicIcon from "../../../../static/assets/icons/italic.svg";
 // @ts-ignore
@@ -37,14 +36,10 @@ import './rich-text-editor.scss';
 import {DraftPost} from "../../ducks/drafts/type";
 import {useDraftPost} from "../../ducks/drafts";
 import {PostType} from "../../types/posts";
-import {customStyleMap, mapDraftToEditorState} from "../../utils/rte";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+import {customStyleMap, mapDraftToEditorState} from "../../../../src/ui/helpers/rte";
 const hljs = require('highlight.js');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TableUtils = require('draft-js-table');
 
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { draftToMarkdown } = require('markdown-draft-js');
 
 type Props = {

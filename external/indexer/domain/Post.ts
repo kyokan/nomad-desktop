@@ -1,6 +1,9 @@
 import {Message} from './Envelope';
 import {Message as WireMessage} from 'fn-client/dist/social/Message';
-import {Post as WirePost} from 'fn-client/dist/social/Post';
+import {
+  Post as WirePost,
+  RefType,
+} from 'fn-client/dist/social/Post';
 
 export class Post implements Message {
   public readonly id: number;
@@ -34,13 +37,28 @@ export class Post implements Message {
   }
 
   public toWire (): WireMessage {
+    let reference = null;
+    let refType = null;
+
+    if (!this.topic && this.reference) {
+      reference = Buffer.from(this.reference, 'hex');
+    } else if (this.topic) {
+      reference = Buffer.from(this.topic, 'utf-8');
+    }
+
+    if (!this.topic && this.reference) {
+      refType = RefType.REPLY;
+    } else if (this.topic) {
+      refType = RefType.TOPIC;
+    }
+
     return new WirePost(
       1,
       Buffer.alloc(4),
       this.body,
       this.title,
-      this.reference ? Buffer.from(this.reference, 'hex') : null,
-      null,
+      reference,
+      refType,
     );
   }
 }

@@ -55,11 +55,6 @@ export const mapDraftToDomainPost = (draft: DraftPost): DomainPost => {
 
   let content = draft.content;
 
-  if (draft.attachments) {
-    content = content + '\n';
-    content = content + draft.attachments.map(h => `<div data-image-file-hash="${h}"></div>`).join('');
-  }
-
   return new DomainPost(
     0,
     content,

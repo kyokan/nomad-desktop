@@ -1,11 +1,7 @@
-// @ts-ignore
 import React from "react";
-// @ts-ignore
 import marked from "marked";
-// @ts-ignore
 import * as DOMPurify from "dompurify";
 import {hash} from "./hash";
-import {INDEXER_API} from "./api";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const hljs = require('highlight.js');

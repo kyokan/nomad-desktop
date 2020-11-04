@@ -50,8 +50,10 @@ export class PostsDAOImpl implements PostsDAO {
     return new Pageable<Envelope<Post>, number>(envelopes, envelopes[envelopes.length - 1].message.id);
   }
 
-  public getPostsByTopic (topic: string, order: SQLOrder, start: number = 0): Pageable<Envelope<Post>, number> {
+  public getPostsByTopic (topicBuf: string, order: SQLOrder, start: number = 0): Pageable<Envelope<Post>, number> {
     const envelopes: Envelope<Post>[] = [];
+    const topic = Buffer.from(topicBuf, 'utf-8').toString('utf-8');
+
     this.engine.each(`
         SELECT e.id as envelope_id, p.id as post_id, e.tld, e.subdomain, e.network_id, e.refhash, e.created_at, p.body,
             p.title, p.reference, p.topic, p.reply_count, p.like_count, p.pin_count
