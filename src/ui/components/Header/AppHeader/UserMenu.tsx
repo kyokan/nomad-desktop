@@ -48,7 +48,6 @@ export default withRouter(UserMenu);
 
 function getUsersMenuItems(props: RouteComponentProps): (MenuProps | null)[] {
   const dispatch = useDispatch();
-  const test = useIdentities();
   const { identities } = useIdentity();
   const users = Object.keys(identities);
   const [isImporting, setImporting] = useState(false);
@@ -285,7 +284,7 @@ function getUsersMenuItems(props: RouteComponentProps): (MenuProps | null)[] {
         props.history.push(`/users/${currentUser}/timeline`);
       },
     },
-    isSubdomain(currentUser) ? null : {
+    {
       text: 'Download Keystore',
       onClick: (e: any) => {
         if (e.stopPropagation) e.stopPropagation();

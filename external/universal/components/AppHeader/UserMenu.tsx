@@ -1,22 +1,29 @@
-import React, {MouseEvent, ReactElement, useCallback, useState} from "react";
-import Menuable, {MenuProps} from "../../Menuable";
-import HeaderButton from "../../HeaderButton";
-import UserIcon from "../../../../../static/assets/icons/user.svg";
-import {setCurrentUser, useIdentities, useIdentity} from "../../../ducks/users";
-import TickIcon from "../../../../../static/assets/icons/tick.svg";
-import PlusIcon from "../../../../../static/assets/icons/plus.svg";
-import UploadIcon from "../../../../../static/assets/icons/upload.svg";
-import {postIPCMain} from "../../../helpers/ipc";
-import {IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
+import {MouseEvent, ReactElement, useCallback, useState} from "react";
+import Menuable, {MenuProps} from "../Menuable";
+
+// @ts-ignore
+import UserIcon from "../../../../static/assets/icons/user.svg";
+// @ts-ignore
+import TickIcon from "../../../../static/assets/icons/tick.svg";
+// @ts-ignore
+import PlusIcon from "../../../../static/assets/icons/plus.svg";
+// @ts-ignore
+import UploadIcon from "../../../../static/assets/icons/upload.svg";
+
 import {useDispatch} from "react-redux";
 import {RouteComponentProps, withRouter} from "react-router";
-import {dotName, isSubdomain, isTLD, undotName} from "../../../helpers/user";
-import {addSystemMessage} from "../../../ducks/app";
+
+
 import {remote} from "electron";
-import fs from "fs";
-import {decrypt} from "../../../../app/util/key";
-import {useCurrentUsername, useUser} from "../../../../../../universal/ducks/users";
-import {getImageURLFromPostHash} from "../../../../../../universal/utils/posts";
+const fs = require('fs');
+import {useCurrentUsername, useUser, setCurrentUser, useIdentities, useIdentity} from "../../ducks/users";
+import {getImageURLFromPostHash} from "../../utils/posts";
+import HeaderButton from "../../../../src/ui/components/HeaderButton";
+import {dotName, isSubdomain, isTLD, undotName} from "../../utils/user";
+import {IPCMessageRequestType, IPCMessageResponse} from "../../../../src/app/types";
+import {decrypt} from "../../../../src/app/util/key";
+import {addSystemMessage} from "../../../../src/ui/ducks/app";
+import {postIPCMain} from "../../../../src/ui/helpers/ipc";
 
 function UserMenu(props: RouteComponentProps): ReactElement {
   const { identities } = useIdentity();
@@ -60,7 +67,7 @@ function getUsersMenuItems(props: RouteComponentProps): (MenuProps | null)[] {
 
   const selectUser = useCallback(async () => {
     try {
-      await dispatch(setCurrentUser(editingName, password));
+      await dispatch(setCurrentUser(editingName));
       setEditingName('');
       setPassword('');
       setImporting(false);
@@ -285,7 +292,7 @@ function getUsersMenuItems(props: RouteComponentProps): (MenuProps | null)[] {
         props.history.push(`/users/${currentUser}/timeline`);
       },
     },
-    isSubdomain(currentUser) ? null : {
+    {
       text: 'Download Keystore',
       onClick: (e: any) => {
         if (e.stopPropagation) e.stopPropagation();

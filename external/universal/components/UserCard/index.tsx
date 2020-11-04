@@ -125,12 +125,12 @@ export const RawUserCard = (props: RawUserCardProps) => {
   } = props;
   return (
     <div className="user-card">
-      <div
-        className="user-card__cover-image"
-        style={{
-          backgroundImage: getCSSImageURLFromPostHash(coverImageUrl || ''),
-        }}
-      />
+      {/*<div*/}
+      {/*  className="user-card__cover-image"*/}
+      {/*  style={{*/}
+      {/*    backgroundImage: getCSSImageURLFromPostHash(coverImageUrl || ''),*/}
+      {/*  }}*/}
+      {/*/>*/}
       <div className="user-card__info">
         <img
           className="avatar"

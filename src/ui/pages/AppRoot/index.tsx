@@ -175,13 +175,7 @@ function renderSummary(): ReactNode {
   }, [postIPCMain]);
 
   const onSearch = useCallback(async (username: string) => {
-    return [
-      '2062',
-      '5404',
-      '6371',
-      '9411',
-      '9764',
-    ];
+    return [];
   }, []);
 
   const sendPost = useSendPost();

@@ -2,7 +2,7 @@ import React, {ChangeEvent, ReactElement, useCallback, useState} from "react";
 import {withRouter, RouteComponentProps} from "react-router";
 import MarkdownEditor from "../../components/MarkdownEditor";
 import "./compose.scss";
-import {addTag, removeTag, useDraftPost, useUpdateDraft} from "../../ducks/drafts";
+import {addTag, useDraftPost, useUpdateDraft} from "../../ducks/drafts";
 import Button from "../../components/Button";
 import {useDispatch} from "react-redux";
 import ReactRTE from "react-rte";
@@ -191,54 +191,7 @@ function ComposeView(props: Props): ReactElement {
         }
         <div className="compose__error-message">{errorMessage}</div>
         <div className="compose__actions">
-          <div className="compose__actions__l">
-            <div className="compose__tags">
-              {
-                draft.tags.map(tag => (
-                  <div
-                    key={`#${tag}`}
-                    className="compose__tags__draft-tag"
-                    onClick={() => dispatch(removeTag(tag))}
-                  >
-                    #{tag}
-                  </div>
-                ))
-              }
-              <div
-                className="compose__tags__input-container"
-                onClick={() => setEditing(true)}
-              >
-                {isEditing ? `#` : ''}
-                {isEditing && (
-                  <div className="compose__tags__tag-input">
-                    {`${draftTag}`}
-                  </div>
-                )}
-                {!isEditing && (
-                  <div className="compose__tags__tag">
-                    + Add New Tag
-                  </div>
-                )}
-                {isEditing && (
-                  <input
-                    className="compose__tags__input"
-                    type="text"
-                    onBlur={onBlur}
-                    onKeyPress={e => {
-                      if (e.key === 'Enter') {
-                        onBlur();
-                      }
-                    }}
-                    onChange={(e) => {
-                      setDraftTag(e.target.value.replace(/ /g, ''));
-                    }}
-                    value={draftTag}
-                    autoFocus
-                  />
-                )}
-              </div>
-            </div>
-          </div>
+          <div className="compose__actions__l" />
           <div className="compose__actions__r">
             <a onClick={togglePreview}>
               {isPreviewing ? 'Switch to Editor' : 'Switch to Markdown' }

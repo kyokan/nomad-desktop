@@ -1,27 +1,17 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useEffect, useState} from "react";
-// @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-// @ts-ignore
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../../indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../indexer/domain/Post';
+import {Pageable} from '../../../indexer/dao/Pageable';
 import CustomView from "../CustomView";
-// @ts-ignore
 import {useDispatch} from "react-redux";
 import {updateRawPost, usePostsMap} from "../../ducks/posts";
-// @ts-ignore
 import uniq from "lodash.uniq";
 import {useCurrentBlocks, userCurrentUserData} from "../../ducks/users";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
 import {serializeUsername} from "../../utils/user";
 import {INDEXER_API} from "../../utils/api";
 import {addTag, addUser} from "../../ducks/search";
-import {RawPost} from "../CustomView/CustomViewPosts";
-import PostCard from "../PostCard";
-import {ResponsePost} from "../../../../src/app/types";
 
 
 type DiscoverViewProps = {
@@ -143,7 +133,7 @@ async function queryNext(next: number | null, list: DomainEnvelope<DomainPost>[]
       );
     });
 
-  if (list.length < 10 && payload.next > -1) {
+  if (list.length < 10 && payload.next && payload.next > -1) {
     return await queryNext(payload.next, list, muted);
   } else {
     return {

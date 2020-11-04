@@ -44,8 +44,8 @@ type AppState = {
   footerText: string;
   footerTextColor: string;
   messages: SystemMessage<any>[];
-  ddrpLogs: string[];
-  ddrpStatus: 'on' | 'off' | 'error';
+  fndLogs: string[];
+  fndStatus: 'on' | 'off' | 'error';
 }
 
 const initialState: AppState = {
@@ -59,8 +59,8 @@ const initialState: AppState = {
   footerText: '',
   footerTextColor: '',
   messages: [],
-  ddrpLogs: [],
-  ddrpStatus: 'off',
+  fndLogs: [],
+  fndStatus: 'off',
 };
 
 type AppData = {
@@ -69,7 +69,7 @@ type AppData = {
   handshakeEndHeight: number;
   discoveredTLDs: string[];
   connectedPeers: number;
-  ddrpStatus: 'on' | 'off' | 'error';
+  fndStatus: 'on' | 'off' | 'error';
 };
 
 export const setAppData = (appData: AppData): AppAction<AppData> => {
@@ -170,7 +170,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
     case AppActionType.ADD_FND_LOG:
       return {
         ...state,
-        ddrpLogs: [action.payload, ...state.ddrpLogs],
+        fndLogs: [action.payload, ...state.fndLogs],
       };
     case AppActionType.SET_HANDSHAKE_START_HEIGHT:
       return {
@@ -190,7 +190,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
     case AppActionType.SET_FND_STATUS:
       return {
         ...state,
-        ddrpStatus: action.payload,
+        fndStatus: action.payload,
       };
     case AppActionType.SET_HYDRATED:
       return {
@@ -212,7 +212,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         initialized: action.payload.initialized,
         // connectedPeers: action.payload.connectedPeers,
         lastSync: action.payload.lastSync,
-        ddrpStatus: action.payload.ddrpStatus,
+        fndStatus: action.payload.ddrpStatus,
       };
     default:
       return state;
@@ -261,9 +261,9 @@ export const useAppInitialized = () => {
 export const useFNDStatus = () => {
   return useSelector((state: { app: AppState }) => {
     const {
-      ddrpStatus,
+      fndStatus,
     } = state.app;
-    return ddrpStatus;
+    return fndStatus;
   }, shallowEqual);
 };
 
@@ -303,7 +303,7 @@ export const useAppData = () => {
       initialized,
       connectedPeers,
       lastSync,
-      ddrpStatus,
+      fndStatus,
     } = state.app;
     return {
       handshakeEndHeight,
@@ -312,7 +312,7 @@ export const useAppData = () => {
       initialized,
       connectedPeers,
       lastSync,
-      ddrpStatus,
+      fndStatus: fndStatus,
     };
   }, (last, next) => (
     last.handshakeEndHeight === next.handshakeEndHeight
@@ -321,7 +321,7 @@ export const useAppData = () => {
     || last.initialized === next.initialized
     || last.connectedPeers === next.connectedPeers
     || last.lastSync === next.lastSync
-    || last.ddrpStatus === next.ddrpStatus
+    || last.fndStatus === next.fndStatus
   ));
 };
 

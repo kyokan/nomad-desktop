@@ -77,7 +77,6 @@ function DiscoverView(props: DiscoverViewProps): ReactElement {
   return (
     <CustomView
       loading={loading}
-      // heroImageUrl="https://picsum.photos/800/160"
       title="Explore Nomad"
       selectedHash={props.match.params.postHash}
       hashes={list}

@@ -1,11 +1,6 @@
-// @ts-ignore
 import React, {MouseEventHandler, ReactElement, ReactNode, useCallback, MouseEvent, useState} from 'react';
-// @ts-ignore
-import CameraIcon from '../../../../electron/static/assets/icons/camera_white.svg';
 import './custom-view-header.scss';
-import Icon from "../../../../electron/src/ui/components/Icon";
 import c from 'classnames';
-import MediaPickerMenuable from "../../../../electron/src/ui/components/MediaPickerMenuable";
 import {getCSSImageURLFromPostHash} from "../../../utils/posts";
 import {isHex} from "../../../utils/hex";
 
@@ -61,13 +56,13 @@ function CustomViewHeader(props: Props): ReactElement {
     <div className={c("custom-view-header", {
       'custom-view-header--no-avatar': !avatarUrl && !canUploadAvatar,
     })}>
-      <CoverImage
-        heroImageUrl={heroImageUrl}
-        uploadable={canUploadHero}
-        hideCoverImage={hideCoverImage}
-        onTitleUpdate={onTitleUpdate}
-        titleEditable={titleEditable}
-      />
+      {/*<CoverImage*/}
+      {/*  heroImageUrl={heroImageUrl}*/}
+      {/*  uploadable={canUploadHero}*/}
+      {/*  hideCoverImage={hideCoverImage}*/}
+      {/*  onTitleUpdate={onTitleUpdate}*/}
+      {/*  titleEditable={titleEditable}*/}
+      {/*/>*/}
       {titleFn && titleFn()}
       {
         actions && (

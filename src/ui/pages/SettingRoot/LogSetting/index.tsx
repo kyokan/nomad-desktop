@@ -45,7 +45,7 @@ function LogSetting(props: RouteComponentProps): ReactElement {
       });
       listened = true;
     })();
-  }, [appendLog]);
+  }, []);
 
   const toggleVerbose = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;

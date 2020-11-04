@@ -1,8 +1,5 @@
-// @ts-ignore
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
-// @ts-ignore
 import {withRouter, RouteComponentProps, Redirect} from "react-router";
-// @ts-ignore
 import './onboarding.scss';
 import Login from "./Login";
 import PasswordLogin from "./PasswordLogin";

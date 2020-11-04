@@ -738,7 +738,8 @@ export default class AppManager {
     }
 
     const resp = await this.usersController.addTLDIdentity(tld, privateKey, password);
-    await this.signerManager.addSignerByHexPrivateKey(privateKey);
+    const pkhex = Buffer.from(privateKey, 'base64').toString('hex');
+    await this.signerManager.addSignerByHexPrivateKey(pkhex);
 
     return this.sendResponse(evt, req.id, resp);
   };

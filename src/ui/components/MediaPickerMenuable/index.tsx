@@ -1,12 +1,9 @@
 import React, {CSSProperties, MouseEventHandler, ReactElement, ReactNode, useState} from "react";
 import Menuable, {MenuProps} from "../Menuable";
-// import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
 import {Pageable} from '../../../../external/indexer/dao/Pageable';
-// import * as appActions from "../../ducks/app";
 import {useDispatch} from "react-redux";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-// import {useCurrentUser} from "../../ducks/users";
 import MediaView from "../UserView/MediaView";
 import "./media-picker.scss";
 import Icon from "../Icon";

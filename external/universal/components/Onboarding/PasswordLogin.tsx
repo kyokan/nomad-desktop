@@ -33,10 +33,10 @@ function PasswordLogin(props: PasswordLoginProps): ReactElement {
     try {
       if (subdomain && RELAYER_TLDS[tld]) {
         await onSubdomainLogin(tld, subdomain, password);
-        history.push('/home');
+        history.push('/discover');
       } else if (tld && !subdomain) {
         await onTLDLogin(tld, password);
-        history.push('/home');
+        history.push('/discover');
       }
     } catch (err) {
       setErrorMessage(err.message);

@@ -1,10 +1,7 @@
-// @ts-ignore
-import React, {ReactElement, ReactNode, useState, useEffect, useCallback} from "react";
-// @ts-ignore
+import React, {ReactElement, useState, useEffect, useCallback} from "react";
 import { withRouter, RouteComponentProps} from "react-router";
-// @ts-ignore
 import { useDispatch } from "react-redux";
-import {parseUsername, serializeUsername} from "../../utils/user";
+import { serializeUsername} from "../../utils/user";
 import "./index.scss";
 import {UserFollowingRow} from "../UserPanels";
 import {INDEXER_API} from "../../utils/api";
@@ -43,23 +40,6 @@ function DiscoverPanels(props: RouteComponentProps): ReactElement {
             )
             : <div className="user-panel__empty">No Trending People</div>
         }
-        {/*{!!trendingPeople.length && <div className="trending-view-all">View All</div>}*/}
-      </div>
-      <div className="trending-topics">
-        <div className="trending-topics__title">Trending Topics</div>
-        {
-          trendingTags.length
-            ? trendingTags.map(({ name, count, posterCount }: any) => (
-              <TrendingTopic
-                key={name}
-                topic={name}
-                count={count}
-                posterCount={posterCount}
-              />
-            ))
-            : <div className="user-panel__empty">No Trending Tags</div>
-        }
-        {/*{!!trendingPeople.length && <div className="trending-view-all">View All</div>}*/}
       </div>
     </div>
   );

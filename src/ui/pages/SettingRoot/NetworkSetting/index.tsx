@@ -12,9 +12,9 @@ let watch: any | null;
 
 function NetworkSetting(props: RouteComponentProps): ReactElement {
   const fetchAppData = useFetchAppData();
-  const ddrpStatus = useFNDStatus();
+  const fndStatus = useFNDStatus();
   const [connectedPeers, setConnectedPeers] = useState<FNDPeer[]>([]);
-  const [bannedPeers, setBannedPeers] = useState<FNDPeer[]>([]);
+  const [bannedPeers] = useState<FNDPeer[]>([]);
 
   const [rpcUrl, setRpcUrl] = useState('');
   const [rpcKey, setRpcKey] = useState('');
@@ -25,7 +25,7 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   const [dirty, setDirty] = useState(false);
 
-  const [isUpdatingDDRPInfo, setUpdatingDDRPInfo] = useState(false);
+  const [isUpdatingFNDInfo, setUpdatingFNDInfo] = useState(false);
   const [stopped, setNodeStopped] = useState<boolean | null>(null);
 
   const [discoveredTLDs, setDiscoveredTLDs] = useState<number>(0);
@@ -41,13 +41,13 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   useEffect(() => {
     (async function() {
-      if (ddrpStatus !== 'on' && watch) {
+      if (fndStatus !== 'on' && watch) {
         clearInterval(watch);
         watch = null;
         return;
       }
 
-      if (ddrpStatus === 'on') {
+      if (fndStatus === 'on') {
         if (watch) {
           clearInterval(watch);
         }
@@ -59,11 +59,11 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
         }, 15000);
       }
     })()
-  }, [ddrpStatus]);
+  }, [fndStatus]);
 
-  const setDDRPInfo = useCallback(async () => {
-    if (isUpdatingDDRPInfo) return;
-    setUpdatingDDRPInfo(true);
+  const setFNDInfo = useCallback(async () => {
+    if (isUpdatingFNDInfo) return;
+    setUpdatingFNDInfo(true);
 
     await postIPCMain({
       type: IPCMessageRequestType.SET_FND_INFO,
@@ -84,9 +84,9 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
     setDefaultBasePath(basePath);
     setDefaultPort(port);
 
-    setUpdatingDDRPInfo(false);
+    setUpdatingFNDInfo(false);
     setDirty(false);
-  }, [rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port, isUpdatingDDRPInfo]);
+  }, [rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port, isUpdatingFNDInfo]);
 
   useEffect(() => {
     (async function onPeerInfoGroupMount() {
@@ -132,7 +132,7 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
     <div className="network-setting">
       <div className="network-setting__groups">
         {renderEditables({
-          isConnected: ddrpStatus === 'on',
+          isConnected: fndStatus === 'on',
           rpcKey: dirty && (rpcKey !== defaultRpcKey) ? rpcKey : defaultRpcKey,
           rpcUrl: dirty && (rpcUrl !== defaultRpcUrl) ? rpcUrl : defaultRpcUrl,
           heartbeatUrl: dirty && (heartbeatUrl !== defaultHeartbeatUrl) ? heartbeatUrl : defaultHeartbeatUrl,
@@ -155,8 +155,8 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
       <div className="network-setting__footer">
         <Button
           disabled={!dirty}
-          onClick={setDDRPInfo}
-          loading={isUpdatingDDRPInfo}
+          onClick={setFNDInfo}
+          loading={isUpdatingFNDInfo}
         >
           Confirm
         </Button>
@@ -187,37 +187,37 @@ type EditableOpts = {
 }
 
 function renderEditables(opts: EditableOpts): ReactNode {
-  const startDDRP = useStartFND();
-  const stopDDRP = useStopFND();
+  const startFND = useStartFND();
+  const stopFND = useStopFND();
 
-  const restartDDRP = useCallback(async () => {
-    await stopDDRP();
-    setTimeout(startDDRP, 500);
-  }, [startDDRP, stopDDRP]);
+  const restartFND = useCallback(async () => {
+    await stopFND();
+    setTimeout(startFND, 500);
+  }, [startFND, stopFND]);
 
   return (
     <div className="setting__group network-setting__controls">
       <div className="setting__group__title">General</div>
       <div className="network-setting__network-info-row">
         <div className="network-setting__network-info-row__label">
-          DDRP Node
+          Footnote Daemon
         </div>
         <div className="network-setting__network-info-row__value">
           <Button
             disabled={opts.isConnected}
-            onClick={startDDRP}
+            onClick={startFND}
           >
             Start
           </Button>
           <Button
             disabled={!opts.isConnected}
-            onClick={stopDDRP}
+            onClick={stopFND}
           >
             Stop
           </Button>
           <Button
             disabled={!opts.isConnected}
-            onClick={restartDDRP}
+            onClick={restartFND}
           >
             Restart
           </Button>
@@ -282,25 +282,6 @@ function renderEditables(opts: EditableOpts): ReactNode {
             disabled={!opts.isConnected}
             onChange={e => {
               opts.setBasePath(e.target.value);
-              opts.setDirty(true);
-            }}
-          />
-        </div>
-      </div>
-      <div className="network-setting__network-info-row">
-        <div className="network-setting__network-info-row__label">
-          Allow Heartbeat to DDRPScan
-          <div className="network-setting__network-info-row__label__sub">
-            This will publicly announce your IP address on DDRPScan
-          </div>
-        </div>
-        <div className="network-setting__network-info-row__value">
-          <input
-            type="checkbox"
-            checked={!!opts.heartbeatUrl}
-            disabled={!opts.isConnected}
-            onChange={e => {
-              opts.setHeartbeatUrl(e.target.checked ? 'https://www.ddrpscan.com/heartbeat' : '');
               opts.setDirty(true);
             }}
           />

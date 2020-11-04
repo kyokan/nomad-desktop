@@ -1,11 +1,9 @@
-// @ts-ignore
 import React, {MouseEventHandler, ReactElement, ReactNode, useState, useCallback, UIEvent} from 'react';
 import './custom-view.scss';
 import CustomViewHeader, {CustomViewHeaderActionProps, CustomViewHeaderItemProps} from "./CustomViewHeader";
-import CustomViewPanel, {CustomViewPanelProps} from "./CustomViewPanel";
+import {CustomViewPanelProps} from "./CustomViewPanel";
 import CustomViewPosts from "./CustomViewPosts";
 import DetailPane from "../DetailPane";
-// @ts-ignore
 import debounce from "lodash.debounce";
 
 type Props = {
@@ -101,6 +99,7 @@ function CustomView(props: Props): ReactElement {
 
   const list = (
     <div
+      // @ts-ignore
       ref={setScrollEl}
       className="custom-view__list"
       onScroll={onScroll}
@@ -108,7 +107,7 @@ function CustomView(props: Props): ReactElement {
       <CustomViewHeader
         title={title}
         titleFn={titleFn}
-        heroImageUrl={heroImageUrl}
+        // heroImageUrl={heroImageUrl}
         nameDecoration={nameDecoration}
         avatarUrl={avatarUrl}
         canUploadHero={canUploadHero}

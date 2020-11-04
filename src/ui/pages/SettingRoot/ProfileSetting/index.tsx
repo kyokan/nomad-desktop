@@ -3,10 +3,9 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import "./profile-setting.scss";
 import {useCurrentUsername, useFetchUser, useUser} from "../../../../../external/universal/ducks/users";
 import {RawUserCard} from "../../../../../external/universal/components/UserCard";
-import {isSubdomain, parseUsername} from "../../../../../external/universal/utils/user";
+import {parseUsername} from "../../../../../external/universal/utils/user";
 import Button from "../../../../../external/universal/components/Button";
 import {useFileUpload, useQueryMediaForName} from "../../../helpers/hooks";
-import MediaPickerMenuable from "../../../components/MediaPickerMenuable";
 import {postIPCMain} from "../../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../../app/types";
 import {createNewDraft} from "../../../../../external/universal/ducks/drafts/type";
@@ -207,33 +206,10 @@ function ProfileSetting(props: Props): ReactElement {
               />
             </div>
             <div className="profile-setting__images">
-              {/*{*/}
-              {/*  !isSubdomain(currentUsername) && (*/}
-              {/*    <div className="profile-setting__images__group">*/}
-              {/*      <div className="profile-setting__images__group__label">Cover Image</div>*/}
-              {/*      <div className="profile-setting__images__group__actions">*/}
-              {/*        <MediaPickerMenuable*/}
-              {/*          onMediaUploadClick={onUploadCoverImage}*/}
-              {/*          queryMediaByName={queryMediaForName}*/}
-              {/*          onMediaHashUpdate={setCoverImage}*/}
-              {/*          items={[*/}
-              {/*            {*/}
-              {/*              text: 'Remove Profile Picture',*/}
-              {/*              onClick: () => onSetAvatarType('_'),*/}
-              {/*            },*/}
-              {/*          ]}*/}
-              {/*        >*/}
-              {/*          <Button>Choose File</Button>*/}
-              {/*        </MediaPickerMenuable>*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*  )*/}
-              {/*}*/}
               <div className="profile-setting__images__group">
                 <div className="profile-setting__images__group__label">Profile Picture</div>
                 <div className="profile-setting__images__group__actions">
                   {(
-                    // @ts-ignore
                     <Menuable
                       className=""
                       items={[
@@ -241,24 +217,12 @@ function ProfileSetting(props: Props): ReactElement {
                           text: 'Choose from Avatars',
                           items: [
                             {
-                              text: 'gridy',
-                              onClick: () => onSetAvatarType('gridy'),
-                            },
-                            {
-                              text: 'bottts',
-                              onClick: () => onSetAvatarType('bottts'),
-                            },
-                            {
-                              text: 'avataaars',
-                              onClick: () => onSetAvatarType('avataaars'),
+                              text: 'identicon',
+                              onClick: () => onSetAvatarType('identicon'),
                             },
                             {
                               text: 'jdenticon',
                               onClick: () => onSetAvatarType('jdenticon'),
-                            },
-                            {
-                              text: 'identicon',
-                              onClick: () => onSetAvatarType('identicon'),
                             },
                           ]
                         },

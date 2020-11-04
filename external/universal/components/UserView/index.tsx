@@ -1,13 +1,8 @@
-// @ts-ignore
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from 'react';
-// @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
-// @ts-ignore
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-// @ts-ignore
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-// @ts-ignore
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {Envelope as DomainEnvelope} from '../../../indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../indexer/domain/Post';
+import {Pageable} from '../../../indexer/dao/Pageable';
 
 import CustomView from "../CustomView";
 import {
@@ -16,12 +11,9 @@ import {
   useCurrentUsername, useFetchUser, userCurrentMutedNames,
   useUsersMap
 } from "../../ducks/users";
-import {dotName, isTLD, parseUsername, serializeUsername, undotName} from "../../utils/user";
+import {dotName, parseUsername, serializeUsername, undotName} from "../../utils/user";
 import {
   updateRawPost,
-  // useBlockUser,
-  // useFollowUser,
-  useGlobalMeta,
   usePostsMap,
 } from "../../ducks/posts";
 import {
@@ -30,9 +22,7 @@ import {
   updateCoverImage,
   updateProfilePicture,
 } from "../../ducks/drafts";
-// @ts-ignore
 import {useDispatch} from "react-redux";
-// @ts-ignore
 import uniq from "lodash.uniq";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
 import './user-view.scss';
@@ -54,7 +44,7 @@ type Props = {
   onSendReply: (postHash: string) => void;
   onBlockUser: (postHash: string) => void;
   onFollowUser: (postHash: string) => void;
-} & RouteComponentProps<{username: string; viewType?: string}>;
+} & RouteComponentProps<{username: string; viewType?: string; postHash?: string}>;
 
 function UserView(props: Props): ReactElement {
   const {
@@ -420,7 +410,7 @@ function UserView(props: Props): ReactElement {
       heroImageUrl={user?.coverImage}
       canUploadHero={isCurrentUser}
       canUploadAvatar={isCurrentUser}
-      selectedHash={props.match.params.postHash}
+      selectedHash={props.match.params?.postHash}
       hashes={list}
       onLikePost={props.onLikePost}
       onSendReply={props.onSendReply}
@@ -479,7 +469,7 @@ async function queryNext(
       return (!envelope.message.topic || (envelope.message.topic[0] !== '.'));
     });
 
-  if (list.length < 10 && payload.next > -1) {
+  if (list.length < 10 && payload.next && payload.next > -1) {
     return await queryNext(username, payload.next, list, blockedUsers, showPosts, showLikes, showReplies, isCurrentUser);
   } else {
     return {

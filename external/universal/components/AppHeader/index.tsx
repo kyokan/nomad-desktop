@@ -8,6 +8,8 @@ import Button from "../Button";
 import Avatar from "../Avatar";
 import Menuable from "../Menuable";
 import {parseUsername} from "../../utils/user";
+import {postIPCMain} from "../../../../src/ui/helpers/ipc";
+import {IPCMessageRequestType} from "../../../../src/app/types";
 
 type Props = { logoUrl: string } & RouteComponentProps;
 function AppHeader(props: Props): ReactElement {
@@ -156,11 +158,11 @@ function renderRight(props: RouteComponentProps): ReactNode {
 
   return (
     <div className="app-header__content__r">
-      <Icon
-        material="home"
-        width={28}
-        onClick={() => props.history.push('/home')}
-      />
+      {/*<Icon*/}
+      {/*  material="home"*/}
+      {/*  width={28}*/}
+      {/*  onClick={() => props.history.push('/home')}*/}
+      {/*/>*/}
       <Icon
         material="public"
         width={28}
@@ -301,11 +303,11 @@ function renderUnauthenticatedKnownUsers(props: RouteComponentProps, onSetting: 
   const currentUsername = identities[0];
   return (
     <div className="app-header__content__r">
-      <Icon
-        material="home"
-        width={28}
-        onClick={() => props.history.push('/home')}
-      />
+      {/*<Icon*/}
+      {/*  material="home"*/}
+      {/*  width={28}*/}
+      {/*  onClick={() => props.history.push('/home')}*/}
+      {/*/>*/}
       <Icon
         material="public"
         width={28}
@@ -337,7 +339,32 @@ function renderUnauthenticatedKnownUsers(props: RouteComponentProps, onSetting: 
             forceRender: () => renderSwitchAccount(props, username),
           })),
           // {forceRender: () => renderAddAnother(props)},
-          // {divider: true,},
+          {divider: true},
+          {
+            text: 'Download Keystore',
+            onClick: (e: any) => {
+              if (e.stopPropagation) e.stopPropagation();
+              postIPCMain({
+                type: IPCMessageRequestType.GET_USER_KEYSTORE,
+                payload: currentUsername,
+              }, true)
+                .then(resp => {
+                  const element = document.createElement('a');
+                  element.setAttribute(
+                    'href',
+                    'data:text/plain;charset=utf-8,' + encodeURIComponent(resp.payload)
+                  );
+                  element.setAttribute('download', currentUsername);
+
+                  element.style.display = 'none';
+                  document.body.appendChild(element);
+
+                  element.click();
+
+                  document.body.removeChild(element);
+                });
+            },
+          },
           {
             text: 'Settings',
             onClick: onSetting,

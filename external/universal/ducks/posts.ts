@@ -237,7 +237,6 @@ export const mapRawToPost = (rawPost: ResponsePost): Post => {
 
   return createNewPost({
     hash: rawPost.hash,
-    id: rawPost.guid,
     type: rawPost.parent ? PostType.COMMENT : PostType.ORIGINAL,
     creator: rawPost.name,
     timestamp: new Date(rawPost.timestamp).getTime(),

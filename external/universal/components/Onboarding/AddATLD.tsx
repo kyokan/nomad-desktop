@@ -1,13 +1,8 @@
-// @ts-ignore
 import React, {ReactElement, useCallback, useState} from "react";
-// @ts-ignore
-import {withRouter, RouteComponentProps, Redirect} from "react-router";
-// @ts-ignore
-import c from 'classnames';
+import {withRouter, RouteComponentProps} from "react-router";
 import {generateNewCompressedKey} from "../../../../src/app/util/key";
 import {parseUsername} from "../../utils/user";
 import Icon from "../Icon";
-// @ts-ignore
 import copy from "copy-to-clipboard";
 import Button from "../Button";
 import {OnboardingViewType} from "./index";
@@ -26,7 +21,8 @@ function AddATLD(props: AddATLDProps): ReactElement {
   const [compressedKey, setCompressedKey] = useState(generateNewCompressedKey());
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const pubkey = compressedKey.publicKey.toString('hex');
+  const pubkey = compressedKey.publicKey.toString('base64');
+  const privkey = compressedKey.privateKey.toString('base64');
 
   const onNext = useCallback(async () => {
     const { tld } = parseUsername(props.username);
@@ -34,7 +30,7 @@ function AddATLD(props: AddATLDProps): ReactElement {
     setLoading(true);
 
     try {
-      await props.onAddTLD(tld, props.password, compressedKey.privateKey.toString('hex'));
+      await props.onAddTLD(tld, props.password, privkey);
       props.history.push('/discover');
     } catch (err) {
       setErrorMessage(err.message);
@@ -55,18 +51,18 @@ function AddATLD(props: AddATLDProps): ReactElement {
           Update your domain name record
         </div>
         <div className="onboarding__panel__subtitle">
-          {`Please add the following key as TXT record in ${props.username}.`}
+          {`Please add the following key as TXT record in ${props.username}`}
         </div>
         <div className="onboarding__tld__content__pubkey">
           <input
             type="text"
-            value={`DDRPKEY:${pubkey}`}
+            value={`f${pubkey}`}
           />
           <div className="onboarding__tld__content__pubkey__icon">
             <Icon
               width={18}
               material="file_copy"
-              onClick={() => copy(`DDRPKEY:${pubkey}`)}
+              onClick={() => copy(`f${pubkey}`)}
             />
           </div>
           <div className="onboarding__tld__content__pubkey__icon">
@@ -77,8 +73,17 @@ function AddATLD(props: AddATLDProps): ReactElement {
             />
           </div>
         </div>
+        <div className="onboarding__panel__subtitle">
+          ...and back up your private key below securely
+        </div>
+        <div className="onboarding__tld__content__pubkey">
+          <input
+            type="text"
+            value={`${privkey}`}
+          />
+        </div>
         <div className="onboarding__tld__content__paragraph">
-          It takes about 32 Handshake blocks (~8 hours) to discover your name after your text record is confirmed. Please see <Anchor href="https://ddrp.network/quick_start.html#step-5-update-your-handshake-name">DDRP documentation</Anchor> for more details.
+          It takes about 32 Handshake blocks (~8 hours) to discover your name after your text record is confirmed. Please see <Anchor href="https://github.com/kyokan/fnd/blob/master/docs/quick_start.md#step-5-update-your-handshake-name">Footnote documentation</Anchor> for more details.
         </div>
         <div className="onboarding__panel__error-message">
           {errorMessage}
@@ -88,7 +93,7 @@ function AddATLD(props: AddATLDProps): ReactElement {
             onClick={onNext}
             loading={isLoading}
           >
-            Save keystore to local storage
+            I have back up my private key
           </Button>
         </div>
       </div>

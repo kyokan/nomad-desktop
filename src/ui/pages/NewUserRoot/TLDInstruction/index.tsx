@@ -43,11 +43,11 @@ function TLDInstruction(props: Props): ReactElement {
         <div className="onboarding__tld__content__pubkey">
           <input
             type="text"
-            value={`DDRPKEY:${pubkey}`}
+            value={`f${pubkey}`}
           />
           <div className="onboarding__tld__content__pubkey__icon">
             <Button
-              onClick={() => copy(`DDRPKEY:${pubkey}`)}
+              onClick={() => copy(`f${pubkey}`)}
             >
               <Icon
                 url={CopyIcon}

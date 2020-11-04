@@ -1,5 +1,6 @@
 import {ThunkDispatch} from "redux-thunk";
-import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
+import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse, ResponsePost} from "../../app/types";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
@@ -9,7 +10,7 @@ import {mapPostWithMetaToPost} from "../../app/util/posts";
 import {useCallback} from "react";
 import {addUserFollowings, useCurrentUser} from "./users";
 import {markup} from "../helpers/rte";
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {parseUsername} from "../helpers/user";
 import uniq from "lodash.uniq";
 
@@ -31,7 +32,11 @@ export enum PostType {
   REPOST = 'repost',
 }
 
-export type PostMeta = PostWithMeta["meta"];
+export type PostMeta = {
+  replyCount: number;
+  pinCount: number;
+  likeCount: number;
+};
 
 export type Post = {
   hash: string;
@@ -62,7 +67,7 @@ export type PostOpts = {
   topic?: string;
   tags?: string[];
   context?: string;
-  meta?: PostWithMeta["meta"];
+  meta?: PostMeta;
   comments?: string[];
   parent?: string;
   attachments?: string[];
@@ -221,7 +226,6 @@ export const mapRawToPost = (rawPost: ResponsePost): Post => {
 
   return createNewPost({
     hash: rawPost.hash,
-    id: rawPost.guid,
     type: rawPost.parent ? PostType.COMMENT : PostType.ORIGINAL,
     creator: rawPost.name,
     timestamp: new Date(rawPost.timestamp).getTime(),
@@ -278,7 +282,7 @@ export const fetchPost = (name: string, guid: string) => async (dispatch: ThunkD
     return;
   }
 
-  const resp: IPCMessageResponse<PostWithMeta> = await postIPCMain({
+  const resp: IPCMessageResponse<DomainEnvelope<DomainPost>> = await postIPCMain({
     type: IPCMessageRequestType.GET_POST,
     payload: { name, guid },
   }, true);
@@ -294,7 +298,7 @@ export const fetchPostByHash = (hash: string) => async (dispatch: ThunkDispatch<
     return;
   }
 
-  const resp: IPCMessageResponse<PostWithMeta> = await postIPCMain({
+  const resp: IPCMessageResponse<DomainEnvelope<DomainPost>> = await postIPCMain({
     type: IPCMessageRequestType.GET_POST_BY_HASH,
     payload: { hash },
   }, true);
@@ -316,7 +320,7 @@ export const fetchComments = (parent: string, order: 'ASC' | 'DESC' = 'DESC', st
   };
 
   return postIPCMain(msg, true)
-    .then((resp: IPCMessageResponse<Pageable<PostWithMeta, number>>) => {
+    .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>>) => {
       const comments: string[] = [];
       resp.payload.items.forEach(postWithMeta => {
         const post = mapPostWithMetaToPost(postWithMeta);

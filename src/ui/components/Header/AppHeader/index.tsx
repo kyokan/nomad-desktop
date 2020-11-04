@@ -81,15 +81,13 @@ function renderRight(props: RouteComponentProps): ReactNode {
     );
   }
 
-
-
   return (
     <div className="app-header__content__r">
-      <Icon
-        material="home"
-        width={28}
-        onClick={() => props.history.push('/home')}
-      />
+      {/*<Icon*/}
+      {/*  material="home"*/}
+      {/*  width={28}*/}
+      {/*  onClick={() => props.history.push('/home')}*/}
+      {/*/>*/}
       <Icon
         material="public"
         width={28}
@@ -113,7 +111,32 @@ function renderRight(props: RouteComponentProps): ReactNode {
               forceRender: () => renderSwitchAccount(props, username),
             })),
           { forceRender: () => renderAddAnother(props) },
-          {divider: true,},
+          {divider: true},
+          {
+            text: 'Download Keystore',
+            onClick: (e: any) => {
+              if (e.stopPropagation) e.stopPropagation();
+              postIPCMain({
+                type: IPCMessageRequestType.GET_USER_KEYSTORE,
+                payload: currentUsername,
+              }, true)
+                .then(resp => {
+                  const element = document.createElement('a');
+                  element.setAttribute(
+                    'href',
+                    'data:text/plain;charset=utf-8,' + encodeURIComponent(resp.payload)
+                  );
+                  element.setAttribute('download', `${currentUsername}.key`);
+
+                  element.style.display = 'none';
+                  document.body.appendChild(element);
+
+                  element.click();
+
+                  document.body.removeChild(element);
+                });
+            },
+          },
           {
             text: 'Settings',
             onClick: onSetting,
@@ -294,11 +317,11 @@ function renderUnauthenticatedKnownUsers(props: RouteComponentProps, onSetting: 
   const currentUsername = identities[0];
   return (
     <div className="app-header__content__r">
-      <Icon
-        material="home"
-        width={28}
-        onClick={() => props.history.push('/home')}
-      />
+      {/*<Icon*/}
+      {/*  material="home"*/}
+      {/*  width={28}*/}
+      {/*  onClick={() => props.history.push('/home')}*/}
+      {/*/>*/}
       <Icon
         material="public"
         width={28}

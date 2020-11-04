@@ -34,7 +34,7 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = `Last synchronized ${moment(lastSync).fromNow()}`;
   }
 
-  // if (ddrpStatus === 'on' && !connectedPeers) {
+  // if (fndStatus === 'on' && !connectedPeers) {
   //   displayText = 'Looking for peers...';
   // }
 

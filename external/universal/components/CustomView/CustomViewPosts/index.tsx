@@ -1,22 +1,18 @@
-// @ts-ignore
 import React, {ReactElement, ReactNode, useCallback, useEffect} from "react";
-// @ts-ignore
 import {useDispatch} from "react-redux";
-// @ts-ignore
 import { withRouter, RouteComponentProps } from "react-router";
 import {
   fetchPostByHash,
   Post,
   useFetchMoreComments,
-  useGlobalMeta,
   usePostId
 } from "../../../ducks/posts";
 import PostCard from "../../PostCard";
-// @ts-ignore
 import classNames from "classnames";
 import {useFetchUser, useUser} from "../../../ducks/users";
 
 type CustomViewPostsProps = {
+  indexerAPI?: string;
   hashes: string[];
   onSelectPost?: (hash: string, creator: string, id: string) => void;
   onLikePost?: (hash: string) => void;

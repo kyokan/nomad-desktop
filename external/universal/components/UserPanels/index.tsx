@@ -1,22 +1,14 @@
-// @ts-ignore
 import React, {ReactElement, ReactNode, useState, useEffect} from "react";
-// @ts-ignore
 import { withRouter, RouteComponentProps} from "react-router";
-// @ts-ignore
 import {useDispatch} from "react-redux";
 import "./user-panels.scss";
-import {getImageURLFromPostHash} from "../../utils/posts";
 import {fetchUserFollowings, useFetchUser, useUser} from "../../ducks/users";
 import {parseUsername, serializeUsername} from "../../utils/user";
 import Avatar from "../Avatar";
 import {INDEXER_API} from "../../utils/api";
 import {IPCMessageResponse} from "../../../../src/app/types";
-// @ts-ignore
-import {Pageable} from '../../../external/indexer/dao/Pageable';
-// @ts-ignore
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
-// @ts-ignore
-import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
+import {Pageable} from '../../../indexer/dao/Pageable';
+import {Connection as DomainConnection} from '../../../indexer/domain/Connection';
 
 function UserPanels(props: RouteComponentProps<{username: string}>): ReactElement {
   const username = props.match.params.username;
@@ -29,7 +21,7 @@ function UserPanels(props: RouteComponentProps<{username: string}>): ReactElemen
 
   return (
     <div className="user-panels">
-      {renderFileUploads(props)}
+      {/*{renderFileUploads(props)}*/}
       {renderFollowings(props)}
       {renderFollowers(props)}
       {renderBlocks(props)}
@@ -216,47 +208,4 @@ function _UserFollowingRow(props: {username: string} & RouteComponentProps): Rea
       </div>
     </div>
   );
-}
-
-function renderFileUploads(props: RouteComponentProps<{username: string}>): ReactNode {
-  const dispatch = useDispatch();
-  const username = props.match.params.username;
-  const [files, setFiles] = useState<string[]>([]);
-
-  useEffect(() => {
-    (async function onFileUploadsPanelMount () {
-      const resp = await fetch(`${INDEXER_API}/users/${username}/uploads?limit=6`);
-      const json: IPCMessageResponse<Pageable<DomainMedia, number>> = await resp.json();
-
-      if (!json.error) {
-        setFiles(json.payload.items.map((media: DomainMedia) => media.refhash));
-      }
-    })()
-  }, [dispatch, username]);
-
-  return (
-    <div className="user-panel">
-      <div className="user-panel__title">
-        {`Uploads (${files.length})`}
-      </div>
-        {
-          files.length
-            ? (
-              <div className="user-panel__files">
-                {files.slice(0, 6).map((file: string) => {
-                  return (
-                    <img
-                      key={file}
-                      className="user-panel__file"
-                      src={getImageURLFromPostHash(file)}
-                    />
-                  )
-                })}
-              </div>
-            )
-            : <div className="user-panel__empty">No Uploads</div>
-        }
-      {/*{!!files.length && <div className="trending-view-all">View All</div>}*/}
-    </div>
-  )
 }
