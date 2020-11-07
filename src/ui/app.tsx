@@ -23,6 +23,7 @@ import {
   updateCurrentUser
 } from "./ducks/users";
 import {
+  AppActionType,
   setFNDStatus,
   setHandshakeEndHeight,
   setHandshakeStartHeight,
@@ -69,6 +70,12 @@ ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
         }
       });
       // return;
+      return;
+    case IPCMessageRequestType.HSD_CONN_TYPE_UPDATED:
+      store.dispatch({
+        type: AppActionType.SET_CONN_TYPE,
+        payload: message.payload,
+      });
       return;
     case IPCMessageRequestType.NEW_USER_ADDED:
       if (typeof message.payload !== "string") return;

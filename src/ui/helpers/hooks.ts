@@ -26,6 +26,7 @@ import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "../../../external/universal/ducks/drafts/type";
+import {AppActionType} from "../ducks/app";
 
 export const useFileUpload = (): () => Promise<string> => {
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ export const useStartHSD = () => {
 };
 
 export const useGetConnection = () => {
+  const dispatch = useDispatch();
   return useCallback(async (): Promise<{
     type: 'P2P' | 'CUSTOM' | '';
     host: string;
@@ -77,11 +79,17 @@ export const useGetConnection = () => {
     apiKey: string;
     basePath: string;
   }> => {
-    return await postIPCMain({
+    const {payload: conn} = await postIPCMain({
       type: IPCMessageRequestType.GET_HSD_CONN,
       payload: null,
     }, true);
-  }, [postIPCMain]);
+
+    dispatch({
+      type: AppActionType.SET_CONN_TYPE,
+      payload: conn.type,
+    });
+    return conn;
+  }, [postIPCMain, dispatch]);
 };
 
 export const useSetHost = () => {

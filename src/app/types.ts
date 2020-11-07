@@ -42,6 +42,7 @@ export enum IPCMessageRequestType {
   SET_HSD_API_KEY = 'ipc/setHSDAPIKey',
   SET_HSD_BASE_PATH = 'ipc/setHSDBasePath',
   SET_HSD_CONN_TYPE = 'ipc/SET_HSD_CONN_TYPE',
+  HSD_CONN_TYPE_UPDATED = 'ipc/HSD_CONN_TYPE_UPDATED',
   START_FND = 'ipc/startFND',
   STOP_FND = 'ipc/stopFND',
   SET_FND_LOG_LEVEL = 'ipc/setFNDLogLevel',

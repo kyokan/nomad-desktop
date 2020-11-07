@@ -49,6 +49,14 @@ function renderWelcome(props: RouteComponentProps) {
   const endHeight = useHandshakeEndHeight();
   const startHeight = useHandshakeStartHeight();
   const fndStatus = useFNDStatus();
+  const fetchConnection = useGetConnection();
+
+
+  useEffect(() => {
+    (async function onWelcomeMount() {
+      await fetchConnection();
+    })();
+  },[fetchConnection]);
 
   if (endHeight && endHeight === startHeight && fndStatus === 'on') {
     return <Redirect to="/onboarding/done" />

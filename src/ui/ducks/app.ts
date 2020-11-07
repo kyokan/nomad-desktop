@@ -18,6 +18,7 @@ export enum AppActionType {
   SET_FND_STATUS = 'app/setFNDStatus',
   SET_HYDRATED = 'app/setHydrated',
   SET_INITIALIZED = 'app/setInitialized',
+  SET_CONN_TYPE = 'app/setHandshakeConnType',
 }
 
 type AppAction<payload> = {
@@ -36,6 +37,7 @@ export type SystemMessage<meta> = {
 type AppState = {
   hydrated: boolean;
   initialized: boolean;
+  handshakeConnectionType: 'P2P'|'CUSTOM'|'';
   handshakeStartHeight: number;
   handshakeEndHeight: number;
   discoveredTLDs: string[];
@@ -51,6 +53,7 @@ type AppState = {
 const initialState: AppState = {
   hydrated: false,
   initialized: false,
+  handshakeConnectionType: '',
   handshakeStartHeight: 0,
   handshakeEndHeight: 0,
   discoveredTLDs: [],
@@ -151,6 +154,11 @@ export const setFNDStatus = (ddrpStatus: 'on' | 'off' | 'error'): AppAction<'on'
 
 export default function appReducer(state: AppState = initialState, action: AppAction<any>): AppState {
   switch (action.type) {
+    case AppActionType.SET_CONN_TYPE:
+      return {
+        ...state,
+        handshakeConnectionType: action.payload,
+      };
     case AppActionType.UPDATE_FOOTER:
       return {
         ...state,

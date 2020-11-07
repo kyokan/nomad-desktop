@@ -31,7 +31,7 @@ import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 import {extendFilter} from "../../../external/nomad-api/src/util/filter";
 import {serializeUsername} from "../../../external/universal/utils/user";
 import crypto from "crypto";
-import HSDService from "./hsd";
+import HSDService, {HSD_API_KEY} from "./hsd";
 
 const ECKey = require('eckey');
 const conv = require('binstring');
@@ -818,10 +818,28 @@ export default class AppManager {
     await this.hsdManager.init();
     await this.fndController.init();
 
-    const type = await this.hsdManager.getConnectionType();
+    const conn = await this.hsdManager.getConnection();
+    const type = conn.type;
+
+    this.dispatchMain({
+      type: IPCMessageRequestType.HSD_CONN_TYPE_UPDATED,
+      payload: type,
+    });
 
     if (type) {
       await this.hsdManager.start();
+
+      if (type === 'P2P') {
+        await this.fndController.setAPIKey(HSD_API_KEY);
+        await this.fndController.setHost('http://127.0.0.1');
+        await this.fndController.setBasePath('');
+        await this.fndController.setPort('12037');
+      } else if (type === 'CUSTOM') {
+        await this.fndController.setAPIKey(conn.apiKey);
+        await this.fndController.setHost(conn.host);
+        await this.fndController.setBasePath(conn.basePath);
+        await this.fndController.setPort(`${conn.port}`);
+      }
     }
 
     const { handshakeEndHeight } = await getHandshakeBlockInfo();

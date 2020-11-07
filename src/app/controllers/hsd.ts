@@ -139,7 +139,7 @@ export default class HSDService extends EventEmitter {
       bip37: true,
       indexAddress: true,
       indexTX: true,
-      apiKey: HSD_API_KEY,
+      // apiKey: HSD_API_KEY,
     });
 
     await hsd.ensure();
@@ -151,7 +151,7 @@ export default class HSDService extends EventEmitter {
   }
 
   async setHSDLocalClient() {
-    const network = Network.from('main');
+    const network = Network.get('main');
     const client = new NodeClient({
       network: network,
       port: network.rpcPort,
