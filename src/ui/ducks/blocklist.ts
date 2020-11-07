@@ -30,18 +30,6 @@ const initialState: BlocklistState = {
   users: {},
 };
 
-
-export const fetchMutelist = () => async (dispatch: Dispatch) => {
-  const resp: IPCMessageResponse<string[]> = await postIPCMain({
-    type: IPCMessageRequestType.GET_MUTE_LIST,
-  }, true);
-
-  dispatch({
-    type: BlocklistActionType.SET_MUTELIST,
-    payload: resp.payload || [],
-  });
-};
-
 export const setMuteUser = (username: string) => ({
   type: BlocklistActionType.MUTE_USER,
   payload: username,

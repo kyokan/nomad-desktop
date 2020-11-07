@@ -233,6 +233,60 @@ input[type="checkbox"] {
   }
 }
 
+input[type="radio"] {
+  height: 1rem;
+  width: 1rem;
+  position: relative;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid transparent;
+
+  &:after {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -1px;
+    height: 100%;
+    width: 100%;
+    background-color: $white;
+    border-radius: 50%;
+    border: 1px solid $gray-300;
+    font-size: .8125rem;
+    transition: border-color 100ms ease-in, background-color 100ms ease-in;
+  }
+
+  &:focus {
+    &:after {
+      border: 1px solid rgba(#000, .5);
+    }
+  }
+
+  &:hover {
+    &:after {
+      border: 1px solid rgba(#000, .5);
+    }
+  }
+
+  &:checked {
+    &:after {
+      content: "\25C9";
+      color: $white;
+      text-align: center;
+      background-color: $blue;
+      border: 1px solid $blue;
+      font-weight: 600;
+    }
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: .5;
+  }
+}
+
 //button,
 //button.button {
 //  @extend %regular-font;

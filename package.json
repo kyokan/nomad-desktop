@@ -8,9 +8,9 @@
     "url": "git+https://github.com/kyokan/nomad-ui.git"
   },
   "scripts": {
-    "electron-dev": "NODE_ENV=development INDEXER_API=http://localhost:7373 concurrently --kill-others-on-fail npm:wds-electron npm:start-electron",
+    "dev": "NODE_ENV=development INDEXER_API=http://localhost:7373 concurrently --kill-others-on-fail npm:wds-electron npm:start-electron",
     "postinstall": "electron-builder install-app-deps",
-    "preelectron-dev": "npm run build-electron",
+    "predev": "npm run build-electron",
     "electron-rebuild": "electron-rebuild -f -w sqlite3",
     "start-electron": "electron ./build/electron.js --inspect=5858",
     "build-electron": "webpack --config ./webpack.config.js",
@@ -97,6 +97,8 @@
     "fn-client": "^0.1.0",
     "get-folder-size": "^2.0.1",
     "highlight.js": "^9.18.0",
+    "hs-client": "0.0.9",
+    "hsd": "^2.2.0",
     "isomorphic-fetch": "^2.2.1",
     "jsdom": "^16.0.1",
     "lodash.debounce": "^4.0.8",

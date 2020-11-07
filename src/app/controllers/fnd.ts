@@ -29,6 +29,7 @@ import {
 import throttle from "lodash.throttle";
 import {initializeApp, isAppInitialized} from "../util/appData";
 import Timeout = NodeJS.Timeout;
+import {HSD_API_KEY} from "./hsd";
 
 const appDataPath = app.getPath('userData');
 const fndHome = path.join(appDataPath, '.fnd');
@@ -181,17 +182,6 @@ export default class DDRPController {
     if (this.daemon) {
       return;
     }
-
-    // const { startHeight, endHeight } = await this.getHandshakeBlockInfo();
-    // const initialized = await isAppInitialized();
-
-    // if (!initialized) {
-    //   if (!startHeight || endHeight > startHeight) {
-    //     await this.setLogLevel('trace');
-    //   } else if (endHeight === startHeight && endHeight) {
-    //     await this.setLogLevel('info');
-    //   }
-    // }
 
     this.daemon = spawn(fndPath, ['start', '--home', fndHome]);
 
@@ -366,7 +356,7 @@ export default class DDRPController {
     return apiKeyLine.slice(13, apiKeyLine.length - 1);
   };
 
-  setDDRPInfo = async (
+  setFNDInfo = async (
     rpcUrl: string,
     rpcKey: string,
     heartbeatUrl: string,
@@ -464,8 +454,8 @@ export default class DDRPController {
   };
 
   private async initDDRP () {
-    const shouldUpdateDDRP = await this.shouldUpdateDDRP();
-    const shouldInitDDRP = await this.shouldInitDDRP();
+    const shouldUpdateDDRP = await this.shouldUpdateFND();
+    const shouldInitDDRP = await this.shouldInitFND();
 
     if (!shouldUpdateDDRP) {
       return;
@@ -504,12 +494,12 @@ export default class DDRPController {
       logger.info('out', stdout);
       // eslint-disable-next-line no-console
       logger.info('err', stderr);
-      await this.setHost('https://5pi.io');
+      await this.setHost('http://127.0.0.1');
       await this.setHeartbeat('');
       await this.setMoniker('');
-      await this.setAPIKey('f8e9fbd3067ae4eece89d737ebf76c90');
-      await this.setBasePath('/hsd');
-      await this.setPort('443');
+      await this.setAPIKey(`${HSD_API_KEY}`);
+      await this.setBasePath('');
+      await this.setPort('12037');
 
       await fs.promises.writeFile(fndInitNoncePath, CURRENT_INIT_NONCE);
       resolve();
@@ -533,7 +523,7 @@ export default class DDRPController {
     }
   }
 
-  private async shouldUpdateDDRP (): Promise<boolean> {
+  private async shouldUpdateFND (): Promise<boolean> {
     try {
       const resp = await fs.promises.readFile(fndVersionPath);
       return resp.toString('utf-8') !== '0.1.9';
@@ -542,7 +532,7 @@ export default class DDRPController {
     }
   }
 
-  private async shouldInitDDRP (): Promise<boolean> {
+  private async shouldInitFND (): Promise<boolean> {
     try {
       const resp = await fs.promises.readFile(fndInitNoncePath);
       return resp.toString('utf-8') !== CURRENT_INIT_NONCE;

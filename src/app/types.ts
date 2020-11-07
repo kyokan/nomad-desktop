@@ -34,6 +34,8 @@ export enum IPCMessageRequestType {
   GET_IDENTITY = 'ipc/getIdentity',
   NEW_INDEXER_LOG_ENTRY = 'ipc/newIndexerLogEntry',
   GET_USER_KEYSTORE = 'ipc/getUserKeystore',
+  START_HSD = 'ipc/startHSD',
+  STOP_HSD = 'ipc/stopHSD',
   START_FND = 'ipc/startFND',
   STOP_FND = 'ipc/stopFND',
   SET_FND_LOG_LEVEL = 'ipc/setFNDLogLevel',

@@ -1,10 +1,11 @@
 import React, {ReactElement, ReactNode, useCallback, useState} from "react";
 import {Redirect, Route, RouteComponentProps, Switch, withRouter} from "react-router";
+import c from 'classnames';
 import "./init-app.scss";
 import Icon from "../../../../external/universal/components/Icon";
 import Logo from "../../../../static/assets/icons/logo.svg";
 import Button from "../../../../external/universal/components/Button";
-import {useStartFND, useStopFND} from "../../helpers/hooks";
+import {useStartFND, useStartHSD, useStopFND} from "../../helpers/hooks";
 import {
   useFNDStatus,
   useFetchAppData,
@@ -22,9 +23,10 @@ function InitApp(props: Props): ReactElement {
   return (
     <Switch>
       <Route path="/onboarding/welcome">{renderWelcome(props)}</Route>
+      <Route path="/onboarding/setup-hsd">{renderHSDConfig(props)}</Route>
       <Route path="/onboarding/connection">{renderConnection(props)}</Route>
       <Route path="/onboarding/done">{renderDone(props)}</Route>
-      {/*<Route path="/onboarding/terms">{renderTerms(props)}</Route>*/}
+      <Route path="/onboarding/terms">{renderTerms(props)}</Route>
       <Route>
         <Redirect to="/onboarding/welcome" />
       </Route>
@@ -35,19 +37,11 @@ function InitApp(props: Props): ReactElement {
 export default withRouter(InitApp);
 
 function renderWelcome(props: RouteComponentProps) {
-  const startDDRP = useStartFND();
   const endHeight = useHandshakeEndHeight();
   const startHeight = useHandshakeStartHeight();
-  const ddrpStatus = useFNDStatus();
+  const fndStatus = useFNDStatus();
 
-  const next = useCallback(async () => {
-    if (ddrpStatus !== 'on') {
-      startDDRP();
-    }
-    props.history.push('/onboarding/connection')
-  }, [startDDRP, props.history.push, ddrpStatus]);
-
-  if (endHeight && endHeight === startHeight && ddrpStatus === 'on') {
+  if (endHeight && endHeight === startHeight && fndStatus === 'on') {
     return <Redirect to="/onboarding/done" />
   }
 
@@ -66,12 +60,100 @@ function renderWelcome(props: RouteComponentProps) {
       </div>
       <div className="init-app__content">
         <div className="init-app__header__paragraph">
-          Nomad is a peer-to-peer, ownerless social network built on top of Handshake and DDRP. It allows you to view and interact with content from owners of Handshake TLDs or Subdomains.
+          Nomad is a peer-to-peer, ownerless social network built on top of Handshake and Footnote. It allows you to view and interact with content from owners of Handshake names.
+        </div>
+      </div>
+      <div className="init-app__footer">
+        <Button onClick={() => props.history.push('/onboarding/terms')}>
+          Let's get started
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function renderHSDConfig(props: Props): ReactNode {
+  const start = useStartHSD();
+  const [hasAPI, setHasAPI] = useState(false);
+  const next = useCallback(async () => {
+    await start();
+    props.history.push('/onboarding/connection')
+  }, [start, props.history.push]);
+
+  return (
+    <div className="init-app hsd-config">
+      <div className="init-app__header__title">
+        <Icon
+          url={Logo}
+          width={24}
+        />
+        Configure Handshake
+      </div>
+      <div className="init-app__content">
+        <div className="init-app__paragraph">
+          In order to verify name ownership, Nomad need API access to retrieve name records from a Handshake daemon.
+        </div>
+        <div className="init-app__paragraph">
+          Do you already have API access to a Handshake node?
+        </div>
+        <div className="init-app__paragraph">
+          <div
+            className={c("init-app__hsd-form", {
+              "init-app__hsd-form--disabled": !hasAPI,
+            })}
+          >
+            <div className="init-app__row init-app__hsd-row">
+              <input
+                className="init-app__checkbox"
+                type="radio"
+                checked={!hasAPI}
+                onClick={() => setHasAPI(!hasAPI)}
+              />
+              <div className="init-app__checkbox-label">No - run a HSD daemon for me</div>
+            </div>
+            <div className="init-app__row init-app__hsd-row">
+              <input
+                className="init-app__checkbox"
+                type="radio"
+                checked={hasAPI}
+                onClick={() => setHasAPI(!hasAPI)}
+              />
+              <div className="init-app__checkbox-label">Yes - I will provide API information</div>
+            </div>
+            <div className={c("init-app__rpc-form", {
+              "init-app__rpc-form--disabled": !hasAPI,
+            })}>
+              <div className="init-app__rpc-form-row">
+                <div className="init-app__rpc-form-row__label">
+                  Host
+                </div>
+                <input type="text" disabled={!hasAPI}/>
+              </div>
+              <div className="init-app__rpc-form-row">
+                <div className="init-app__rpc-form-row__label">
+                  Port
+                </div>
+                <input type="text" disabled={!hasAPI}/>
+              </div>
+              <div className="init-app__rpc-form-row">
+                <div className="init-app__rpc-form-row__label">
+                  API Key
+                </div>
+                <input type="text" disabled={!hasAPI}/>
+              </div>
+              <div className="init-app__rpc-form-row">
+                <div className="init-app__rpc-form-row__label">
+                  Base
+                </div>
+                <input type="text" disabled={!hasAPI}/>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="init-app__footer">
         <Button onClick={next}>
-          Let's get started
+          Next Step
         </Button>
       </div>
     </div>
@@ -90,7 +172,7 @@ function renderConnection(props: Props): ReactNode {
       </div>
       <div className="init-app__content">
         <div className="init-app__paragraph">
-          Nomad Explorer will automatically synchronize with the peer-to-peer network on start up. Initial synchronization with the network will take about 5 - 15 minutes.
+          Nomad Explorer will automatically synchronize with Footnote on start up. Initial synchronization with the network will take about 5 - 15 minutes.
         </div>
         <div className="init-app__paragraph">
           You can start browsing using Nomad API as a fallback. Nomad Explorer will prompt you to switch back to peer-to-peer mode when synchronization is completed.
@@ -183,7 +265,7 @@ function renderTerms(props: RouteComponentProps): ReactNode {
       </div>
       <div className="init-app__footer">
         <Button
-          onClick={() => props.history.push('/onboarding/terms')}
+          onClick={() => props.history.push('/onboarding/setup-hsd')}
           disabled={!accepted}
         >
           Next

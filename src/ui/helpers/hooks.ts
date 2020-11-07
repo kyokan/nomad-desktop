@@ -60,6 +60,15 @@ export const useFileUpload = (): () => Promise<string> => {
 };
 
 // Callback
+export const useStartHSD = () => {
+  return useCallback(async (): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.START_HSD,
+      payload: null,
+    }, true);
+  }, [postIPCMain]);
+};
+
 export const useStartFND = () => {
   return useCallback(async (): Promise<void> => {
     return await postIPCMain({

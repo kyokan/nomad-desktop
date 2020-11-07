@@ -31,15 +31,16 @@ import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 import {extendFilter} from "../../../external/nomad-api/src/util/filter";
 import {serializeUsername} from "../../../external/universal/utils/user";
 import crypto from "crypto";
+import HSDService from "./hsd";
 
 const ECKey = require('eckey');
 const conv = require('binstring');
 const dbPath = path.join(electron.app.getPath('userData'), 'nomad.db');
 const namedbPath = path.join(electron.app.getPath('userData'), 'names.db');
-const pendingDbPath = path.join(electron.app.getPath('userData'), 'pending.db');
 const rp = resourcesPath();
 
 export default class AppManager {
+  hsdManager: HSDService;
   indexerManager: IndexerManager;
   signerManager: SignerManager;
   windowsController: WindowsController;
@@ -51,6 +52,7 @@ export default class AppManager {
   localServer: LocalServer;
 
   constructor () {
+    this.hsdManager = new HSDService();
     this.indexerManager = new IndexerManager({
       dbPath,
       namedbPath,
@@ -60,7 +62,6 @@ export default class AppManager {
     this.usersController = new UsersController({
       dispatchMain: this.dispatchMain,
       dispatchNewPost: this.dispatchNewPost,
-
     });
     this.favsManager = new FavsManager();
     this.userDataManager = new UserDataManager({
@@ -85,8 +86,6 @@ export default class AppManager {
       indexerManager: this.indexerManager,
       userDataManager: this.userDataManager,
     });
-
-
     this.localServer = new LocalServer({
       indexerManager: this.indexerManager,
     });
@@ -501,7 +500,7 @@ export default class AppManager {
         port = 12037,
       } = req.payload;
 
-      const resp = await this.fndController.setDDRPInfo(rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port);
+      const resp = await this.fndController.setFNDInfo(rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port);
       this.sendResponse(evt, req.id, resp);
     } catch (err) {
       this.sendResponse(evt, req.id, err.message, true);
@@ -785,12 +784,25 @@ export default class AppManager {
 
   async init () {
     const initialized = await isAppInitialized();
+
+    await this.hsdManager.init();
+
+    const type = await this.hsdManager.getConnectionType();
+
+    if (type) {
+      await this.hsdManager.start();
+    }
+
     const { handshakeEndHeight } = await getHandshakeBlockInfo();
+
     await this.fndController.init();
+
     if (initialized || handshakeEndHeight) {
       await this.fndController.startDaemon();
     }
+
     await this.indexerManager.start();
+
     await this.usersController.init();
     await this.userDataManager.init();
     await this.signerManager.init();
