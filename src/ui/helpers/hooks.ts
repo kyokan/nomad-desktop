@@ -69,6 +69,51 @@ export const useStartHSD = () => {
   }, [postIPCMain]);
 };
 
+export const useSetHost = () => {
+  return useCallback(async (host: string): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.SET_HSD_HOST,
+      payload: host,
+    }, true);
+  }, [postIPCMain]);
+};
+
+export const useSetPort = () => {
+  return useCallback(async (port: string): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.SET_HSD_PORT,
+      payload: port,
+    }, true);
+  }, [postIPCMain]);
+};
+
+export const useSetAPIKey = () => {
+  return useCallback(async (apiKey: string): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.SET_HSD_API_KEY,
+      payload: apiKey,
+    }, true);
+  }, [postIPCMain]);
+};
+
+export const useSetHSDConnectionType = () => {
+  return useCallback(async (type: 'P2P' | 'CUSTOM' | ''): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.SET_HSD_CONN_TYPE,
+      payload: type,
+    }, true);
+  }, [postIPCMain]);
+};
+
+export const useSetBasePath = () => {
+  return useCallback(async (basePath: string): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.SET_HSD_BASE_PATH,
+      payload: basePath,
+    }, true);
+  }, [postIPCMain]);
+};
+
 export const useStartFND = () => {
   return useCallback(async (): Promise<void> => {
     return await postIPCMain({

@@ -41,11 +41,6 @@ export default class HSDService extends EventEmitter {
     await this._ensureDir(hsdDataPath);
   }
 
-  async hasConfig() {
-    const type = await this.getConnectionType();
-    return type !== '';
-  }
-
   async getConnectionType(): Promise<'P2P' | 'CUSTOM' | ''> {
     try {
       const type = await this.readFile(connectionTypePath);
@@ -74,6 +69,26 @@ export default class HSDService extends EventEmitter {
 
   async writeFile(filepath: string, value: Buffer): Promise<void> {
     return fs.promises.writeFile(filepath, value);
+  }
+
+  async setConnectionType(type: 'P2P' | 'CUSTOM' | ''): Promise<void> {
+    return fs.promises.writeFile(connectionTypePath, type);
+  }
+
+  async setHost(host: string) {
+    return this.writeFile(hostPath, Buffer.from(host, 'utf-8'));
+  }
+
+  async setPort(port: string) {
+    return this.writeFile(portPath, Buffer.from(port, 'utf-8'));
+  }
+
+  async setAPIKey(apiKey: string) {
+    return this.writeFile(apiKeyPath, Buffer.from(apiKey, 'utf-8'));
+  }
+
+  async setBasePath(base: string) {
+    return this.writeFile(basePath, Buffer.from(base, 'utf-8'));
   }
 
   async getConnection(): Promise<{

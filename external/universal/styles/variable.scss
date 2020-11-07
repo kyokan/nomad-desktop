@@ -175,6 +175,10 @@ textarea {
     cursor: default;
     opacity: .5;
   }
+
+  &::placeholder {
+    color: $gray-200;
+  }
 }
 
 textarea {

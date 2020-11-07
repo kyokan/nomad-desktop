@@ -124,7 +124,7 @@ const deleteFolderRecursive = function(dir: string) {
   }
 };
 
-export default class DDRPController {
+export default class FNDController {
   private daemon: ChildProcess | null = null;
   private subscribers: ((log: string) => void)[];
   client: FNDClient;

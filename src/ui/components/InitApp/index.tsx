@@ -3,9 +3,17 @@ import {Redirect, Route, RouteComponentProps, Switch, withRouter} from "react-ro
 import c from 'classnames';
 import "./init-app.scss";
 import Icon from "../../../../external/universal/components/Icon";
-import Logo from "../../../../static/assets/icons/logo.svg";
+import Logo from "../../../../static/assets/icons/logo-green.svg";
 import Button from "../../../../external/universal/components/Button";
-import {useStartFND, useStartHSD, useStopFND} from "../../helpers/hooks";
+import {
+  useSetAPIKey,
+  useSetBasePath,
+  useSetHost, useSetHSDConnectionType,
+  useSetPort,
+  useStartFND,
+  useStartHSD,
+  useStopFND
+} from "../../helpers/hooks";
 import {
   useFNDStatus,
   useFetchAppData,
@@ -74,11 +82,39 @@ function renderWelcome(props: RouteComponentProps) {
 
 function renderHSDConfig(props: Props): ReactNode {
   const start = useStartHSD();
+  const setHost = useSetHost();
+  const setPort = useSetPort();
+  const setApiKey = useSetAPIKey();
+  const setBasePath = useSetBasePath();
+  const setConnType = useSetHSDConnectionType();
   const [hasAPI, setHasAPI] = useState(false);
+  const [_host, setHostDraft] = useState('');
+  const [_port, setPortDraft] = useState('');
+  const [_apiKey, setApiKeyDraft] = useState('');
+  const [_base, setBaseDraft] = useState('');
+
   const next = useCallback(async () => {
-    await start();
-    props.history.push('/onboarding/connection')
-  }, [start, props.history.push]);
+    if (!hasAPI) {
+      await setConnType('P2P');
+      await start();
+    } else {
+      await setHost(_host);
+      await setPort(_port);
+      await setApiKey(_apiKey);
+      await setBasePath(_base);
+      await setConnType('CUSTOM');
+    }
+
+    props.history.push('/onboarding/connection');
+
+  }, [
+    start,
+    props.history.push,
+    _host,
+    _port,
+    _apiKey,
+    _base,
+  ]);
 
   return (
     <div className="init-app hsd-config">
@@ -127,32 +163,69 @@ function renderHSDConfig(props: Props): ReactNode {
                 <div className="init-app__rpc-form-row__label">
                   Host
                 </div>
-                <input type="text" disabled={!hasAPI}/>
+                <input
+                  type="text"
+                  disabled={!hasAPI}
+                  value={_host}
+                  placeholder="127.0.0.1"
+                  onChange={e => {
+                    const val = e.target.value;
+                    setHostDraft(val);
+                  }}
+                />
               </div>
               <div className="init-app__rpc-form-row">
                 <div className="init-app__rpc-form-row__label">
                   Port
                 </div>
-                <input type="text" disabled={!hasAPI}/>
+                <input
+                  type="text"
+                  disabled={!hasAPI}
+                  value={_port}
+                  placeholder="12037"
+                  onChange={e => {
+                    const val = e.target.value;
+                    setPortDraft(val.replace(/\D/g,''));
+                  }}
+                />
               </div>
               <div className="init-app__rpc-form-row">
                 <div className="init-app__rpc-form-row__label">
                   API Key
                 </div>
-                <input type="text" disabled={!hasAPI}/>
+                <input
+                  type="text"
+                  disabled={!hasAPI}
+                  value={_apiKey}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setApiKeyDraft(val);
+                  }}
+                />
               </div>
               <div className="init-app__rpc-form-row">
                 <div className="init-app__rpc-form-row__label">
                   Base
                 </div>
-                <input type="text" disabled={!hasAPI}/>
+                <input
+                  type="text"
+                  disabled={!hasAPI}
+                  value={_base}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setBaseDraft(val);
+                  }}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="init-app__footer">
-        <Button onClick={next}>
+        <Button
+          onClick={next}
+          disabled={hasAPI && !_host}
+        >
           Next Step
         </Button>
       </div>

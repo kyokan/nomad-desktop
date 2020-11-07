@@ -11,7 +11,7 @@ import electron, {ipcMain, IpcMainEvent} from 'electron';
 import {APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
 import {DraftPost} from '../../ui/ducks/drafts/type';
 import {mapDraftToDomainPost} from '../util/posts';
-import DDRPController from './fnd';
+import FNDController from './fnd';
 import UserDataManager from './userData';
 import {decrypt} from "../util/key";
 import logger from "../util/logger";
@@ -46,7 +46,7 @@ export default class AppManager {
   windowsController: WindowsController;
   usersController: UsersController;
   userDataManager: UserDataManager;
-  fndController: DDRPController;
+  fndController: FNDController;
   favsManager: FavsManager;
   blocklistManager: BlocklistManager;
   localServer: LocalServer;
@@ -73,7 +73,7 @@ export default class AppManager {
       dispatchMain: this.dispatchMain,
       dispatchSetting: this.dispatchSetting,
     });
-    this.fndController = new DDRPController({
+    this.fndController = new FNDController({
       dispatchMain: this.dispatchMain,
       dispatchSetting: this.dispatchSetting,
       dispatchNewPost: this.dispatchNewPost,
@@ -204,6 +204,30 @@ export default class AppManager {
           this.fndController.banPeer.bind(this, req.payload.peerId, req.payload.durationMS),
           evt, req,
         );
+      case IPCMessageRequestType.SET_HSD_API_KEY:
+        return this.handleRequest(async () => {
+          await this.hsdManager.setAPIKey(req.payload);
+          await this.fndController.setAPIKey(req.payload);
+        }, evt, req);
+      case IPCMessageRequestType.SET_HSD_BASE_PATH:
+        return this.handleRequest(async () => {
+          await this.hsdManager.setBasePath(req.payload);
+          await this.fndController.setBasePath(req.payload);
+        }, evt, req);
+      case IPCMessageRequestType.SET_HSD_HOST:
+        return this.handleRequest(async () => {
+          await this.hsdManager.setHost(req.payload);
+          await this.fndController.setHost(req.payload);
+        }, evt, req);
+      case IPCMessageRequestType.SET_HSD_CONN_TYPE:
+        return this.handleRequest(async () => {
+          await this.hsdManager.setConnectionType(req.payload);
+        }, evt, req);
+      case IPCMessageRequestType.SET_HSD_PORT:
+        return this.handleRequest(async () => {
+          await this.hsdManager.setPort(req.payload);
+          await this.fndController.setPort(req.payload);
+        }, evt, req);
       case IPCMessageRequestType.GET_FND_LOG_LEVEL:
         return this.handleRequest(this.fndController.getLogLevel, evt, req);
       case IPCMessageRequestType.GET_FND_PEERS:
@@ -329,7 +353,7 @@ export default class AppManager {
       case IPCMessageRequestType.GET_FND_INFO:
         return this.handleGetDDRPInfo(evt, req);
       case IPCMessageRequestType.SET_FND_INFO:
-        return this.handleSetDDRPInfo(evt, req);
+        return this.handleSetFNDInfo(evt, req);
       case IPCMessageRequestType.DOWNLOAD_FND_LOG:
         return this.handleRequest(this.fndController.getDDRPLog, evt, req);
       case IPCMessageRequestType.SET_FND_LOG_LEVEL:
@@ -489,7 +513,7 @@ export default class AppManager {
     }
   };
 
-  private handleSetDDRPInfo = async (evt: IpcMainEvent, req: IPCMessageRequest<any>) => {
+  private handleSetFNDInfo = async (evt: IpcMainEvent, req: IPCMessageRequest<any>) => {
     try {
       const {
         rpcUrl = '',
