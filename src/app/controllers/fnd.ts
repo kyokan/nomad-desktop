@@ -32,7 +32,7 @@ import Timeout = NodeJS.Timeout;
 import {HSD_API_KEY} from "./hsd";
 
 const appDataPath = app.getPath('userData');
-const fndHome = path.join(appDataPath, '.fnd');
+const fndHome = path.join(appDataPath, 'fnd_data');
 const fndPath = path.join(appDataPath, 'fnd');
 const fndVersionPath = path.join(appDataPath, 'fnd_version');
 const fndInitNoncePath = path.join(appDataPath, 'fnd_init_nonce');

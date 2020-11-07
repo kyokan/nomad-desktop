@@ -3,6 +3,7 @@ import {PostMeta} from "../../external/universal/ducks/posts";
 export enum IPCMessageRequestType {
   PLACEHOLDER = 'ipc/placeholder',
   PROXY = 'ipc/proxy',
+  GET_HSD_CONN = 'ipc/getHSDConnection',
   GET_FND_INFO = 'ipc/getFNDInfo',
   SET_FND_INFO = 'ipc/setFNDInfo',
   SET_POST_VIEWER_HASH = 'ipc/setPostViewHash',

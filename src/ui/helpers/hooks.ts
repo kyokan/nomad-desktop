@@ -69,6 +69,21 @@ export const useStartHSD = () => {
   }, [postIPCMain]);
 };
 
+export const useGetConnection = () => {
+  return useCallback(async (): Promise<{
+    type: 'P2P' | 'CUSTOM' | '';
+    host: string;
+    port: number;
+    apiKey: string;
+    basePath: string;
+  }> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.GET_HSD_CONN,
+      payload: null,
+    }, true);
+  }, [postIPCMain]);
+};
+
 export const useSetHost = () => {
   return useCallback(async (host: string): Promise<void> => {
     return await postIPCMain({

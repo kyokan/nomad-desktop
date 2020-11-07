@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode, useCallback, useState} from "react";
+import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
 import {Redirect, Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import c from 'classnames';
 import "./init-app.scss";
@@ -6,6 +6,7 @@ import Icon from "../../../../external/universal/components/Icon";
 import Logo from "../../../../static/assets/icons/logo-green.svg";
 import Button from "../../../../external/universal/components/Button";
 import {
+  useGetConnection,
   useSetAPIKey,
   useSetBasePath,
   useSetHost, useSetHSDConnectionType,
@@ -87,6 +88,8 @@ function renderHSDConfig(props: Props): ReactNode {
   const setApiKey = useSetAPIKey();
   const setBasePath = useSetBasePath();
   const setConnType = useSetHSDConnectionType();
+  const startFND = useStartFND();
+  const [isLoading, setLoading] = useState(false);
   const [hasAPI, setHasAPI] = useState(false);
   const [_host, setHostDraft] = useState('');
   const [_port, setPortDraft] = useState('');
@@ -94,9 +97,9 @@ function renderHSDConfig(props: Props): ReactNode {
   const [_base, setBaseDraft] = useState('');
 
   const next = useCallback(async () => {
+    setLoading(true);
     if (!hasAPI) {
       await setConnType('P2P');
-      await start();
     } else {
       await setHost(_host);
       await setPort(_port);
@@ -104,9 +107,9 @@ function renderHSDConfig(props: Props): ReactNode {
       await setBasePath(_base);
       await setConnType('CUSTOM');
     }
-
+    await start();
+    await startFND();
     props.history.push('/onboarding/connection');
-
   }, [
     start,
     props.history.push,
@@ -224,7 +227,8 @@ function renderHSDConfig(props: Props): ReactNode {
       <div className="init-app__footer">
         <Button
           onClick={next}
-          disabled={hasAPI && !_host}
+          disabled={isLoading || (hasAPI && !_host)}
+          loading={isLoading}
         >
           Next Step
         </Button>
@@ -263,14 +267,14 @@ function renderConnection(props: Props): ReactNode {
 function renderDone(props: Props): ReactNode {
   const [loading, setLoading] = useState(false);
   const fetchAppData = useFetchAppData();
-  const startDDRP = useStartFND();
-  const stopDDRP = useStopFND();
+  const startFND = useStartFND();
+  const stopFND = useStopFND();
   const restartDDRP = useCallback(async () => {
     if (loading) return;
-    await stopDDRP();
+    await stopFND();
     await wait(1000);
-    startDDRP();
-  }, [startDDRP, stopDDRP, loading]);
+    startFND();
+  }, [startFND, stopFND, loading]);
 
   const done = useCallback(async () => {
     if (loading) return;

@@ -91,13 +91,13 @@ export default class HSDService extends EventEmitter {
     return this.writeFile(basePath, Buffer.from(base, 'utf-8'));
   }
 
-  async getConnection(): Promise<{
+  getConnection = async (): Promise<{
     type: 'P2P' | 'CUSTOM' | '';
     host: string;
     port: number;
     apiKey: string;
     basePath: string;
-  }> {
+  }> => {
     const type = await this.getConnectionType();
     const host = await this.readFile(hostPath);
     const port = await this.readFile(portPath);

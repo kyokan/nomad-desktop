@@ -346,10 +346,16 @@ export default class AppManager {
         return this.handleRequest(this.usersController.getUserKeystore.bind(this, req.payload), evt, req);
       case IPCMessageRequestType.GET_IDENTITY:
         return this.handleGetIdentity(evt, req);
+      case IPCMessageRequestType.START_HSD:
+        return this.handleRequest(async () => {
+          return await this.hsdManager.start();
+        }, evt, req);
       case IPCMessageRequestType.START_FND:
         return this.handleRequest(this.fndController.startDaemon, evt, req);
       case IPCMessageRequestType.STOP_FND:
         return this.handleRequest(this.fndController.stopDaemon, evt, req);
+      case IPCMessageRequestType.GET_HSD_CONN:
+        return this.handleRequest(this.hsdManager.getConnection, evt, req);
       case IPCMessageRequestType.GET_FND_INFO:
         return this.handleGetDDRPInfo(evt, req);
       case IPCMessageRequestType.SET_FND_INFO:
@@ -810,6 +816,7 @@ export default class AppManager {
     const initialized = await isAppInitialized();
 
     await this.hsdManager.init();
+    await this.fndController.init();
 
     const type = await this.hsdManager.getConnectionType();
 
@@ -819,7 +826,6 @@ export default class AppManager {
 
     const { handshakeEndHeight } = await getHandshakeBlockInfo();
 
-    await this.fndController.init();
 
     if (initialized || handshakeEndHeight) {
       await this.fndController.startDaemon();
