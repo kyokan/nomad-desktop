@@ -4,8 +4,16 @@ import {FNDPeer, IPCMessageRequestType, IPCMessageResponse} from "../../../../ap
 import {postIPCMain} from "../../../helpers/ipc";
 import "./network-setting.scss";
 import Button from "../../../../../external/universal/components/Button";
-import {useStartFND, useStopFND} from "../../../helpers/hooks";
-import {useFNDStatus, useFetchAppData} from "../../../ducks/app";
+import {
+  useSetAPIKey,
+  useSetBasePath,
+  useSetHost, useSetHSDConnectionType,
+  useSetPort,
+  useStartFND,
+  useStartHSD,
+  useStopFND, useStopHSD
+} from "../../../helpers/hooks";
+import {useFNDStatus, useFetchAppData, useAppData} from "../../../ducks/app";
 import {INDEXER_API} from "../../../../../external/universal/utils/api";
 
 let watch: any | null;
@@ -13,13 +21,16 @@ let watch: any | null;
 function NetworkSetting(props: RouteComponentProps): ReactElement {
   const fetchAppData = useFetchAppData();
   const fndStatus = useFNDStatus();
+  const saveHost = useSetHost();
+  const savePort = useSetPort();
+  const saveApiKey = useSetAPIKey();
+  const saveBasePath = useSetBasePath();
+
   const [connectedPeers, setConnectedPeers] = useState<FNDPeer[]>([]);
   const [bannedPeers] = useState<FNDPeer[]>([]);
 
   const [rpcUrl, setRpcUrl] = useState('');
   const [rpcKey, setRpcKey] = useState('');
-  const [heartbeatUrl, setHeartbeatUrl] = useState('');
-  const [moniker, setMoniker] = useState('Nomad Desktop');
   const [port, setPort] = useState(12037);
   const [basePath, setBasePath] = useState('');
 
@@ -34,8 +45,6 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   const [defaultRpcUrl, setDefaultRpcUrl] = useState('');
   const [defaultRpcKey, setDefaultRpcKey] = useState('');
-  const [defaultHeartbeatUrl, setDefaultHeartbeatUrl] = useState('');
-  const [defaultMoniker, setDefaultMoniker] = useState('');
   const [defaultPort, setDefaultPort] = useState(0);
   const [defaultBasePath, setDefaultBasePath] = useState('');
 
@@ -65,39 +74,24 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
     if (isUpdatingFNDInfo) return;
     setUpdatingFNDInfo(true);
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SET_FND_INFO,
-      payload: {
-        rpcUrl,
-        rpcKey,
-        heartbeatUrl,
-        moniker,
-        basePath,
-        port,
-      },
-    }, true);
+    await saveApiKey(rpcKey);
+    await saveHost(rpcUrl);
+    await savePort(`${port || ''}`);
+    await saveBasePath(basePath);
 
     setDefaultRpcUrl(rpcUrl);
     setDefaultRpcKey(rpcKey);
-    setDefaultMoniker(moniker);
-    setDefaultHeartbeatUrl(heartbeatUrl);
     setDefaultBasePath(basePath);
     setDefaultPort(port);
 
     setUpdatingFNDInfo(false);
     setDirty(false);
-  }, [rpcUrl, rpcKey, heartbeatUrl, moniker, basePath, port, isUpdatingFNDInfo]);
+  }, [rpcUrl, rpcKey, basePath, port, isUpdatingFNDInfo]);
 
   useEffect(() => {
     (async function onPeerInfoGroupMount() {
       await fetchAppData();
       const json: IPCMessageResponse<{
-        rpcUrl: string;
-        rpcKey: string;
-        moniker: string;
-        basePath: string;
-        heartbeatUrl: string;
-        port: number;
         startHeight: number;
         endHeight: number;
       }> = await postIPCMain({
@@ -105,19 +99,26 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
         payload: null,
       }, true);
 
-      setRpcUrl(json.payload.rpcUrl);
-      setRpcKey(json.payload.rpcKey);
-      setMoniker(json.payload.moniker);
-      setHeartbeatUrl(json.payload.heartbeatUrl);
-      setBasePath(json.payload.basePath);
-      setPort(json.payload.port);
+      const {payload: conn}: IPCMessageResponse<{
+        type: 'P2P' | 'CUSTOM' | '';
+        host: string;
+        port: number;
+        apiKey: string;
+        basePath: string;
+      }> = await postIPCMain({
+        type: IPCMessageRequestType.GET_HSD_CONN,
+        payload: null,
+      }, true);
 
-      setDefaultRpcUrl(json.payload.rpcUrl);
-      setDefaultRpcKey(json.payload.rpcKey);
-      setDefaultMoniker(json.payload.moniker);
-      setDefaultHeartbeatUrl(json.payload.heartbeatUrl);
-      setDefaultBasePath(json.payload.basePath);
-      setDefaultPort(json.payload.port);
+      setRpcUrl(conn.host);
+      setRpcKey(conn.apiKey);
+      setBasePath(conn.basePath);
+      setPort(conn.port);
+
+      setDefaultRpcUrl(conn.host);
+      setDefaultRpcKey(conn.apiKey);
+      setDefaultBasePath(conn.basePath);
+      setDefaultPort(conn.port);
 
       setStartHeight(json.payload.startHeight);
       setEndHeight(json.payload.endHeight);
@@ -135,13 +136,9 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
           isConnected: fndStatus === 'on',
           rpcKey: dirty && (rpcKey !== defaultRpcKey) ? rpcKey : defaultRpcKey,
           rpcUrl: dirty && (rpcUrl !== defaultRpcUrl) ? rpcUrl : defaultRpcUrl,
-          heartbeatUrl: dirty && (heartbeatUrl !== defaultHeartbeatUrl) ? heartbeatUrl : defaultHeartbeatUrl,
-          moniker: dirty && (moniker !== defaultMoniker) ? moniker : defaultMoniker,
           basePath: dirty && (basePath !== defaultBasePath) ? basePath : defaultBasePath,
           port: dirty && (port !== defaultPort) ? port : defaultPort,
           stopped,
-          setHeartbeatUrl,
-          setMoniker,
           setRpcKey,
           setRpcUrl,
           setDirty,
@@ -177,11 +174,7 @@ type EditableOpts = {
   setRpcUrl: (rpcUrl: string) => void;
   rpcKey: string;
   setRpcKey: (rpcKey: string) => void;
-  heartbeatUrl: string;
-  setHeartbeatUrl: (heartbeatUrl: string) => void;
-  moniker: string;
   stopped: boolean | null;
-  setMoniker: (moniker: string) => void;
   setDirty: (dirty: boolean) => void;
   setNodeStopped: (stopped: boolean | null) => void;
 }
@@ -189,6 +182,12 @@ type EditableOpts = {
 function renderEditables(opts: EditableOpts): ReactNode {
   const startFND = useStartFND();
   const stopFND = useStopFND();
+  const startHSD = useStartHSD();
+  const stopHSD = useStopHSD();
+  const appData = useAppData();
+  const [isHSDLoading, setHSDLoading] = useState(false);
+
+  const isHSDRunning = appData.handshakeConnectionType === 'P2P';
 
   const restartFND = useCallback(async () => {
     await stopFND();
@@ -203,21 +202,51 @@ function renderEditables(opts: EditableOpts): ReactNode {
           Footnote Daemon
         </div>
         <div className="network-setting__network-info-row__value">
+          <Button disabled={opts.isConnected} onClick={startFND}>
+            Start
+          </Button>
+          <Button disabled={!opts.isConnected} onClick={stopFND}>
+            Stop
+          </Button>
+          <Button disabled={!opts.isConnected} onClick={restartFND}>
+            Restart
+          </Button>
+        </div>
+      </div>
+      <div className="network-setting__network-info-row">
+        <div className="network-setting__network-info-row__label">
+          Handshake Daemon
+        </div>
+        <div className="network-setting__network-info-row__value">
           <Button
-            disabled={opts.isConnected}
-            onClick={startFND}
+            disabled={isHSDRunning || isHSDLoading}
+            onClick={async () => {
+              setHSDLoading(true);
+              await startHSD();
+              setHSDLoading(false);
+            }}
           >
             Start
           </Button>
           <Button
-            disabled={!opts.isConnected}
-            onClick={stopFND}
+            disabled={!isHSDRunning || isHSDLoading}
+            onClick={async () => {
+              setHSDLoading(true);
+              await stopHSD();
+              setHSDLoading(false);
+            }}
           >
             Stop
           </Button>
           <Button
-            disabled={!opts.isConnected}
-            onClick={restartFND}
+            disabled={!isHSDRunning || isHSDLoading}
+            onClick={async () => {
+              setHSDLoading(true);
+              await stopHSD();
+              await new Promise((r: Function) => setTimeout(r, 3000));
+              await startHSD();
+              setHSDLoading(false);
+            }}
           >
             Restart
           </Button>
@@ -225,13 +254,13 @@ function renderEditables(opts: EditableOpts): ReactNode {
       </div>
       <div className="network-setting__network-info-row">
         <div className="network-setting__network-info-row__label">
-          Handshake RPC API
+          Handshake RPC Host
         </div>
         <div className="network-setting__network-info-row__value">
           <input
             type="text"
             value={opts.rpcUrl}
-            disabled={!opts.isConnected}
+            disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setRpcUrl(e.target.value);
               opts.setDirty(true);
@@ -247,7 +276,7 @@ function renderEditables(opts: EditableOpts): ReactNode {
           <input
             type="text"
             value={opts.rpcKey}
-            disabled={!opts.isConnected}
+            disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setRpcKey(e.target.value);
               opts.setDirty(true);
@@ -257,13 +286,13 @@ function renderEditables(opts: EditableOpts): ReactNode {
       </div>
       <div className="network-setting__network-info-row">
         <div className="network-setting__network-info-row__label">
-          Handshake RPC API Port (Optional)
+          Handshake RPC Port (Optional)
         </div>
         <div className="network-setting__network-info-row__value">
           <input
             type="text"
-            value={opts.port}
-            disabled={!opts.isConnected}
+            value={opts.port || ''}
+            disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setPort(Number(e.target.value));
               opts.setDirty(true);
@@ -273,13 +302,13 @@ function renderEditables(opts: EditableOpts): ReactNode {
       </div>
       <div className="network-setting__network-info-row">
         <div className="network-setting__network-info-row__label">
-          Handshake RPC API Base Path (Optional)
+          Handshake RPC Base Path (Optional)
         </div>
         <div className="network-setting__network-info-row__value">
           <input
             type="text"
             value={opts.basePath}
-            disabled={!opts.isConnected}
+            disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setBasePath(e.target.value);
               opts.setDirty(true);
@@ -287,29 +316,6 @@ function renderEditables(opts: EditableOpts): ReactNode {
           />
         </div>
       </div>
-      {
-        !!opts.heartbeatUrl && (
-          <div className="network-setting__network-info-row">
-            <div className="network-setting__network-info-row__label">
-              Moniker
-              <div className="network-setting__network-info-row__label__sub">
-                This will appear as your node's name on DDRPScan
-              </div>
-            </div>
-            <div className="network-setting__network-info-row__value">
-              <input
-                type="text"
-                value={opts.moniker}
-                disabled={!opts.isConnected}
-                onChange={e => {
-                  opts.setMoniker(e.target.value);
-                  opts.setDirty(true);
-                }}
-              />
-            </div>
-          </div>
-        )
-      }
     </div>
   )
 }

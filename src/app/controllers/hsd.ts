@@ -196,10 +196,10 @@ export default class HSDService extends EventEmitter {
     const network = Network.get('main');
     this.client = new NodeClient({
       network: network,
-      apiKey: apiKey,
-      port: port,
-      host: host,
-      path: basePath,
+      apiKey: apiKey || undefined,
+      port: port || undefined,
+      host: host || undefined,
+      path: basePath || undefined,
     });
   }
 
@@ -219,7 +219,10 @@ export default class HSDService extends EventEmitter {
   }
 
   async stop() {
-    await this.hsd!.close();
+    if (this.hsd) {
+      await this.hsd.close();
+      this.hsd = null;
+    }
   }
 
   private _ensureClient() {

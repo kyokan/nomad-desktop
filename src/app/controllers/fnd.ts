@@ -406,7 +406,7 @@ export default class FNDController {
   setPort = async (port: string) => {
     const content = await fs.promises.readFile(`${fndHome}/config.toml`);
     const splits = content.toString('utf-8').split('\n');
-    splits[PORT_LINE] = `  port = ${port}`;
+    splits[PORT_LINE] = `  port = ${port || '80'}`;
     return await fs.promises.writeFile(`${fndHome}/config.toml`, splits.join('\n'));
   };
 

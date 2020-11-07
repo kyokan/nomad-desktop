@@ -5,8 +5,8 @@ import SettingRoot from "./pages/SettingRoot";
 import configureSettingStore from "./store/configureSettingStore";
 import {MemoryRouter} from "react-router-dom";
 import {ipcRenderer} from "electron";
-import {APP_DATA_EVENT_TYPES, FND_EVENT_TYPES, IPCMessageRequest} from "../app/types";
-import {setFNDStatus, setHandshakeEndHeight, setHandshakeStartHeight, setLastSync} from "./ducks/app";
+import {APP_DATA_EVENT_TYPES, FND_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType} from "../app/types";
+import {AppActionType, setFNDStatus, setHandshakeEndHeight, setHandshakeStartHeight, setLastSync} from "./ducks/app";
 
 const store = configureSettingStore();
 
@@ -21,6 +21,12 @@ ReactDOM.render(
 
 ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
   switch (message.type) {
+    case IPCMessageRequestType.HSD_CONN_TYPE_UPDATED:
+      store.dispatch({
+        type: AppActionType.SET_CONN_TYPE,
+        payload: message.payload,
+      });
+      return;
     case APP_DATA_EVENT_TYPES.START_HEIGHT_UPDATED:
       return store.dispatch(setHandshakeStartHeight(message.payload));
     case APP_DATA_EVENT_TYPES.END_HEIGHT_UPDATED:

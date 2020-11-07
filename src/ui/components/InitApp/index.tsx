@@ -87,7 +87,7 @@ function renderWelcome(props: RouteComponentProps) {
 }
 
 function renderHSDConfig(props: Props): ReactNode {
-  const start = useStartHSD();
+  const startHSD = useStartHSD();
   const setHost = useSetHost();
   const setPort = useSetPort();
   const setApiKey = useSetAPIKey();
@@ -112,11 +112,11 @@ function renderHSDConfig(props: Props): ReactNode {
       await setBasePath(_base);
       await setConnType('CUSTOM');
     }
-    await start();
+    await startHSD();
     await startFND();
     props.history.push('/onboarding/connection');
   }, [
-    start,
+    startHSD,
     props.history.push,
     _host,
     _port,
@@ -131,7 +131,7 @@ function renderHSDConfig(props: Props): ReactNode {
           url={Logo}
           width={24}
         />
-        Configure Handshake
+        Network Setting
       </div>
       <div className="init-app__content">
         <div className="init-app__paragraph">
@@ -243,6 +243,13 @@ function renderHSDConfig(props: Props): ReactNode {
 }
 
 function renderConnection(props: Props): ReactNode {
+  const appData = useAppData();
+  let remainingTimeText = 'Initial synchronization with the network will take about 5 - 15 minutes.';
+
+  if (appData.handshakeConnectionType === 'P2P' && appData.handshakeSyncProgress < 1) {
+    remainingTimeText = 'Initial synchronization with the network will take about 6 - 8 hours.';
+  }
+
   return (
     <div className="init-app">
       <div className="init-app__header__title">
@@ -254,10 +261,10 @@ function renderConnection(props: Props): ReactNode {
       </div>
       <div className="init-app__content">
         <div className="init-app__paragraph">
-          Nomad Explorer will automatically synchronize with Footnote on start up. Initial synchronization with the network will take about 5 - 15 minutes.
+          {`Nomad Desktop will automatically synchronize with Footnote on start up. ${remainingTimeText}`}
         </div>
         <div className="init-app__paragraph">
-          You can start browsing using Nomad API as a fallback. Nomad Explorer will prompt you to switch back to peer-to-peer mode when synchronization is completed.
+          You can start browsing using our hosted Nomad API as a fallback. Nomad Desktop will prompt you to switch back to peer-to-peer mode when synchronization is completed.
         </div>
       </div>
       <div className="init-app__footer">

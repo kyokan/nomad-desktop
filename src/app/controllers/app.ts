@@ -350,7 +350,38 @@ export default class AppManager {
         return this.handleGetIdentity(evt, req);
       case IPCMessageRequestType.START_HSD:
         return this.handleRequest(async () => {
+          await this.hsdManager.setConnectionType('P2P');
+          await this.fndController.setPort('12037');
+          await this.fndController.setHost('http://127.0.0.1');
+          await this.fndController.setBasePath('');
+          await this.fndController.setAPIKey(HSD_API_KEY);
+          await this.dispatchMain({
+            type: IPCMessageRequestType.HSD_CONN_TYPE_UPDATED,
+            payload: 'P2P',
+          });
+          await this.dispatchSetting({
+            type: IPCMessageRequestType.HSD_CONN_TYPE_UPDATED,
+            payload: 'P2P',
+          });
           return await this.hsdManager.start();
+        }, evt, req);
+      case IPCMessageRequestType.STOP_HSD:
+        return this.handleRequest(async () => {
+          const conn = await this.hsdManager.getConnection();
+          await this.hsdManager.setConnectionType('CUSTOM');
+          await this.fndController.setPort(`${conn.port || ''}`);
+          await this.fndController.setHost(conn.host);
+          await this.fndController.setBasePath(conn.basePath);
+          await this.fndController.setAPIKey(conn.apiKey);
+          await this.dispatchMain({
+            type: IPCMessageRequestType.HSD_CONN_TYPE_UPDATED,
+            payload: 'CUSTOM',
+          });
+          await this.dispatchSetting({
+            type: IPCMessageRequestType.HSD_CONN_TYPE_UPDATED,
+            payload: 'CUSTOM',
+          });
+          return await this.hsdManager.stop();
         }, evt, req);
       case IPCMessageRequestType.START_FND:
         return this.handleRequest(this.fndController.startDaemon, evt, req);

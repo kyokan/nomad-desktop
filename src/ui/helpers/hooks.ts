@@ -70,6 +70,15 @@ export const useStartHSD = () => {
   }, [postIPCMain]);
 };
 
+export const useStopHSD = () => {
+  return useCallback(async (): Promise<void> => {
+    return await postIPCMain({
+      type: IPCMessageRequestType.STOP_HSD,
+      payload: null,
+    }, true);
+  }, [postIPCMain]);
+};
+
 export const useGetConnection = () => {
   const dispatch = useDispatch();
   return useCallback(async (): Promise<{
