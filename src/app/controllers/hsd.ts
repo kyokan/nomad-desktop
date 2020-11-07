@@ -3,6 +3,7 @@ import fs from "fs";
 import crypto from "crypto";
 import {EventEmitter} from "events";
 import {app} from "electron";
+import {APP_DATA_EVENT_TYPES, IPCMessageRequest} from "../types";
 
 const FullNode = require('hsd/lib/node/fullnode');
 const {NodeClient} = require('hs-client');
@@ -24,9 +25,19 @@ const basePath = path.join(hsdDataPath, 'BASE_PATH');
 const portPath = path.join(hsdDataPath, 'PORT');
 const apiKeyPath = path.join(hsdDataPath, 'API_KEY');
 
+type Opts = {
+  dispatchMain: (msg: IPCMessageRequest<any>) => void;
+}
+
 export default class HSDService extends EventEmitter {
   hsd?: typeof FullNode;
   client?: typeof NodeClient;
+  dispatchMain: (msg: IPCMessageRequest<any>) => void;
+
+  constructor(opts: Opts) {
+    super();
+    this.dispatchMain = opts.dispatchMain;
+  }
 
   private async _ensureDir(dir: string) {
     const exists = fs.existsSync(dir);
@@ -40,6 +51,11 @@ export default class HSDService extends EventEmitter {
     await this._ensureDir(appDataPath);
     await this._ensureDir(hsdDataPath);
   }
+
+  getInfo = async () => {
+    this._ensureClient();
+    return await this.client.getInfo();
+  };
 
   async getConnectionType(): Promise<'P2P' | 'CUSTOM' | ''> {
     try {
@@ -146,6 +162,13 @@ export default class HSDService extends EventEmitter {
     await hsd.open();
     await hsd.connect();
     await hsd.startSync();
+
+    hsd.on('connect', (block: any) => {
+      this.dispatchMain({
+        type: APP_DATA_EVENT_TYPES.SET_HSD_SYNC_PROGRESS,
+        payload: hsd.chain.getProgress(),
+      });
+    });
 
     this.hsd = hsd;
   }

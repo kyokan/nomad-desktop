@@ -26,7 +26,7 @@ import {
   AppActionType,
   setFNDStatus,
   setHandshakeEndHeight,
-  setHandshakeStartHeight,
+  setHandshakeStartHeight, setHSDSyncProgress,
   setInitialized,
   setLastSync,
 } from "./ducks/app";
@@ -96,6 +96,8 @@ ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
       return store.dispatch(updateCurrentLastFlushed(message.payload));
     case IPCMessageRequestType.UPDATE_QUEUE_UPDATED:
       return store.dispatch(setCurrentUpdateQueue(message.payload));
+    case APP_DATA_EVENT_TYPES.SET_HSD_SYNC_PROGRESS:
+      return store.dispatch(setHSDSyncProgress(message.payload));
     case APP_DATA_EVENT_TYPES.START_HEIGHT_UPDATED:
       return store.dispatch(setHandshakeStartHeight(message.payload));
     case APP_DATA_EVENT_TYPES.END_HEIGHT_UPDATED:

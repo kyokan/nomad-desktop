@@ -12,6 +12,7 @@ export enum AppActionType {
   REMOVE_SYSTEM_MESSAGE = 'app/removeSystemMessage',
   ADD_FND_LOG = 'app/addFNDLog',
   SET_APP_DATA = 'app/setAppData',
+  SET_HSD_SYNC_PROGRESS = 'app/setHSDSyncProgress',
   SET_HANDSHAKE_START_HEIGHT = 'app/setHandshakeStartHeight',
   SET_HANDSHAKE_END_HEIGHT = 'app/setHandshakeEndHeight',
   SET_LAST_SYNC = 'app/setLastSync',
@@ -37,6 +38,7 @@ export type SystemMessage<meta> = {
 type AppState = {
   hydrated: boolean;
   initialized: boolean;
+  handshakeSyncProgress: number;
   handshakeConnectionType: 'P2P'|'CUSTOM'|'';
   handshakeStartHeight: number;
   handshakeEndHeight: number;
@@ -53,6 +55,7 @@ type AppState = {
 const initialState: AppState = {
   hydrated: false,
   initialized: false,
+  handshakeSyncProgress: 0,
   handshakeConnectionType: '',
   handshakeStartHeight: 0,
   handshakeEndHeight: 0,
@@ -68,6 +71,7 @@ const initialState: AppState = {
 
 type AppData = {
   initialized: boolean;
+  handshakeSyncProgress: number;
   handshakeStartHeight: number;
   handshakeEndHeight: number;
   discoveredTLDs: string[];
@@ -107,6 +111,13 @@ export const addDDRPLog = (log: string): AppAction<string> => {
   return {
     type: AppActionType.ADD_FND_LOG,
     payload: log,
+  };
+};
+
+export const setHSDSyncProgress = (progress: number): AppAction<number> => {
+  return {
+    type: AppActionType.SET_HSD_SYNC_PROGRESS,
+    payload: progress,
   };
 };
 
@@ -180,6 +191,11 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         ...state,
         fndLogs: [action.payload, ...state.fndLogs],
       };
+    case AppActionType.SET_HSD_SYNC_PROGRESS:
+      return {
+        ...state,
+        handshakeSyncProgress: action.payload,
+      };
     case AppActionType.SET_HANDSHAKE_START_HEIGHT:
       return {
         ...state,
@@ -215,6 +231,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         ...state,
         hydrated: true,
         // discoveredTLDs: action.payload.discoveredTLDs,
+        handshakeConnectionType: action.payload.handshakeConnectionType,
         handshakeStartHeight: action.payload.handshakeStartHeight,
         handshakeEndHeight: action.payload.handshakeEndHeight,
         initialized: action.payload.initialized,
@@ -305,6 +322,8 @@ export const useConnectedPeers = () => {
 export const useAppData = () => {
   return useSelector((state: { app: AppState }) => {
     const {
+      handshakeSyncProgress,
+      handshakeConnectionType,
       handshakeEndHeight,
       handshakeStartHeight,
       discoveredTLDs,
@@ -314,6 +333,8 @@ export const useAppData = () => {
       fndStatus,
     } = state.app;
     return {
+      handshakeSyncProgress,
+      handshakeConnectionType,
       handshakeEndHeight,
       handshakeStartHeight,
       discoveredTLDs,
@@ -324,6 +345,8 @@ export const useAppData = () => {
     };
   }, (last, next) => (
     last.handshakeEndHeight === next.handshakeEndHeight
+    || last.handshakeSyncProgress === next.handshakeSyncProgress
+    || last.handshakeConnectionType === next.handshakeConnectionType
     || last.handshakeStartHeight === next.handshakeStartHeight
     || last.discoveredTLDs.join(',') === next.discoveredTLDs.join(',')
     || last.initialized === next.initialized

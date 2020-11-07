@@ -1,7 +1,7 @@
 import React, {ReactElement, ReactNode} from "react";
 import c from "classnames";
 import "./footer.scss";
-import {useFNDStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
+import {useAppData, useFNDStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
 import moment from "moment";
 import Icon from "../../../../external/universal/components/Icon";
 import {postIPCMain} from "../../helpers/ipc";
@@ -23,6 +23,8 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
   const startHeight = useHandshakeStartHeight();
   const endHeight = useHandshakeEndHeight();
   const ddrpStatus = useFNDStatus();
+  const appData = useAppData();
+  const isHSDRunning = appData.handshakeConnectionType === 'P2P';
 
   let displayText = '';
 
@@ -34,12 +36,8 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = `Last synchronized ${moment(lastSync).fromNow()}`;
   }
 
-  // if (fndStatus === 'on' && !connectedPeers) {
-  //   displayText = 'Looking for peers...';
-  // }
-
   if (ddrpStatus === 'on' && (startHeight < endHeight)) {
-    displayText = `Synchronizing with Handshake (${((startHeight/endHeight) * 100).toFixed(2)}%)...`
+    displayText = `Processing name records (${((startHeight/endHeight) * 100).toFixed(2)}%)...`
   }
 
   if (ddrpStatus === 'on' && !endHeight) {
@@ -50,12 +48,18 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = '';
   }
 
+  if (isHSDRunning) {
+    displayText = `Synchronizing with Handshake (${((appData.handshakeSyncProgress) * 100).toFixed(2)}%)...`;
+  }
+
   return (
     <>
       <div
         className={c('footer__message__status', {
           'footer__message__status--green': ddrpStatus === 'on',
-          'footer__message__status--yellow': showingFallback || (startHeight < endHeight || !endHeight) && ddrpStatus === 'on',
+          'footer__message__status--yellow': showingFallback
+            || isHSDRunning
+            || (startHeight < endHeight || !endHeight) && ddrpStatus === 'on',
         })}
       />
       <div

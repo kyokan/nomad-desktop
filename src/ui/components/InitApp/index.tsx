@@ -19,7 +19,7 @@ import {
   useFNDStatus,
   useFetchAppData,
   useHandshakeEndHeight,
-  useHandshakeStartHeight,
+  useHandshakeStartHeight, useAppData,
 } from "../../ducks/app";
 import {postIPCMain} from "../../helpers/ipc";
 import {APP_DATA_EVENT_TYPES} from "../../../app/types";
@@ -49,20 +49,17 @@ function renderWelcome(props: RouteComponentProps) {
   const endHeight = useHandshakeEndHeight();
   const startHeight = useHandshakeStartHeight();
   const fndStatus = useFNDStatus();
-  const fetchConnection = useGetConnection();
-
-
-  useEffect(() => {
-    (async function onWelcomeMount() {
-      await fetchConnection();
-    })();
-  },[fetchConnection]);
+  const appData = useAppData();
 
   if (endHeight && endHeight === startHeight && fndStatus === 'on') {
     return <Redirect to="/onboarding/done" />
   }
 
   if (endHeight) {
+    return <Redirect to="/onboarding/connection" />
+  }
+
+  if (appData.handshakeConnectionType === "P2P") {
     return <Redirect to="/onboarding/connection" />
   }
 

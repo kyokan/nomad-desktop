@@ -96,6 +96,7 @@ export enum APP_DATA_EVENT_TYPES {
   GET_APP_STATUS = `ipc/appData/getAppStatus`,
   INITIALIZE_APP = `ipc/appData/initializeApp`,
   RESET_APP = `ipc/appData/resetApp`,
+  SET_HSD_SYNC_PROGRESS = `ipc/appData/setHSDSyncProgress`,
   START_HEIGHT_UPDATED = `ipc/appData/startHeightUpdated`,
   END_HEIGHT_UPDATED = `ipc/appData/endHeightUpdated`,
   LAST_SYNC_UPDATED = 'ipc/appData/lastSyncUpdated',
