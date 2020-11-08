@@ -20,7 +20,7 @@ import PostCardHeader from "./PostCardHeader";
 import Attachments from "../Attachments";
 import Menuable, {MenuProps} from "../Menuable";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
-import {undotName} from "../../utils/user";
+import {parseUsername, undotName} from "../../utils/user";
 import Button from "../Button";
 import {createNewDraft} from "../../ducks/drafts/type";
 import {RichTextEditor} from "../ComposeView";
@@ -337,7 +337,7 @@ function renderLikedBy(hash: string, creator: string): ReactNode {
       const user = users[name];
       const { likes = {} } = user || {};
       if (likes[hash]) {
-        acc.push(`@${name.slice(0, name.length - 1)}`);
+        acc.push(`@${parseUsername(name).tld}`);
       }
       return acc;
     }, []);

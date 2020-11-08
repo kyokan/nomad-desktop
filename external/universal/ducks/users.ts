@@ -15,6 +15,7 @@ import {parseUsername, serializeUsername} from "../utils/user";
 import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
 import {Post as DomainPost} from '../../../external/indexer/domain/Post';
 import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
+import {fetchCurrentUserData} from "../../../src/ui/ducks/users";
 
 const postIPCMain = async (a: any, b: any): Promise<IPCMessageResponse<any>> => {
   return {

@@ -63,7 +63,10 @@ function Markup(props: Props): ReactElement {
     if (tagName === 'A') {
       e.stopPropagation();
       e.preventDefault();
-      if (typeof window !== "undefined") {
+      if (typeof global !== "undefined") {
+        const {shell} = require('electron');
+        shell.openExternal(href);
+      } else if (typeof window !== "undefined") {
         window.open(href, '_blank');
       }
       return;

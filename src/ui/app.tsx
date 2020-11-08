@@ -17,7 +17,7 @@ import {MemoryRouter} from 'react-router-dom';
 import {setMuteUser, setUnmuteUser} from "./ducks/blocklist";
 import {
   addIdentity,
-  fetchCurrentUserData,
+  fetchCurrentUserData, fetchUserBlockee, fetchUserLikes,
   setCurrentUpdateQueue,
   updateCurrentLastFlushed,
   updateCurrentUser
@@ -30,6 +30,7 @@ import {
   setInitialized,
   setLastSync,
 } from "./ducks/app";
+import {fetchUserFollowings} from "../../external/universal/ducks/users";
 // const Matomo = require("matomo-tracker");
 // const matomo = new Matomo(2, 'http://34.106.54.216/matomo.php');
 // matomo.track({
@@ -83,6 +84,9 @@ ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
       return;
     case IPCMessageRequestType.CURRENT_IDENTITY_CHANGED:
       store.dispatch(updateCurrentUser(message.payload));
+      store.dispatch(fetchUserFollowings(message.payload));
+      store.dispatch(fetchUserBlockee(message.payload));
+      store.dispatch(fetchUserLikes(message.payload));
       store.dispatch(fetchCurrentUserData());
       return;
     case IPCMessageRequestType.NEW_INDEXER_LOG_ENTRY:

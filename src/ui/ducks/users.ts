@@ -109,8 +109,8 @@ export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>) => {
         });
 
         dispatch(fetchCurrentUserLikes());
-        // dispatch(fetchUserFollowings(currentUser));
-        // dispatch(fetchUserBlockee(currentUser));
+        dispatch(fetchUserFollowings(currentUser));
+        dispatch(fetchUserBlockee(currentUser));
       }
 
       dispatch(fetchCurrentUserData());
@@ -210,76 +210,57 @@ export const fetchUserLikes = (username: string) => async (dispatch: ThunkDispat
   }
 };
 
-export const fetchUserFollowings = (name: string) => (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
+export const fetchUserFollowings = (username: string) => async (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
   dispatch(setUserFollowings(name, {}));
-  queryFollowings(0);
+  await queryFollowings(0);
 
-  function queryFollowings(start: number) {
-    const ipcEvt = {
-      type: IPCMessageRequestType.QUERY_FOLLOWINGS_FOR_NAME,
-      payload: {
-        name,
-        order: 'ASC',
-        start,
+  async function queryFollowings(start: number) {
+    const resp = await fetch(`${INDEXER_API}/users/${username}/followees?limit=100${start ? '&offset=' + start : ''}`);
+    const json: IPCMessageResponse<Pageable<DomainConnection, number>> = await resp.json();
+
+    if (!json.error) {
+      dispatch(
+        addUserFollowings(
+          name,
+          json.payload.items.reduce((acc: {[h: string]: string}, env: DomainConnection) => {
+            acc[env.tld] = env.tld;
+            return acc;
+          }, {})
+        )
+      );
+
+      if (json.payload.next > -1) {
+        setTimeout(() => queryFollowings(json.payload.next), 200);
       }
-    };
-
-    postIPCMain(ipcEvt, true)
-      .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainPost>, number>>) => {
-        if (!resp.error) {
-          dispatch(
-            addUserFollowings(
-              name,
-              resp.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainConnection>) => {
-                acc[env.refhash] = env.refhash;
-                acc[env.message.tld] = env.message.tld;
-                return acc;
-              }, {})
-            )
-          );
-          if (resp.payload.next) {
-            // @ts-ignore
-            setTimeout(() => queryFollowings(resp.payload.next), 200);
-          }
-        }
-      });
+    }
   }
 };
 
-export const fetchUserBlockee = (username: string) => (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
+export const fetchUserBlockee = (username: string) => async (dispatch: ThunkDispatch<any, any, any>, getState: () => { users: UsersState }) => {
   dispatch(setUserBlocks(name, {}));
-  queryBlockeeByUsername(0);
+  await queryBlockeeByUsername(0);
 
-  function queryBlockeeByUsername(start: number) {
-    const ipcEvt = {
-      type: IPCMessageRequestType.QUERY_BLOCKEE_FOR_NAME,
-      payload: {
-        name: username,
-        order: 'ASC',
-        start,
+  async function queryBlockeeByUsername(start: number) {
+    const resp = await fetch(`${INDEXER_API}/users/${username}/blockees?limit=100${start ? '&offset=' + start : ''}`);
+    const json: IPCMessageResponse<Pageable<DomainConnection, number>> = await resp.json();
+
+    if (!json.error) {
+      dispatch(
+        addUserBlocks(
+          username,
+          json.payload.items.reduce((acc: {[h: string]: string}, env: DomainConnection) => {
+            const {subdomain, tld} = env;
+            const username = serializeUsername(subdomain, tld);
+            acc[username] = username;
+            return acc;
+          }, {})
+        )
+      );
+
+      if (json.payload.next > -1) {
+        setTimeout(() => queryBlockeeByUsername(json.payload.next), 200);
       }
-    };
-
-    postIPCMain(ipcEvt, true)
-      .then((resp: IPCMessageResponse<Pageable<DomainEnvelope<DomainConnection>, number>>) => {
-        if (!resp.error) {
-          dispatch(
-            addUserBlocks(
-              username,
-              resp.payload.items.reduce((acc: {[h: string]: string}, env: DomainEnvelope<DomainConnection>) => {
-                const {subdomain, tld} = env.message;
-                const username = serializeUsername(subdomain, tld);
-                acc[username] = username;
-                return acc;
-              }, {})
-            )
-          );
-          if (resp.payload.next) {
-            // @ts-ignore
-            setTimeout(() => queryBlockeeByUsername(resp.payload.next), 200);
-          }
-        }
-      });
+    }
   }
 };
 
