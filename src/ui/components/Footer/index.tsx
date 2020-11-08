@@ -48,7 +48,7 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = '';
   }
 
-  if (isHSDRunning) {
+  if (isHSDRunning && appData.handshakeSyncProgress < 1) {
     displayText = `Synchronizing with Handshake (${((appData.handshakeSyncProgress) * 100).toFixed(2)}%)...`;
   }
 

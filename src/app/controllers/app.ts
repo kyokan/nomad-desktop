@@ -578,6 +578,7 @@ export default class AppManager {
       lastSync,
     } = await getAppStatus();
     const connType = await this.hsdManager.getConnectionType();
+    const syncProgress = await this.hsdManager.getSyncProgress();
     this.sendResponse(evt, req.id, {
       initialized,
       handshakeConnectionType: connType,
@@ -585,6 +586,7 @@ export default class AppManager {
       handshakeEndHeight,
       lastSync,
       ddrpStatus: this.fndController.nodeStatus,
+      handshakeSyncProgress: syncProgress,
     });
   };
 
@@ -879,7 +881,6 @@ export default class AppManager {
 
     const { handshakeEndHeight } = await getHandshakeBlockInfo();
 
-    console.log({ initialized, handshakeEndHeight })
     if (initialized || handshakeEndHeight) {
       await this.fndController.startDaemon();
     }

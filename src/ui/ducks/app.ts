@@ -231,6 +231,7 @@ export default function appReducer(state: AppState = initialState, action: AppAc
         ...state,
         hydrated: true,
         // discoveredTLDs: action.payload.discoveredTLDs,
+        handshakeSyncProgress: action.payload.handshakeSyncProgress,
         handshakeConnectionType: action.payload.handshakeConnectionType,
         handshakeStartHeight: action.payload.handshakeStartHeight,
         handshakeEndHeight: action.payload.handshakeEndHeight,

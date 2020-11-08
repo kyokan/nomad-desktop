@@ -52,9 +52,13 @@ export default class HSDService extends EventEmitter {
     await this._ensureDir(hsdDataPath);
   }
 
-  getInfo = async () => {
-    this._ensureClient();
-    return await this.client.getInfo();
+  getSyncProgress = async () => {
+    try {
+      const resp = await this.client!.getInfo();
+      return resp?.chain?.progress || 0;
+    } catch (e) {
+      return 0;
+    }
   };
 
   async getConnectionType(): Promise<'P2P' | 'CUSTOM' | ''> {
@@ -127,12 +131,11 @@ export default class HSDService extends EventEmitter {
       apiKey: apiKey,
       basePath: bp,
     }
-  }
+  };
 
   async init() {
     await this.ensurePath();
   }
-
 
   async startNode() {
     if (this.hsd) {

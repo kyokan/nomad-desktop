@@ -90,6 +90,7 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   useEffect(() => {
     (async function onPeerInfoGroupMount() {
+      console.log('hi')
       await fetchAppData();
       const json: IPCMessageResponse<{
         startHeight: number;
@@ -109,6 +110,8 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
         type: IPCMessageRequestType.GET_HSD_CONN,
         payload: null,
       }, true);
+
+      console.log(conn);
 
       setRpcUrl(conn.host);
       setRpcKey(conn.apiKey);
