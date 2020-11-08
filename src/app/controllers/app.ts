@@ -864,8 +864,6 @@ export default class AppManager {
     });
 
     if (type) {
-      await this.hsdManager.start();
-
       if (type === 'P2P') {
         await this.fndController.setAPIKey(HSD_API_KEY);
         await this.fndController.setHost('http://127.0.0.1');
@@ -877,6 +875,15 @@ export default class AppManager {
         await this.fndController.setBasePath(conn.basePath);
         await this.fndController.setPort(`${conn.port}`);
       }
+
+      await this.hsdManager.start()
+        .catch(async () =>{
+          await this.hsdManager.setConnectionType('CUSTOM');
+          await this.fndController.setAPIKey(conn.apiKey);
+          await this.fndController.setHost(conn.host);
+          await this.fndController.setBasePath(conn.basePath);
+          await this.fndController.setPort(`${conn.port}`);
+        });
     }
 
     const { handshakeEndHeight } = await getHandshakeBlockInfo();

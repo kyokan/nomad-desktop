@@ -5,7 +5,6 @@ import {ChildProcess, execFile, spawn} from 'child_process';
 import FNDClient from 'fn-client/dist/fnd/FootnoteClient';
 import {resourcesPath} from '../util/paths';
 import net from 'net';
-import getSize from 'get-folder-size';
 import {loggers} from "../util/logger";
 import UserDataManager from "./userData";
 import {
@@ -289,19 +288,6 @@ export default class FNDController {
       this.dispatchNewPost(respEvt);
       this.dispatchMain(respEvt);
     }
-  };
-
-  getSize = async (): Promise<number> => {
-    return new Promise((resolve, reject) => {
-      getSize(`${fndHome}/blobs`, (err, size) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve(size);
-      })
-    });
   };
 
   getHeartbeat = async () => {
