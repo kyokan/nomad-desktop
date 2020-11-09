@@ -263,9 +263,27 @@ function renderEditables(opts: EditableOpts): ReactNode {
           <input
             type="text"
             value={opts.rpcUrl}
+            placeholder="http://127.0.0.1"
             disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setRpcUrl(e.target.value);
+              opts.setDirty(true);
+            }}
+          />
+        </div>
+      </div>
+      <div className="network-setting__network-info-row">
+        <div className="network-setting__network-info-row__label">
+          Handshake RPC Port (Optional)
+        </div>
+        <div className="network-setting__network-info-row__value">
+          <input
+            type="text"
+            value={opts.port || ''}
+            disabled={opts.isConnected || isHSDRunning}
+            placeholder="12037"
+            onChange={e => {
+              opts.setPort(Number(e.target.value));
               opts.setDirty(true);
             }}
           />
@@ -282,22 +300,6 @@ function renderEditables(opts: EditableOpts): ReactNode {
             disabled={opts.isConnected || isHSDRunning}
             onChange={e => {
               opts.setRpcKey(e.target.value);
-              opts.setDirty(true);
-            }}
-          />
-        </div>
-      </div>
-      <div className="network-setting__network-info-row">
-        <div className="network-setting__network-info-row__label">
-          Handshake RPC Port (Optional)
-        </div>
-        <div className="network-setting__network-info-row__value">
-          <input
-            type="text"
-            value={opts.port || ''}
-            disabled={opts.isConnected || isHSDRunning}
-            onChange={e => {
-              opts.setPort(Number(e.target.value));
               opts.setDirty(true);
             }}
           />

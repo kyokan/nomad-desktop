@@ -30,14 +30,16 @@ import {initializeApp, isAppInitialized} from "../util/appData";
 import Timeout = NodeJS.Timeout;
 import {HSD_API_KEY} from "./hsd";
 
-const appDataPath = app.getPath('userData');
-const fndHome = path.join(appDataPath, 'fnd_data');
-const fndPath = path.join(appDataPath, 'fnd');
-const fndVersionPath = path.join(appDataPath, 'fnd_version');
-const fndInitNoncePath = path.join(appDataPath, 'fnd_init_nonce');
-const handshakeStartHeight = path.join(appDataPath, 'hns_start_height');
-const handshakeEndHeight = path.join(appDataPath, 'hns_end_height');
-const logDir = path.join(appDataPath, 'logs');
+const userDataPath = app.getPath('userData');
+const appDataPath = path.join(app.getPath('userData'), 'appData');
+const hsdDataPath = path.join(appDataPath, 'fnd');
+const fndHome = path.join(userDataPath, 'fnd_data');
+const fndPath = path.join(userDataPath, 'fnd');
+const fndVersionPath = path.join(hsdDataPath, 'VERSION');
+const fndInitNoncePath = path.join(hsdDataPath, 'INIT_NONCE');
+export const handshakeStartHeight = path.join(hsdDataPath, 'START_HEIGHT');
+export const handshakeEndHeight = path.join(hsdDataPath, 'END_HEIGHT');
+const logDir = path.join(hsdDataPath, 'logs');
 
 const LOG_LEVEL_LINE = 14;
 const MONIKER_LINE = 20;
@@ -144,7 +146,21 @@ export default class FNDController {
     this.nodeStatus = 'off';
   }
 
+  private async _ensureDir(dir: string) {
+    const exists = fs.existsSync(dir);
+    if (!exists) {
+      await fs.promises.mkdir(dir, {recursive: true });
+    }
+  }
+
+  private async ensurePath() {
+    await this._ensureDir(appDataPath);
+    await this._ensureDir(hsdDataPath);
+    await this._ensureDir(logDir);
+  }
+
   async init () {
+    await this.ensurePath();
     await this.initDDRP();
   }
 
@@ -469,7 +485,7 @@ export default class FNDController {
       logger.error(rmdirErr.message);
       return;
     }
-    const cmd = path.join(appDataPath, 'fnd');
+    const cmd = fndPath;
 
     await new Promise((resolve, reject) => execFile(cmd, ['init', '--home', fndHome], async (err, stdout, stderr) => {
       if (err) {

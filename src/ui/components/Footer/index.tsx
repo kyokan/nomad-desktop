@@ -40,10 +40,6 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = `Processing name records (${((startHeight/endHeight) * 100).toFixed(2)}%)...`
   }
 
-  if (ddrpStatus === 'on' && !endHeight) {
-    displayText = `Fetching Handshake info...`;
-  }
-
   if (ddrpStatus === 'off') {
     displayText = '';
   }
@@ -52,13 +48,17 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = `Synchronizing with Handshake (${((appData.handshakeSyncProgress) * 100).toFixed(2)}%)...`;
   }
 
+  if (ddrpStatus === 'on' && !endHeight) {
+    displayText = `Fetching Handshake info...`;
+  }
+
   return (
     <>
       <div
         className={c('footer__message__status', {
           'footer__message__status--green': ddrpStatus === 'on',
           'footer__message__status--yellow': showingFallback
-            || isHSDRunning
+            || (isHSDRunning && appData.handshakeSyncProgress < 1)
             || (startHeight < endHeight || !endHeight) && ddrpStatus === 'on',
         })}
       />

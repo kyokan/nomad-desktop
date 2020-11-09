@@ -1,12 +1,11 @@
 import {app} from 'electron';
 import path from "path";
 import fs from "fs";
+import {handshakeEndHeight, handshakeStartHeight} from "../controllers/fnd";
 
 const appDataPath = app.getPath('userData');
-const initializedPath = path.join(appDataPath, 'initialized');
-const handshakeStartHeight = path.join(appDataPath, 'hns_start_height');
-const handshakeEndHeight = path.join(appDataPath, 'hns_end_height');
-const lastSyncTime = path.join(appDataPath, 'last_sync');
+const initializedPath = path.join(appDataPath, 'appData', 'INITIALIZED');
+const lastSyncTime = path.join(appDataPath, 'appData', 'LAST_SYNC');
 
 export const isAppInitialized = async (): Promise<boolean> => {
   try {

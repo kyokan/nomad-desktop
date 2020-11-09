@@ -174,7 +174,7 @@ function renderHSDConfig(props: Props): ReactNode {
                   type="text"
                   disabled={!hasAPI}
                   value={_host}
-                  placeholder="127.0.0.1"
+                  placeholder="http://127.0.0.1"
                   onChange={e => {
                     const val = e.target.value;
                     setHostDraft(val);
