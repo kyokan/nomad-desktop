@@ -314,6 +314,9 @@ function renderPanels(): ReactNode {
         </Route>
         <Route path="/home">
           <div className="panels">
+            <SearchPanels
+              onCreateNewView={onCreateNewView}
+            />
           </div>
         </Route>
         <Route path="/posts/:postHash">

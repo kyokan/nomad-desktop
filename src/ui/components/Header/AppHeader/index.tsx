@@ -83,11 +83,11 @@ function renderRight(props: RouteComponentProps): ReactNode {
 
   return (
     <div className="app-header__content__r">
-      {/*<Icon*/}
-      {/*  material="home"*/}
-      {/*  width={28}*/}
-      {/*  onClick={() => props.history.push('/home')}*/}
-      {/*/>*/}
+      <Icon
+        material="home"
+        width={28}
+        onClick={() => props.history.push('/home')}
+      />
       <Icon
         material="public"
         width={28}
@@ -317,11 +317,11 @@ function renderUnauthenticatedKnownUsers(props: RouteComponentProps, onSetting: 
   const currentUsername = identities[0];
   return (
     <div className="app-header__content__r">
-      {/*<Icon*/}
-      {/*  material="home"*/}
-      {/*  width={28}*/}
-      {/*  onClick={() => props.history.push('/home')}*/}
-      {/*/>*/}
+      <Icon
+        material="home"
+        width={28}
+        onClick={() => props.history.push('/home')}
+      />
       <Icon
         material="public"
         width={28}

@@ -79,16 +79,22 @@ function SearchPanels (props: Props): ReactElement {
       switch (firstLetter) {
         case '@':
           setQuery('');
-          return dispatch(addUser(value));
-        case '#':
-          setQuery('');
-          return dispatch(addTag(value));
+          dispatch(addUser(value));
+          break;
+        // case '#':
+        //   setQuery('');
+        //   dispatch(addTag(value));
+        //   break;
         default:
-          setErrorMessage('start with @ or #');
-          return;
+          setErrorMessage('start with @');
+          break;
+      }
+
+      if (props.location.pathname.includes('/home')) {
+        props.history.push(`/search`);
       }
     }
-  }, [query, dispatch]);
+  }, [query, dispatch, props.history, props.location.pathname.includes('/home')]);
 
   return (
     <div className="search-panels">
@@ -99,7 +105,7 @@ function SearchPanels (props: Props): ReactElement {
             'search-panel__input--error': errorMessage,
           })}
           type="text"
-          placeholder="Add @username or #tag"
+          placeholder="Add @username"
           onChange={onUpdateQuery}
           onKeyDown={onSubmitQuery}
           value={query}
