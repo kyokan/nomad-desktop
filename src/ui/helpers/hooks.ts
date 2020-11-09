@@ -172,7 +172,7 @@ export const useSendPost = () => {
       type: IPCMessageRequestType.SEND_NEW_POST,
       payload: {
         draft,
-        truncate: true,
+        truncate: false,
       },
     }, true);
 
