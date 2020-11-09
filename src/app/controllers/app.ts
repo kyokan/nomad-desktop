@@ -737,8 +737,12 @@ export default class AppManager {
   private handleReactPost(ipcEvt: IpcMainEvent, req: IPCMessageRequest<{ parent: string; moderationType: ModerationType; truncate?: boolean}>) {
     this.usersController.getCurrentUser()
       .then(async creator => {
+        if (req.payload.parent.length <= 32) {
+          throw new Error('invalid refhash');
+        }
         const { tld, subdomain } = parseUsername(creator);
         const networkId = crypto.randomBytes(8).toString('hex');
+
         return this.signerManager.sendNewPost(
           creator,
           await DomainEnvelope.createWithMessage(

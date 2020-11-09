@@ -93,17 +93,17 @@ function Card(props: Props): ReactElement {
   const [isContentOverflow, setContentOverflow] = useState(false);
   const [isShowingReply, setShowingReply] = useState<boolean>(false);
   const currentLikes = useCurrentLikes();
-  const onMuteUser = useMuteUser();
-  const onUnmuteUser = useUnmuteUser();
-  const blockedMap = useCurrentBlocks();
+  // const onMuteUser = useMuteUser();
+  // const onUnmuteUser = useUnmuteUser();
+  // const blockedMap = useCurrentBlocks();
   const mutedNames = userCurrentMutedNames();
   const currentUser = useCurrentUsername();
-  const isCurrentUser = creator === currentUser;
+  // const isCurrentUser = creator === currentUser;
 
-  const mutedMap = (mutedNames || []).reduce((acc: {[n: string]: string}, name) => {
-    acc[name] = name;
-    return acc;
-  }, {});
+  // const mutedMap = (mutedNames || []).reduce((acc: {[n: string]: string}, name) => {
+  //   acc[name] = name;
+  //   return acc;
+  // }, {});
 
   const likePost = useCallback((e: MouseEvent) => {
     e.stopPropagation();

@@ -13,7 +13,7 @@ import {
   useSetPort,
   useStartFND,
   useStartHSD,
-  useStopFND
+  useStopFND, useStopHSD
 } from "../../helpers/hooks";
 import {
   useFNDStatus,
@@ -88,11 +88,11 @@ function renderWelcome(props: RouteComponentProps) {
 
 function renderHSDConfig(props: Props): ReactNode {
   const startHSD = useStartHSD();
+  const stopHSD = useStopHSD();
   const setHost = useSetHost();
   const setPort = useSetPort();
   const setApiKey = useSetAPIKey();
   const setBasePath = useSetBasePath();
-  const setConnType = useSetHSDConnectionType();
   const startFND = useStartFND();
   const [isLoading, setLoading] = useState(false);
   const [hasAPI, setHasAPI] = useState(false);
@@ -104,15 +104,14 @@ function renderHSDConfig(props: Props): ReactNode {
   const next = useCallback(async () => {
     setLoading(true);
     if (!hasAPI) {
-      await setConnType('P2P');
+      await startHSD();
     } else {
       await setHost(_host);
       await setPort(_port);
       await setApiKey(_apiKey);
       await setBasePath(_base);
-      await setConnType('CUSTOM');
+      await stopHSD();
     }
-    await startHSD();
     await startFND();
     props.history.push('/onboarding/connection');
   }, [

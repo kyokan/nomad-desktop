@@ -175,6 +175,10 @@ export default class SignerManager {
     const { tld } = parseUsername(username);
 
     if (isTLD(username)) {
+      if (truncate) {
+        await this.writer!.truncateBlob(tld, new Date(), false, this.signer);
+      }
+
       const res = await this.appendTLDMessage(tld, envelope, truncate);
       const env = envelope.toWire(0);
       await this.indexerManager.insertPost(tld, env, [{ name: '', tld, public_key: '' }]);

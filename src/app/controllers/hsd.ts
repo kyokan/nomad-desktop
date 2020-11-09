@@ -92,7 +92,7 @@ export default class HSDService extends EventEmitter {
   }
 
   async setConnectionType(type: 'P2P' | 'CUSTOM' | ''): Promise<void> {
-    return fs.promises.writeFile(connectionTypePath, type);
+    return this.writeFile(connectionTypePath, Buffer.from(type, 'utf-8'));
   }
 
   async setHost(host: string) {

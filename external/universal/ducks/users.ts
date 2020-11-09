@@ -4,6 +4,7 @@ import {
   IPCMessageResponse,
 } from "../../../src/app/types";
 import {ThunkDispatch} from "redux-thunk";
+import {createRefhash} from 'fn-client/dist/social/refhash';
 import {Pageable} from '../../../external/indexer/dao/Pageable';
 import {CustomViewProps, UserData} from "../../../src/app/controllers/userData";
 import {useCallback} from "react";
@@ -188,6 +189,7 @@ export const fetchUserLikes = (name: string) => async (dispatch: ThunkDispatch<a
     if (!json.error) {
       json.payload.items.forEach((postWithMeta: DomainEnvelope<DomainPost>) => {
         const post = mapDomainEnvelopeToPost(postWithMeta);
+        const refhash = createRefhash
         likes[post.hash] = post.hash;
       });
 
