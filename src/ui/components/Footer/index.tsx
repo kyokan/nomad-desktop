@@ -48,9 +48,9 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     displayText = `Synchronizing with Handshake (${((appData.handshakeSyncProgress) * 100).toFixed(2)}%)...`;
   }
 
-  if (ddrpStatus === 'on' && !endHeight) {
-    displayText = `Fetching Handshake info...`;
-  }
+  // if (ddrpStatus === 'on' && !endHeight) {
+  //   displayText = `Fetching Handshake info...`;
+  // }
 
   return (
     <>
