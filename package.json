@@ -87,7 +87,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.17.1",
     "file-type": "^14.1.2",
-    "fn-client": "^0.2.0",
+    "fn-client": "^0.3.0",
     "get-folder-size": "^2.0.1",
     "highlight.js": "^9.18.0",
     "hs-client": "0.0.9",
