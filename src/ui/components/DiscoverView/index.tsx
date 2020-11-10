@@ -1,7 +1,7 @@
 import React, {ReactElement, useCallback, useEffect, useState} from "react";
 import {withRouter, RouteComponentProps} from "react-router";
-import {Post} from '../../../../external/indexer/domain/Post';
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Post} from '../fn-client/lib/application/Post';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
 import CustomView from "../../../../external/universal/components/CustomView";
 import {useDispatch} from "react-redux";
 import {addLikeCount, updateRawPost, usePostsMap, useSelectPost} from "../../ducks/posts";
@@ -12,7 +12,7 @@ import {IPCMessageRequestType} from "../../../app/types";
 import {useCurrentBlocks, userCurrentUserData} from "../../ducks/users";
 import {serializeUsername} from "../../helpers/user";
 import {useLikePage} from "../../helpers/hooks";
-import {Envelope} from "../../../../external/indexer/domain/Envelope";
+import {Envelope} from "../fn-client/lib/application/Envelope";
 
 type DiscoverViewProps = {
 

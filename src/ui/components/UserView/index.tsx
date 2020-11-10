@@ -1,7 +1,7 @@
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Post} from '../../../../external/indexer/domain/Post';
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Post} from '../fn-client/lib/application/Post';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
 import CustomView from "../../../../external/universal/components/CustomView";
 import {
   fetchUserBlockee,
@@ -38,7 +38,7 @@ import MediaView from "./MediaView";
 import {FullScreenModal} from "../FullScreenModal";
 import {useBlockUser, useFollowUser, useLikePage, useQueryMediaForName} from "../../helpers/hooks";
 import {getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
-import {Envelope} from "../../../../external/indexer/domain/Envelope";
+import {Envelope} from "../fn-client/lib/application/Envelope";
 
 type Props = {
 

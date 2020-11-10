@@ -1,6 +1,6 @@
 import React, {CSSProperties, MouseEventHandler, ReactElement, ReactNode, useState} from "react";
 import Menuable, {MenuProps} from "../Menuable";
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
 import {useDispatch} from "react-redux";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";

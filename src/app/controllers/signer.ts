@@ -1,13 +1,12 @@
-import {PostsDAOImpl} from '../../../external/indexer/dao/PostsDAO';
-import {ModerationsDAOImpl} from '../../../external/indexer/dao/ModerationsDAO';
-import {ConnectionsDAOImpl} from '../../../external/indexer/dao/ConnectionsDAO';
-import {SqliteEngine} from '../../../external/indexer/dao/Engine';
-import SECP256k1Signer from 'fn-client/dist/crypto/signer'
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
-import {Moderation as DomainModeration} from '../../../external/indexer/domain/Moderation';
-import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
+import {PostsDAOImpl} from '../../../external/nomad-api/src/services/indexer/PostsDAO';
+import {ModerationsDAOImpl} from '../../../external/nomad-api/src/services/indexer/ModerationsDAO';
+import {ConnectionsDAOImpl} from '../../../external/nomad-api/src/services/indexer/ConnectionsDAO';
+import {SqliteEngine} from '../../../external/nomad-api/src/services/indexer/Engine';
+import SECP256k1Signer from 'fn-client/lib/crypto/signer'
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
+import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';
+import {Moderation as DomainModeration} from 'fn-client/lib/application/Moderation';
 
 import electron from 'electron';
 import * as path from 'path';
@@ -139,7 +138,7 @@ export default class SignerManager {
     return this.setIngestor(pk);
   }
 
-  private async appendTLDMessage(tld: string, message: DomainEnvelope<DomainPost|DomainModeration|DomainConnection|DomainMedia>, truncate: boolean): Promise<DomainEnvelope<DomainPost|DomainModeration|DomainConnection|DomainMedia>> {
+  private async appendTLDMessage(tld: string, message: DomainEnvelope<DomainPost|DomainModeration|DomainConnection>, truncate: boolean): Promise<DomainEnvelope<DomainPost|DomainModeration|DomainConnection>> {
     if (!this.signer) {
       return Promise.reject(new Error('User is not logged in.'));
     }
@@ -163,7 +162,7 @@ export default class SignerManager {
     return message;
   }
 
-  async sendNewPost (username: string, envelope: DomainEnvelope<DomainPost|DomainModeration|DomainConnection|DomainMedia>, truncate: boolean): Promise<any> {
+  async sendNewPost (username: string, envelope: DomainEnvelope<DomainPost|DomainModeration|DomainConnection>, truncate: boolean): Promise<any> {
     if (!username) {
       return Promise.reject(NO_CURRENT_USER);
     }

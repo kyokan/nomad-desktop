@@ -3,15 +3,15 @@ import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse} from "../../app/types";
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
 // @ts-ignore
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../helpers/filter";
 import {serializeUsername} from "../helpers/user";
 import {INDEXER_API} from "../../../external/universal/utils/api";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
+import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';
 
 type User = {
   name: string;

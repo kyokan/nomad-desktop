@@ -1,6 +1,6 @@
 import {ThunkDispatch} from "redux-thunk";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {postIPCMain} from "../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse, ResponsePost} from "../../app/types";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
@@ -10,7 +10,7 @@ import {mapPostWithMetaToPost} from "../../app/util/posts";
 import {useCallback} from "react";
 import {addUserFollowings, useCurrentUser} from "./users";
 import {markup} from "../helpers/rte";
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {Pageable} from '../../../external/nomad-api/src/services/indexer/Pageable';
 import {parseUsername} from "../helpers/user";
 import uniq from "lodash.uniq";
 

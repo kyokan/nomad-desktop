@@ -1,8 +1,7 @@
 import WindowsController from './windows';
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
-import {Media as DomainMedia} from '../../../external/indexer/domain/Media';
-import {Moderation as DomainModeration, ModerationType} from '../../../external/indexer/domain/Moderation';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';
+import {Moderation as DomainModeration, ModerationType} from 'fn-client/lib/application/Moderation';
 import UsersController from './users';
 import SignerManager from './signer';
 import FavsManager from './favorites';
@@ -251,8 +250,6 @@ export default class AppManager {
         );
       case IPCMessageRequestType.SEND_NEW_POST:
         return this.handleSendNewPost(evt, req);
-      case IPCMessageRequestType.SEND_NEW_MEDIA:
-        return this.handSendNewMedia(evt, req);
       case IPCMessageRequestType.SEND_NEW_REACTION:
         return this.handleReactPost(evt, req);
       case IPCMessageRequestType.FOLLOW_USER:
@@ -645,8 +642,8 @@ export default class AppManager {
             networkId,
             new DomainConnection(
               0,
-              req.payload.tld,
-              req.payload.subdomain,
+              req.payload!.tld,
+              req.payload!.subdomain,
               'FOLLOW',
             ),
           ),
@@ -658,8 +655,8 @@ export default class AppManager {
         ipcEvt, req.id,
         new DomainConnection(
           0,
-          req.payload.tld,
-          req.payload.subdomain,
+          req.payload!.tld,
+          req.payload!.subdomain,
           'FOLLOW',
         ),
       ))
@@ -680,8 +677,8 @@ export default class AppManager {
             networkId,
             new DomainConnection(
               0,
-              req.payload.tld,
-              req.payload.subdomain,
+              req.payload!.tld,
+              req.payload!.subdomain,
               'BLOCK',
             ),
           ),
@@ -693,53 +690,18 @@ export default class AppManager {
         ipcEvt, req.id,
         new DomainConnection(
           0,
-          req.payload.tld,
-          req.payload.subdomain,
+          req.payload!.tld,
+          req.payload!.subdomain,
           'BLOCK',
         ),
       ))
       .catch(err => this.sendResponse(ipcEvt, req.id, err.message, true));
   }
 
-  private handSendNewMedia(ipcEvt: IpcMainEvent, req: IPCMessageRequest<{ fileName: string; mimeType: string; content: Buffer; truncate?: boolean}>) {
-    this.usersController.getCurrentUser()
-      .then(async creator => {
-        const { tld, subdomain } = parseUsername(creator);
-        const networkId = crypto.randomBytes(8).toString('hex');
-        return this.signerManager.sendNewPost(
-          creator,
-          await DomainEnvelope.createWithMessage(
-            0,
-            tld,
-            subdomain || null,
-            networkId,
-            new DomainMedia(
-              0,
-              req.payload.fileName,
-              req.payload.mimeType,
-              req.payload.content,
-            ),
-          ),
-          !!req.payload?.truncate,
-        );
-      })
-      .then((env) => {
-        // @ts-ignore
-        return this.sendResponse(
-          ipcEvt,
-          req.id,
-          env,
-        );
-      })
-      .catch(err => {
-        return this.sendResponse(ipcEvt, req.id, err.message, true);
-      });
-  }
-
   private handleReactPost(ipcEvt: IpcMainEvent, req: IPCMessageRequest<{ parent: string; moderationType: ModerationType; truncate?: boolean}>) {
     this.usersController.getCurrentUser()
       .then(async creator => {
-        if (req.payload.parent.length <= 32) {
+        if (req.payload!.parent.length <= 32) {
           throw new Error('invalid refhash');
         }
         const { tld, subdomain } = parseUsername(creator);
@@ -754,8 +716,8 @@ export default class AppManager {
             networkId,
             new DomainModeration(
               0,
-              req.payload.parent,
-              req.payload.moderationType || 'LIKE',
+              req.payload!.parent,
+              req.payload!.moderationType || 'LIKE',
             ),
           ),
           !!req.payload?.truncate,
@@ -767,8 +729,8 @@ export default class AppManager {
           ipcEvt, req.id,
           new DomainModeration(
             0,
-            req.payload.parent,
-            req.payload.moderationType,
+            req.payload!.parent,
+            req.payload!.moderationType,
           ),
         );
       })
@@ -789,7 +751,7 @@ export default class AppManager {
             tld,
             subdomain || null,
             networkId,
-            mapDraftToDomainPost(req.payload?.draft),
+            mapDraftToDomainPost(req.payload!.draft),
           ),
           !!req.payload?.truncate,
         );

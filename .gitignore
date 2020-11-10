@@ -34,3 +34,5 @@ resources/fnd-*
 .build
 release
 *.provisionprofile
+**/*.js
+**/*.js.map

@@ -46,7 +46,6 @@ export default class LocalServer {
     app.get('/users/:username/followers', this.fallbackGet, doAuth, indexerManager.handlers['/users/:username/followers']);
     app.get('/users/:username/followees', this.fallbackGet, doAuth, indexerManager.handlers['/users/:username/followees']);
     app.get('/users/:username/blockees', this.fallbackGet, doAuth, indexerManager.handlers['/users/:username/blockees']);
-    app.get('/users/:username/uploads', this.fallbackGet, doAuth, indexerManager.handlers['/users/:username/uploads']);
     app.get('/users/:username/profile', this.fallbackGet, doAuth, indexerManager.handlers['/users/:username/profile']);
     app.get('/avatars/:sprite/:seed.svg', this.fallbackGet, indexerManager.handlers['/avatars/:sprite/:seed.svg']);
     app.get('/media/:refhash', this.fallbackGet, indexerManager.handlers['/media/:refhash']);

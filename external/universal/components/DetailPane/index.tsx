@@ -4,9 +4,9 @@ import './detail.scss';
 // @ts-ignore
 import {RouteComponentProps, withRouter} from "react-router";
 // @ts-ignore
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 // @ts-ignore
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {
   useCommentsFromParentId,
   useFetchMoreComments,

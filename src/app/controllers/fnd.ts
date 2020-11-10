@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import {app} from 'electron';
 import {ChildProcess, execFile, spawn} from 'child_process';
-import FNDClient from 'fn-client/dist/fnd/FootnoteClient';
+import FNDClient from 'fn-client/lib/fnd/FootnoteClient';
 import {resourcesPath} from '../util/paths';
 import net from 'net';
 import {loggers} from "../util/logger";

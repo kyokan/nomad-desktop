@@ -21,9 +21,9 @@ import {parseUsername, serializeUsername} from "../../../external/universal/util
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {INDEXER_API} from "../../../external/universal/utils/api";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
+import {Pageable} from '../../../external/nomad-api/src/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "../../../external/universal/ducks/drafts/type";
 import {AppActionType} from "../ducks/app";

@@ -4,8 +4,8 @@ import {
   IPCMessageResponse,
 } from "../../../src/app/types";
 import {ThunkDispatch} from "redux-thunk";
-import {createRefhash} from 'fn-client/dist/social/refhash';
-import {Pageable} from '../../../external/indexer/dao/Pageable';
+import {createRefhash} from 'fn-client/lib/wire/refhash';
+import {Pageable} from '../../nomad-api/src/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../../src/app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../../../src/ui/helpers/filter";
@@ -13,10 +13,9 @@ import {INDEXER_API} from "../utils/api";
 import {mapDomainEnvelopeToPost} from "../utils/posts";
 import {UserProfile} from "../../nomad-api/src/constants";
 import {parseUsername, serializeUsername} from "../utils/user";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';
-import {fetchCurrentUserData} from "../../../src/ui/ducks/users";
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
+import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';
 
 const postIPCMain = async (a: any, b: any): Promise<IPCMessageResponse<any>> => {
   return {

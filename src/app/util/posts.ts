@@ -1,6 +1,6 @@
 import {DraftPost} from "../../ui/ducks/drafts/type";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {ResponsePost} from "../types";
 import {serializeUsername} from "../../ui/helpers/user";
 import {RelayerPostModel} from "../../../external/universal/types/posts";

@@ -1,13 +1,13 @@
 import React, {ReactElement, MouseEvent, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Post as DomainPost, Post} from '../../../../external/indexer/domain/Post';
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
+import {Post as DomainPost, Post} from '../fn-client/lib/application/Post';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
 import uniq from "lodash.uniq";
 import {useDispatch} from "react-redux";
 import './media-view.scss';
 import {updateRawPost} from "../../../../external/universal/ducks/posts";
-import {Envelope as DomainEnvelope} from "../../../../external/indexer/domain/Envelope";
+import {Envelope as DomainEnvelope} from "../fn-client/lib/application/Envelope";
 
 type Props = {
   queryNext: (username: string, next: number | null, list: DomainEnvelope<DomainPost>[]) => Promise<Pageable<DomainEnvelope<DomainPost>, number>>;

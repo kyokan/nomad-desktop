@@ -1,8 +1,8 @@
 import React, {ReactElement, useCallback, useEffect, useState} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Pageable} from '../../../../external/indexer/dao/Pageable';
-import {Filter} from '../../../../external/indexer/dao/Filter';
-import {PostWithMeta} from '../../../../external/indexer/dao/PostWithMeta';
+import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
+import {Filter} from '../../../../external/nomad-api/src/services/indexer/Filter';
+import {PostWithMeta} from '../../../../external/nomad-api/src/services/indexer/PostWithMeta';
 import {
   fetchCurrentUserLikes,
   fetchUserFollowings,

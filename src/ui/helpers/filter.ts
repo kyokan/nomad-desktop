@@ -1,4 +1,4 @@
-import {Filter as F} from '../../../../external/indexer/dao/Filter';
+import {Filter as F} from '../../../../external/nomad-api/src/services/indexer/Filter';
 
 export type Filter = F;
 

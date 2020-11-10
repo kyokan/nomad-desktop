@@ -8,8 +8,8 @@ import {CustomFilterViewProps} from "../CustomFilterView";
 import {IPCMessageResponse} from "../../../../src/app/types";
 import {mapDomainEnvelopeToPost} from "../../utils/posts";
 import {INDEXER_API} from "../../utils/api";
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
-import {Post as DomainPost} from '../../../external/indexer/domain/Post';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {Filter} from "../../../../external/nomad-api/src/util/filter";
 
 const postIPCMain = async (a: any, b?: any): Promise<IPCMessageResponse<any>> => {

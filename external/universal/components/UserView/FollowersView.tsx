@@ -3,9 +3,9 @@ import React, {ReactElement, ReactNode, useCallback, useEffect, useState, UIEven
 // @ts-ignore
 import {withRouter, RouteComponentProps} from "react-router";
 // @ts-ignore
-import {Envelope as DomainEnvelope} from '../../../external/indexer/domain/Envelope';
+import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 // @ts-ignore
-import {Connection as DomainConnection} from '../../../external/indexer/domain/Connection';;
+import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';;
 // @ts-ignore
 import {Pageable} from '../../../external/indexer/dao/Pageable';
 import "./following-view.scss";
