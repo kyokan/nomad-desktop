@@ -31,10 +31,10 @@ import Timeout = NodeJS.Timeout;
 import {HSD_API_KEY} from "./hsd";
 
 const userDataPath = app.getPath('userData');
-const appDataPath = path.join(app.getPath('userData'), 'appData');
+const appDataPath = path.join(userDataPath, 'appData');
 const hsdDataPath = path.join(appDataPath, 'fnd');
 const fndHome = path.join(userDataPath, 'fnd_data');
-const fndPath = path.join(userDataPath, 'fnd');
+const fndPath = path.join(appDataPath, 'fnd.exe');
 const fndVersionPath = path.join(hsdDataPath, 'VERSION');
 const fndInitNoncePath = path.join(hsdDataPath, 'INIT_NONCE');
 export const handshakeStartHeight = path.join(hsdDataPath, 'START_HEIGHT');
@@ -544,8 +544,9 @@ export default class FNDController {
   }
 
   private async copyBinary () {
-    const file = `fnd-${process.platform}-${process.arch}`;
+    const file = `fnd-${process.platform}-${process.arch}.exe`;
     const src = path.join(resourcesPath(), file);
+    console.log({ src, dest: fndPath })
     await fs.promises.copyFile(src, fndPath);
     await fs.promises.chmod(fndPath, 0o755);
   }
