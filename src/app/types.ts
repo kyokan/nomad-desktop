@@ -1,8 +1,12 @@
 import {PostMeta} from "../../external/universal/ducks/posts";
+import crypto from "crypto";
+
+export const API_KEY = crypto.randomBytes(20).toString('hex');
 
 export enum IPCMessageRequestType {
   PLACEHOLDER = 'ipc/placeholder',
   PROXY = 'ipc/proxy',
+  GET_API_KEY = 'ipc/GET_API_KEY',
   GET_HSD_CONN = 'ipc/getHSDConnection',
   GET_FND_INFO = 'ipc/getFNDInfo',
   SET_FND_INFO = 'ipc/setFNDInfo',

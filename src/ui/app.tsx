@@ -1,3 +1,31 @@
+import {postIPCMain} from "./helpers/ipc";
+const _fetch = fetch;
+// @ts-ignore
+global.fetch = async function (url, options) {
+  const {payload: apiKey} = await postIPCMain({
+    type: IPCMessageRequestType.GET_API_KEY,
+    payload: null,
+  }, true);
+
+  if (typeof url === 'string') {
+    return _fetch(url, {
+      ...options || {},
+      headers: {
+        ...(options ? options.headers : {}),
+        'X-API-Token': `${apiKey}`,
+      },
+    });
+  }
+
+  return _fetch({
+    ...url || {},
+    headers: {
+      ...(url ? url.headers : {}),
+      'X-API-Token': `${apiKey}`,
+    },
+  });
+
+}.bind(global);
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
@@ -17,7 +45,9 @@ import {MemoryRouter} from 'react-router-dom';
 import {setMuteUser, setUnmuteUser} from "./ducks/blocklist";
 import {
   addIdentity,
-  fetchCurrentUserData, fetchUserBlockee, fetchUserLikes,
+  fetchCurrentUserData,
+  fetchUserBlockee,
+  fetchUserLikes,
   setCurrentUpdateQueue,
   updateCurrentLastFlushed,
   updateCurrentUser
@@ -26,11 +56,15 @@ import {
   AppActionType,
   setFNDStatus,
   setHandshakeEndHeight,
-  setHandshakeStartHeight, setHSDSyncProgress,
+  setHandshakeStartHeight,
+  setHSDSyncProgress,
   setInitialized,
   setLastSync,
 } from "./ducks/app";
 import {fetchUserFollowings} from "../../external/universal/ducks/users";
+
+
+
 // const Matomo = require("matomo-tracker");
 // const matomo = new Matomo(2, 'http://34.106.54.216/matomo.php');
 // matomo.track({

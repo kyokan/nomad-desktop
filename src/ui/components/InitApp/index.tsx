@@ -262,14 +262,14 @@ function renderConnection(props: Props): ReactNode {
         <div className="init-app__paragraph">
           {`Nomad Desktop will automatically synchronize with Footnote on start up. ${remainingTimeText}`}
         </div>
-        {/*<div className="init-app__paragraph">*/}
-        {/*  You can start browsing using our hosted Nomad API as a fallback. Nomad Desktop will prompt you to switch back to peer-to-peer mode when synchronization is completed.*/}
-        {/*</div>*/}
+        <div className="init-app__paragraph">
+          You can start browsing using our hosted Nomad API as a fallback. Nomad Desktop will prompt you to switch back to peer-to-peer mode when synchronization is completed.
+        </div>
       </div>
       <div className="init-app__footer">
-        {/*<Button onClick={() => props.setBrowsing(true)}>*/}
-        {/*  Start Browsing*/}
-        {/*</Button>*/}
+        <Button onClick={() => props.setBrowsing(true)}>
+          Start Browsing
+        </Button>
       </div>
     </div>
   )

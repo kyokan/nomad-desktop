@@ -8,7 +8,7 @@ import SignerManager from './signer';
 import FavsManager from './favorites';
 import BlocklistManager from './blocklist';
 import electron, {ipcMain, IpcMainEvent} from 'electron';
-import {APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
+import {API_KEY, APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
 import {DraftPost} from '../../ui/ducks/drafts/type';
 import {mapDraftToDomainPost} from '../util/posts';
 import FNDController from './fnd';
@@ -149,6 +149,8 @@ export default class AppManager {
   handleEvents = (evt: IpcMainEvent, req: IPCMessageRequest<any>) => {
     logger.info(`[app manager] Incoming Event # ${req.id} - ${req.type}`);
     switch (req.type) {
+      case IPCMessageRequestType.GET_API_KEY:
+        return this.handleRequest(async () => API_KEY, evt, req);
       case APP_DATA_EVENT_TYPES.GET_APP_STATUS:
         return this.handleGetAppStatus(evt, req);
       case APP_DATA_EVENT_TYPES.INITIALIZE_APP:

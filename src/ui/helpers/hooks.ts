@@ -167,12 +167,12 @@ export const useStopFND = () => {
 export const useSendPost = () => {
   const dispatch = useDispatch();
 
-  return useCallback(async (draft: DraftPost): Promise<RelayerNewPostResponse> => {
+  return useCallback(async (draft: DraftPost, truncate = false): Promise<RelayerNewPostResponse> => {
     const json: IPCMessageResponse<RelayerNewPostResponse> = await postIPCMain({
       type: IPCMessageRequestType.SEND_NEW_POST,
       payload: {
         draft,
-        truncate: false,
+        truncate,
       },
     }, true);
 

@@ -9,9 +9,10 @@ import ReactRTE from "react-rte";
 import {createNewDraft, DraftPost} from "../../ducks/drafts/type";
 import {RelayerNewPostResponse} from "../../../../src/app/types";
 import {INDEXER_API} from "../../utils/api";
+import Input from "../Input";
 
 type Props = {
-  onSendPost: (draft: DraftPost) => Promise<RelayerNewPostResponse>;
+  onSendPost: (draft: DraftPost, truncate?: boolean) => Promise<RelayerNewPostResponse>;
   onFileUpload: (file: File) => Promise<string>;
   onFileUploadButtonClick?: () => any;
 } & RouteComponentProps;
@@ -29,6 +30,7 @@ function ComposeView(props: Props): ReactElement {
   const [draftTag, setDraftTag] = useState('');
   const [isEditing, setEditing] = useState(false);
   const [draftState, setDraftState] = useState(ReactRTE.createValueFromString(draft.content, 'markdown'));
+  const [truncate, setTruncate] = useState(false);
 
   const onBlur = useCallback(() => {
     if (draftTag) {
@@ -37,33 +39,6 @@ function ComposeView(props: Props): ReactElement {
     }
     setEditing(false);
   }, [draftTag]);
-
-  const onInsertFile = useCallback(async (file: File) => {
-    const refhash = await props.onFileUpload(file);
-    const newContent = `${draft.content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
-
-    updateDraft({
-      ...draft,
-      content: newContent ,
-    });
-
-    setDraftState(ReactRTE.createValueFromString(newContent, 'markdown'));
-
-  }, [draft]);
-
-  const onSelectAndInsertFile = useCallback(async () => {
-    if (props.onFileUploadButtonClick) {
-      const refhash = await props.onFileUploadButtonClick();
-      const newContent = `${draft.content}\n\n![](${INDEXER_API}/media/${refhash})\n\n`;
-
-      updateDraft({
-        ...draft,
-        content: newContent,
-      });
-
-      setDraftState(ReactRTE.createValueFromString(newContent, 'markdown'));
-    }
-  }, [draft]);
 
   const togglePreview = useCallback(() => {
     setPreviewing(!isPreviewing)
@@ -92,13 +67,8 @@ function ComposeView(props: Props): ReactElement {
 
     setSending(true);
 
-    draft.content = draft.content.replace(
-      new RegExp(`${INDEXER_API}/media/`, 'gi'),
-      'ddrpref://'
-    );
-
     try {
-      await props.onSendPost(draft);
+      await props.onSendPost(draft, truncate);
       setSuccess(true);
       setErrorMessage('');
       updateDraft(createNewDraft());
@@ -110,7 +80,17 @@ function ComposeView(props: Props): ReactElement {
     } finally {
       setSending(false);
     }
-  }, [isSending, success, draft.content, draft.attachments.join(','), draft.tags.join(',')]);
+  }, [
+    isSending,
+    success,
+    draft.content,
+    draft.attachments.join(','),
+    draft.tags.join(','),
+    truncate,
+  ]);
+
+  console.log(draftState.getEditorState().getCurrentContent().hasText());
+  console.log(draft.content);
 
   return (
     <div className="compose-container">
@@ -191,7 +171,18 @@ function ComposeView(props: Props): ReactElement {
         }
         <div className="compose__error-message">{errorMessage}</div>
         <div className="compose__actions">
-          <div className="compose__actions__l" />
+          <div className="compose__actions__l">
+            <div className="compose__actions__truncate">
+              <input
+                type="checkbox"
+                onChange={e => setTruncate(e.target.checked)}
+                checked={truncate}
+              />
+              <div className="compose__actions__truncate-label">
+                Rewrite?
+              </div>
+            </div>
+          </div>
           <div className="compose__actions__r">
             <a onClick={togglePreview}>
               {isPreviewing ? 'Switch to Editor' : 'Switch to Markdown' }
@@ -200,6 +191,7 @@ function ComposeView(props: Props): ReactElement {
               color={success ? "green" : undefined}
               onClick={send}
               loading={isSending}
+              disabled={isSending || !draftState.getEditorState().getCurrentContent().hasText()}
             >
               { success ? "Posted" : "Post" }
             </Button>

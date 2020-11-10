@@ -244,6 +244,16 @@
         margin: .375rem 1rem;
       }
     }
+
+    &__truncate {
+      @extend %row-nowrap;
+      align-items: center;
+    }
+
+    &__truncate-label {
+      @extend %small-font;
+      margin-left: .25rem;
+    }
   }
 }
 

@@ -12,6 +12,7 @@ import Button from "../../../../../external/universal/components/Button";
 import Avatar from "../../../../../external/universal/components/Avatar";
 import Menuable from "../../../../../external/universal/components/Menuable";
 import {parseUsername} from "../../../../../external/universal/utils/user";
+import {useAppData} from "../../../ducks/app";
 
 function AppHeader(props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();

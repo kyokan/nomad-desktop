@@ -73,9 +73,8 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
       >
         {
           showingFallback
-            ? 'Connected via https://api.nomadweb.io'
+            ? 'Connected via https://api.nmd.co'
             : (
-              // @ts-ignore
               <Icon
                 material="refresh"
                 width={16}
