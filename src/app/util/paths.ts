@@ -7,7 +7,7 @@ export function resourcesPath (): string {
   }
 
   // this is the build directory in dev
-  return path.join(app.getAppPath(), 'resources');
+  return path.join(app.getAppPath(), '..', 'resources');
 }
 
 export function appRootPath () {
