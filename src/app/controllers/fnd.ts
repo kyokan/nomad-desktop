@@ -50,6 +50,7 @@ const HOST_LINE = 33;
 const PORT_LINE = 35;
 
 const CURRENT_INIT_NONCE = '1';
+const FND_VERSION = '0.3.0';
 
 const flushTimeoutMap: {
   [name: string]: Timeout | null;
@@ -468,7 +469,7 @@ export default class FNDController {
     await this.copyBinary();
     // eslint-disable-next-line no-console
     logger.info('copied binary');
-    await fs.promises.writeFile(fndVersionPath, '0.1.6');
+    await fs.promises.writeFile(fndVersionPath, FND_VERSION);
 
     if (!shouldInitDDRP) {
       return;
@@ -528,7 +529,7 @@ export default class FNDController {
   private async shouldUpdateFND (): Promise<boolean> {
     try {
       const resp = await fs.promises.readFile(fndVersionPath);
-      return resp.toString('utf-8') !== '0.1.9';
+      return resp.toString('utf-8') !== FND_VERSION;
     } catch (e) {
       return true;
     }

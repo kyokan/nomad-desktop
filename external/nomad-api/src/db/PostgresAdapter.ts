@@ -12,7 +12,9 @@ import {extendFilter, Filter} from "../util/filter";
 import {parseUsername} from "../util/user";
 import {UserProfile} from "../constants";
 import {SubdomainDBRow} from "../services/subdomains";
-import config from "../../config.json";
+const config = {
+  signers: {},
+};
 
 export type PostgresAdapterOpts = {
   user: string;
