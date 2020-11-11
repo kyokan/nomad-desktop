@@ -87,12 +87,9 @@ export default class SignerManager {
   }
 
   async init () {
-    const shouldUpdateNomadDB = await this.shouldUpdateNomadDB();
-    if (shouldUpdateNomadDB) {
-      logger.info('[indexer manager] Copying database');
-      await this.copyDB();
-      logger.info('[indexer manager] Copied database');
-    }
+    logger.info('[indexer manager] Copying database');
+    await this.copyDB();
+    logger.info('[indexer manager] Copied database');
 
     const engine = new SqliteEngine(dbPath);
     await engine.open();
@@ -124,9 +121,13 @@ export default class SignerManager {
   private async copyDB () {
     const src = path.join(resourcesPath(), 'nomad.db');
     const nameSrc = path.join(resourcesPath(), 'names.db');
-    await fs.promises.copyFile(src, dbPath);
-    await fs.promises.copyFile(nameSrc, namedbPath);
-    await fs.promises.writeFile(indexerVersionPath, '0.0.55');
+    if (!fs.existsSync(dbPath)) {
+      await fs.promises.copyFile(src, dbPath);
+    }
+
+    if (!fs.existsSync(namedbPath)) {
+      await fs.promises.copyFile(nameSrc, namedbPath);
+    }
   }
 
   private async setIngestor (pkhex: string) {
