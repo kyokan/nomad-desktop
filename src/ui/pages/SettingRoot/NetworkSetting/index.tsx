@@ -90,7 +90,6 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   useEffect(() => {
     (async function onPeerInfoGroupMount() {
-      console.log('hi')
       await fetchAppData();
       const json: IPCMessageResponse<{
         startHeight: number;
