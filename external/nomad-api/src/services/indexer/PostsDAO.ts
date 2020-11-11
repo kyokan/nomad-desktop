@@ -205,6 +205,5 @@ export function insertEnvelope (engine: Engine, envelope: Envelope<any>): number
     createdAt: envelope.createdAt.getTime() / 1000,
   });
   const row = engine.first('SELECT last_insert_rowid() AS id', {});
-  console.log(row);
   return row!.id;
 }
