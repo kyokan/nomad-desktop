@@ -9,7 +9,6 @@ import ReactRTE from "react-rte";
 import {createNewDraft, DraftPost} from "../../ducks/drafts/type";
 import {RelayerNewPostResponse} from "../../../../src/app/types";
 import {INDEXER_API} from "../../utils/api";
-import Input from "../Input";
 
 type Props = {
   onSendPost: (draft: DraftPost, truncate?: boolean) => Promise<RelayerNewPostResponse>;
@@ -88,9 +87,6 @@ function ComposeView(props: Props): ReactElement {
     draft.tags.join(','),
     truncate,
   ]);
-
-  console.log(draftState.getEditorState().getCurrentContent().hasText());
-  console.log(draft.content);
 
   return (
     <div className="compose-container">

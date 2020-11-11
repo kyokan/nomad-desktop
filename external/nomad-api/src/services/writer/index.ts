@@ -20,7 +20,9 @@ import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 
 const jsonParser = bodyParser.json();
 const SERVICE_KEY = process.env.SERVICE_KEY;
-const config: any = {};
+const config: any = {
+  signers: {},
+};
 
 export class Writer {
   client: FootnoteClient;

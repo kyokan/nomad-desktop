@@ -19,7 +19,9 @@ import {
 import {ConnectionBody, MediaBody, PostBody} from "../../constants";
 const bcrypt = require('bcrypt');
 import {Writer} from "../writer";
-const config = {};
+const config: any = {
+  signers: {},
+};
 import {
   hashConnectionBody,
   hashMediaBody,

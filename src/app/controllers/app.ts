@@ -34,8 +34,8 @@ import HSDService, {HSD_API_KEY} from "./hsd";
 
 const ECKey = require('eckey');
 const conv = require('binstring');
-const dbPath = path.join(electron.app.getPath('userData'), 'nomad.db');
-const namedbPath = path.join(electron.app.getPath('userData'), 'names.db');
+const dbPath = path.join(electron.app.getPath('userData'), 'appData', 'nomad.db');
+const namedbPath = path.join(electron.app.getPath('userData'), 'appData', 'names.db');
 const rp = resourcesPath();
 
 export default class AppManager {
