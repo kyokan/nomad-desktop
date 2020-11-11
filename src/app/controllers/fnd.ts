@@ -31,7 +31,7 @@ import Timeout = NodeJS.Timeout;
 import {HSD_API_KEY} from "./hsd";
 
 const userDataPath = app.getPath('userData');
-const appDataPath = path.join(app.getPath('userData'), 'appData');
+const appDataPath = path.join(userDataPath, 'appData');
 const hsdDataPath = path.join(appDataPath, 'fnd');
 const fndHome = path.join(userDataPath, 'fnd_data');
 const fndPath = path.join(appDataPath, 'fndbin');
