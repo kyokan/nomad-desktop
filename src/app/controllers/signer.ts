@@ -14,7 +14,7 @@ import fs from 'fs';
 import {resourcesPath} from '../util/paths';
 import logger from "../util/logger";
 import UsersManager from "./users";
-import FNDController from "./fnd";
+import FNDController, {fndVersionPath} from "./fnd";
 import {isTLD, parseUsername} from "../../ui/helpers/user";
 import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
 import {SubdomainManager} from "../../../external/nomad-api/src/services/subdomains";
@@ -24,9 +24,9 @@ import UserDataManager from "./userData";
 const NOT_INITIALIZED_ERROR = new Error('Indexer Manager is not initialized.');
 const NO_CURRENT_USER = new Error('No Creator.');
 
-const dbPath = path.join(electron.app.getPath('userData'), 'nomad.db');
-const namedbPath = path.join(electron.app.getPath('userData'), 'names.db');
-const indexerVersionPath = path.join(electron.app.getPath('userData'), 'indexer_version');
+const dbPath = path.join(electron.app.getPath('userData'), 'appData', 'nomad.db');
+const namedbPath = path.join(electron.app.getPath('userData'), 'appData', 'names.db');
+const indexerVersionPath = fndVersionPath;
 
 export type TopicMeta = {
   postOrder: {
