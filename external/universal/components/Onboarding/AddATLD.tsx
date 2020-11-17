@@ -93,7 +93,7 @@ function AddATLD(props: AddATLDProps): ReactElement {
             onClick={onNext}
             loading={isLoading}
           >
-            I have back up my private key
+            I have saved my private key
           </Button>
         </div>
       </div>
