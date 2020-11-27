@@ -79,3 +79,35 @@
     }
   }
 }
+
+.onboarding__tld__content__pubkey {
+  @extend %row-nowrap;
+  margin: .5rem 0;
+  width: 100%;
+  border: 1px solid $gray-100;
+  box-sizing: border-box;
+
+  input {
+    @extend %tiny-font;
+    @extend %strong;
+    font-family: "Roboto Mono", monospace;
+    flex: 1 1 auto;
+    width: 0;
+    border: 0;
+  }
+
+  .icon {
+    @extend %col-nowrap;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    height: 1.6875rem;
+    width: 1.6875rem;
+
+    &:focus,
+    &:hover,
+    &:active {
+      background-color: transparent;
+    }
+  }
+}

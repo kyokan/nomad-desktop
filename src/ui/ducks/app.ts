@@ -35,7 +35,7 @@ export type SystemMessage<meta> = {
   meta?: meta;
 }
 
-type AppState = {
+export type AppState = {
   hydrated: boolean;
   initialized: boolean;
   handshakeSyncProgress: number;

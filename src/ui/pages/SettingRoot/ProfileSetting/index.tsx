@@ -123,12 +123,6 @@ function ProfileSetting(props: Props): ReactElement {
   ]);
 
   useEffect(() => {
-    if (currentUsername) {
-      fetchUser(currentUsername);
-    }
-  }, [currentUsername, fetchUser]);
-
-  useEffect(() => {
     setProfilePicture(user?.profilePicture || '');
     setCoverImage(user?.coverImage || '');
     setDisplayName(user?.displayName || subdomain || tld);
