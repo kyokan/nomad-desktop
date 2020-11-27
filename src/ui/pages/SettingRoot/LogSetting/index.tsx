@@ -4,7 +4,7 @@ import "./log-setting.scss";
 import {ipcRenderer} from "electron";
 import {IPCMessageRequest, IPCMessageRequestType} from "../../../../app/types";
 import {postIPCMain} from "../../../helpers/ipc";
-import Button from "../../../../../external/universal/components/Button";
+import Button from "nomad-universal/lib/components/Button";
 
 const LOGS_CACHE: string[] = [];
 let listened = false;

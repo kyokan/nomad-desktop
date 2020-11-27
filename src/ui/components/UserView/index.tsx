@@ -2,7 +2,7 @@ import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from '
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Post} from '../fn-client/lib/application/Post';
 import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
-import CustomView from "../../../../external/universal/components/CustomView";
+import CustomView from "nomad-universal/lib/components/CustomView";
 import {
   fetchUserBlockee,
   fetchUserFollowings, useAddUserToViewIndex, useCreateNewView, useCurrentBlocks,
@@ -29,7 +29,7 @@ import {IPCMessageRequestType} from "../../../app/types";
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
 import uniq from "lodash.uniq";
 import {useMuteUser, useUnmuteUser} from "../../ducks/blocklist";
-import {CustomViewPanelType} from "../../../../external/universal/components/CustomView/CustomViewPanel";
+import {CustomViewPanelType} from "nomad-universal/lib/components/CustomView/CustomViewPanel";
 import './user-view.scss';
 import UserCard from "../UserCard";
 import Menuable, {MenuProps} from "../Menuable";
@@ -37,7 +37,7 @@ import {CustomViewProps} from "../../../app/controllers/userData";
 import MediaView from "./MediaView";
 import {FullScreenModal} from "../FullScreenModal";
 import {useBlockUser, useFollowUser, useLikePage, useQueryMediaForName} from "../../helpers/hooks";
-import {getImageURLFromPostHash} from "../../../../external/universal/utils/posts";
+import {getImageURLFromPostHash} from "nomad-universal/lib/utils/posts";
 import {Envelope} from "../fn-client/lib/application/Envelope";
 
 type Props = {

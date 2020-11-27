@@ -1,8 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ECKey = require('eckey');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const secureRandom = require('secure-random');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import CryptoJS from 'crypto-js';
 
 export function generateNewCompressedKey(): typeof ECKey {

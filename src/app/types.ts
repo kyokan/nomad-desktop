@@ -1,4 +1,4 @@
-import {PostMeta} from "../../external/universal/ducks/posts";
+import {PostMeta} from "nomad-universal/lib/ducks/posts";
 import crypto from "crypto";
 
 export const API_KEY = crypto.randomBytes(20).toString('hex');

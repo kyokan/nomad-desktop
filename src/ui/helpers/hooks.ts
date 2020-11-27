@@ -13,19 +13,19 @@ import {
   useCurrentUsername,
   UsersActionType,
   UsersState
-} from "../../../external/universal/ducks/users";
+} from "nomad-universal/lib/ducks/users";
 import {RepliesState, setSendingReplies} from "../ducks/drafts/replies";
-import {appendNewComment, createNewPost, updatePost} from "../../../external/universal/ducks/posts";
-import {PostType} from "../../../external/universal/types/posts";
-import {parseUsername, serializeUsername} from "../../../external/universal/utils/user";
+import {appendNewComment, createNewPost, updatePost} from "nomad-universal/lib/ducks/posts";
+import {PostType} from "nomad-universal/lib/types/posts";
+import {parseUsername, serializeUsername} from "nomad-universal/lib/utils/user";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import {INDEXER_API} from "../../../external/universal/utils/api";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
-import {Pageable} from '../../../external/nomad-api/src/services/indexer/Pageable';
+import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
-import {DraftPost} from "../../../external/universal/ducks/drafts/type";
+import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
 import {AppActionType} from "../ducks/app";
 
 export const useFileUpload = (): () => Promise<string> => {

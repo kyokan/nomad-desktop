@@ -8,7 +8,7 @@ import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {useCallback} from "react";
 import {extendFilter} from "../helpers/filter";
 import {serializeUsername} from "../helpers/user";
-import {INDEXER_API} from "../../../external/universal/utils/api";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';

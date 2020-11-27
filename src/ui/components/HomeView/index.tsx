@@ -17,8 +17,8 @@ import {IPCMessageRequestType} from "../../../app/types";
 import uniq from "lodash.uniq";
 import {useMutedUser} from "../../ducks/blocklist";
 import {mapPostWithMetaToPost} from "../../../app/util/posts";
-import CustomView from "../../../../external/universal/components/CustomView";
-import {CustomViewPanelType} from "../../../../external/universal/components/CustomView/CustomViewPanel";
+import CustomView from "nomad-universal/lib/components/CustomView";
+import {CustomViewPanelType} from "nomad-universal/lib/components/CustomView/CustomViewPanel";
 
 
 type Props = {

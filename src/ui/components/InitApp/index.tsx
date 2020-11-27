@@ -2,9 +2,9 @@ import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from "
 import {Redirect, Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import c from 'classnames';
 import "./init-app.scss";
-import Icon from "../../../../external/universal/components/Icon";
+import Icon from "nomad-universal/lib/components/Icon";
 import Logo from "../../../../static/assets/icons/logo-green.svg";
-import Button from "../../../../external/universal/components/Button";
+import Button from "nomad-universal/lib/components/Button";
 import {
   useGetConnection,
   useSetAPIKey,

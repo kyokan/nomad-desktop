@@ -21,10 +21,10 @@ import {MessagePort} from "../../components/SystemMessage";
 import {fetchCurrentUserData, fetchIdentity, updateCurrentUser, useCurrentUser} from "../../ducks/users";
 import {ipcRenderer} from "electron";
 import {IPCMessageRequest, IPCMessageRequestType} from "../../../app/types";
-import {useUpdateDraft} from "../../../../external/universal/ducks/drafts";
-import MarkdownEditor from "../../../../external/universal/components/MarkdownEditor";
-import {useFetchUser} from "../../../../external/universal/ducks/users";
-import Attachments from "../../../../external/universal/components/Attachments";
+import {useUpdateDraft} from "nomad-universal/lib/ducks/drafts";
+import MarkdownEditor from "nomad-universal/lib/components/MarkdownEditor";
+import {useFetchUser} from "nomad-universal/lib/ducks/users";
+import Attachments from "nomad-universal/lib/components/Attachments";
 
 export default function NewPostRoot (): ReactElement {
   const dispatch = useDispatch();
