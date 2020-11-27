@@ -32,7 +32,7 @@ import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
-import {AppActionType} from "../ducks/app";
+import {AppActionType, AppState, useAppInitialized} from "../ducks/app";
 
 type RepliesState = {
   map: {
@@ -179,6 +179,7 @@ export const useStopFND = () => {
 
 export const useSendPost = () => {
   const dispatch = useDispatch();
+  const initialized = useAppInitialized();
 
   return useCallback(async (draft: DraftPost, truncate = false): Promise<RelayerNewPostResponse> => {
     const json: IPCMessageResponse<RelayerNewPostResponse> = await postIPCMain({
@@ -195,10 +196,12 @@ export const useSendPost = () => {
       throw new Error(json.payload as string);
     }
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
     dispatch(updatePost(createNewPost({
       hash: json.payload.refhash,
@@ -269,6 +272,7 @@ export const useQueryMediaForName = () => {
 export const useBlockUser = () => {
   const dispatch = useDispatch();
   const currentUsername = useCurrentUsername();
+  const initialized = useAppInitialized();
   return useCallback(async (username: string) => {
     if (!currentUsername) {
       return;
@@ -288,10 +292,12 @@ export const useBlockUser = () => {
       [username]: username,
     }));
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
   }, [dispatch, postIPCMain, currentUsername])
 };
@@ -299,6 +305,7 @@ export const useBlockUser = () => {
 export const useFollowUser = () => {
   const dispatch = useDispatch();
   const currentUser = useCurrentUser();
+  const initialized = useAppInitialized();
   return useCallback(async (username: string) => {
     const {tld, subdomain} = parseUsername(username);
 
@@ -310,11 +317,12 @@ export const useFollowUser = () => {
       },
     }, true);
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
-
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
     dispatch(addUserFollowings(currentUser.name, {
       [username]: username,
@@ -325,6 +333,7 @@ export const useFollowUser = () => {
 export const useLikePage = () => {
   const dispatch = useDispatch();
   const currentUsername = useCurrentUsername();
+  const initialized = useAppInitialized();
 
   return useCallback(async (postHash: string) => {
     if (!currentUsername) {
@@ -339,10 +348,12 @@ export const useLikePage = () => {
         },
       }, true);
 
-      await postIPCMain({
-        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-        payload: {},
-      }, true);
+      if (initialized) {
+        await postIPCMain({
+          type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+          payload: {},
+        }, true);
+      }
 
       // dispatch(fetchCurrentUserLikes());
       dispatch(addLikeCount(postHash, 1));
@@ -355,10 +366,20 @@ export const useLikePage = () => {
   }, [postIPCMain, dispatch, currentUsername]);
 };
 
-export const sendReply = (id: string) => async (dispatch: ThunkDispatch<{ replies: RepliesState }, any, Action>, getState: () => { replies: RepliesState; users: UsersState }): Promise<IPCMessageResponse<any>> => {
+export const sendReply = (id: string) => async (
+  dispatch: ThunkDispatch<{ replies: RepliesState }, any, Action>,
+  getState: () => {
+    replies: RepliesState;
+    users: UsersState;
+    app: AppState;
+  }
+): Promise<IPCMessageResponse<any>> => {
   dispatch(setSendingReplies(true));
-
-  const { replies, users: { currentUser } } = getState();
+  const {
+    replies,
+    users: { currentUser },
+    app: { initialized },
+  } = getState();
   const { tld } = parseUsername(currentUser);
   const reply = replies.map[id];
 
@@ -377,10 +398,12 @@ export const sendReply = (id: string) => async (dispatch: ThunkDispatch<{ replie
 
   const json = await postIPCMain(ipcMessage, true);
 
-  await postIPCMain({
-    type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-    payload: {},
-  }, true);
+  if (initialized) {
+    await postIPCMain({
+      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+      payload: {},
+    }, true);
+  }
 
   dispatch(setSendingReplies(false));
 
