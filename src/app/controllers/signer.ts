@@ -156,7 +156,7 @@ export default class SignerManager {
         this.signer,
       );
     } else {
-      const blob = await fetchBlobInfo(tld);
+      const blob = await fetchBlobInfo(tld).catch(() => ({ offset: 0 }));
       offset = blob.offset;
 
       switch (wire.message.type.toString('utf-8')) {
