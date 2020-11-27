@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-Desktop: [Release](https://github.com/nomad-org/nomad-ui/releases)
+Desktop: [Release](https://github.com/kyokan/nomad-desktop/releases)
 
 ## Features
 
