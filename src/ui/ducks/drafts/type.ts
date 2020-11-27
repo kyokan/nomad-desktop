@@ -1,4 +1,4 @@
-import {PostType} from "../../../../external/universal/types/posts";
+import {PostType} from "nomad-universal/lib/types/posts";
 
 export type DraftPost = {
   type: PostType;

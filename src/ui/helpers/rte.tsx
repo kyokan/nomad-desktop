@@ -4,7 +4,7 @@ import Anchor from "../components/Anchor";
 import {DraftPost} from "../ducks/drafts/type";
 import marked from "marked";
 import DOMPurify from "dompurify";
-import {hash} from "../../../external/universal/utils/hash";
+import {hash} from "nomad-universal/lib/utils/hash";
 
 const { markdownToDraft } = require('markdown-draft-js');
 const hljs = require('highlight.js');

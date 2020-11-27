@@ -26,9 +26,9 @@ import {
   resetApp,
   writeLastSync
 } from "../util/appData";
-import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
-import {extendFilter} from "../../../external/nomad-api/src/util/filter";
-import {serializeUsername} from "../../../external/universal/utils/user";
+import {IndexerManager} from "nomad-api/lib/services/indexer";
+import {extendFilter} from "nomad-api/lib/util/filter";
+import {serializeUsername} from "nomad-universal/lib/utils/user";
 import crypto from "crypto";
 import HSDService, {HSD_API_KEY} from "./hsd";
 

@@ -15,7 +15,7 @@ import {
   IPCMessageRequestType
 } from "../types";
 import {dotName, isSubdomain} from "../../ui/helpers/user";
-import logger from "../../../external/nomad-api/src/util/logger";
+import logger from "nomad-api/lib/util/logger";
 import {
   getEndHeightFromLog,
   getHeightFromLog,
@@ -24,7 +24,7 @@ import {
   getNameFromLog,
   getStartHeightFromLog,
   getSyncedHeightFromLog,
-} from "../../../external/nomad-api/src/services/fnd";
+} from "nomad-api/lib/services/fnd";
 import throttle from "lodash.throttle";
 import {initializeApp, isAppInitialized} from "../util/appData";
 import Timeout = NodeJS.Timeout;

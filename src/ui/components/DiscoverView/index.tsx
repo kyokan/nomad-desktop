@@ -2,7 +2,7 @@ import React, {ReactElement, useCallback, useEffect, useState} from "react";
 import {withRouter, RouteComponentProps} from "react-router";
 import {Post} from '../fn-client/lib/application/Post';
 import {Pageable} from '../../../../external/nomad-api/src/services/indexer/Pageable';
-import CustomView from "../../../../external/universal/components/CustomView";
+import CustomView from "nomad-universal/lib/components/CustomView";
 import {useDispatch} from "react-redux";
 import {addLikeCount, updateRawPost, usePostsMap, useSelectPost} from "../../ducks/posts";
 import {mapPostWithMetaToPost} from "../../../app/util/posts";

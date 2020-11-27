@@ -7,17 +7,17 @@ import "../index.scss";
 import "./styles/menu.scss";
 import AppHeader from "../../components/Header/AppHeader";
 import {MessagePort} from "../../components/SystemMessage";
-import {CustomViewContainer} from "../../../../external/universal/components/CustomFilterView";
-import UserView from "../../../../external/universal/components/UserView";
-import DiscoverView from "../../../../external/universal/components/DiscoverView";
+import {CustomViewContainer} from "nomad-universal/lib/components/CustomFilterView";
+import UserView from "nomad-universal/lib/components/UserView";
+import DiscoverView from "nomad-universal/lib/components/DiscoverView";
 import {
   fetchUserFollowings,
   fetchUserLikes,
   useCurrentUsername,
   useFetchUser
-} from "../../../../external/universal/ducks/users";
+} from "nomad-universal/lib/ducks/users";
 import {useDispatch} from "react-redux";
-import HomeView from "../../../../external/universal/components/HomeView";
+import HomeView from "nomad-universal/lib/components/HomeView";
 import {
   sendReply,
   useBlockUser,
@@ -31,23 +31,23 @@ import {
 } from "../../helpers/hooks";
 import {useFetchAppData, useHydrated, useInitialized} from "../../ducks/app";
 import InitApp from "../../components/InitApp";
-import DiscoverPanels from "../../../../external/universal/components/DiscoverPanels";
-import UserPanels from "../../../../external/universal/components/UserPanels";
-import Onboarding, {OnboardingViewType} from "../../../../external/universal/components/Onboarding";
+import DiscoverPanels from "nomad-universal/lib/components/DiscoverPanels";
+import UserPanels from "nomad-universal/lib/components/UserPanels";
+import Onboarding, {OnboardingViewType} from "nomad-universal/lib/components/Onboarding";
 import {postIPCMain} from "../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../app/types";
-import SearchView from "../../../../external/universal/components/SearchView";
-import SearchPanels from "../../../../external/universal/components/SearchPanels";
-import SavedView from "../../../../external/universal/components/SavedView";
-import SavedViewPanels from "../../../../external/universal/components/SavedViewPanels";
-import BlocksView from "../../../../external/universal/components/UserView/BlocksView";
-import FollowingView from "../../../../external/universal/components/UserView/FollowingView";
-import FollowersView from "../../../../external/universal/components/UserView/FollowersView";
-import ComposeView from "../../../../external/universal/components/ComposeView";
-import {FullScreenModal} from "../../../../external/universal/components/FullScreenModal";
-import Icon from "../../../../external/universal/components/Icon";
+import SearchView from "nomad-universal/lib/components/SearchView";
+import SearchPanels from "nomad-universal/lib/components/SearchPanels";
+import SavedView from "nomad-universal/lib/components/SavedView";
+import SavedViewPanels from "nomad-universal/lib/components/SavedViewPanels";
+import BlocksView from "nomad-universal/lib/components/UserView/BlocksView";
+import FollowingView from "nomad-universal/lib/components/UserView/FollowingView";
+import FollowersView from "nomad-universal/lib/components/UserView/FollowersView";
+import ComposeView from "nomad-universal/lib/components/ComposeView";
+import {FullScreenModal} from "nomad-universal/lib/components/FullScreenModal";
+import Icon from "nomad-universal/lib/components/Icon";
 import Logo from "../../../../static/assets/icons/logo.svg";
-import Button from "../../../../external/universal/components/Button";
+import Button from "nomad-universal/lib/components/Button";
 
 export default function Root(): ReactElement {
   const dispatch = useDispatch();

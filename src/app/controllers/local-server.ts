@@ -4,7 +4,7 @@ import {joinAppRootPath} from "../util/paths";
 import bodyParser from "body-parser";
 const jsonParser = bodyParser.json();
 import {isAppInitialized} from "../util/appData";
-import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
+import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {API_KEY} from "../types";
 const app = express();
 

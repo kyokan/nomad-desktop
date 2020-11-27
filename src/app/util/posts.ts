@@ -3,7 +3,7 @@ import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {ResponsePost} from "../types";
 import {serializeUsername} from "../../ui/helpers/user";
-import {RelayerPostModel} from "../../../external/universal/types/posts";
+import {RelayerPostModel} from "nomad-universal/lib/types/posts";
 
 export const mapDraftToPostPayload = (draft?: DraftPost): RelayerPostModel => {
   if (!draft) {

@@ -61,7 +61,7 @@ import {
   setInitialized,
   setLastSync,
 } from "./ducks/app";
-import {fetchUserFollowings} from "../../external/universal/ducks/users";
+import {fetchUserFollowings} from "nomad-universal/lib/ducks/users";
 
 
 

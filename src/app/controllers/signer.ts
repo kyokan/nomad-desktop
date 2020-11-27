@@ -1,7 +1,7 @@
-import {PostsDAOImpl} from '../../../external/nomad-api/src/services/indexer/PostsDAO';
-import {ModerationsDAOImpl} from '../../../external/nomad-api/src/services/indexer/ModerationsDAO';
-import {ConnectionsDAOImpl} from '../../../external/nomad-api/src/services/indexer/ConnectionsDAO';
-import {SqliteEngine} from '../../../external/nomad-api/src/services/indexer/Engine';
+import {PostsDAOImpl} from 'nomad-api/lib/services/indexer/PostsDAO';
+import {ModerationsDAOImpl} from 'nomad-api/lib/services/indexer/ModerationsDAO';
+import {ConnectionsDAOImpl} from 'nomad-api/lib/services/indexer/ConnectionsDAO';
+import {SqliteEngine} from 'nomad-api/lib/services/indexer/Engine';
 import SECP256k1Signer from 'fn-client/lib/crypto/signer'
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
@@ -16,9 +16,8 @@ import logger from "../util/logger";
 import UsersManager from "./users";
 import FNDController, {fndVersionPath} from "./fnd";
 import {isTLD, parseUsername} from "../../ui/helpers/user";
-import {IndexerManager} from "../../../external/nomad-api/src/services/indexer";
-import {SubdomainManager} from "../../../external/nomad-api/src/services/subdomains";
-import {Writer} from "../../../external/nomad-api/src/services/writer";
+import {IndexerManager} from "nomad-api/lib/services/indexer";
+import {Writer} from "nomad-api/lib/services/writer";
 import UserDataManager from "./userData";
 
 const NOT_INITIALIZED_ERROR = new Error('Indexer Manager is not initialized.');
@@ -66,7 +65,6 @@ export default class SignerManager {
   moderationsDao?: ModerationsDAOImpl;
   connectionsDao?: ConnectionsDAOImpl;
   writer?: Writer;
-  subdomains?: SubdomainManager;
   signer?: SECP256k1Signer;
   usersController: UsersManager;
   fndController: FNDController;
@@ -97,16 +95,10 @@ export default class SignerManager {
     this.moderationsDao = new ModerationsDAOImpl(engine);
     this.connectionsDao = new ConnectionsDAOImpl(engine);
     this.setIngestor('');
-    const subdomains = new SubdomainManager({
-      indexer: this.indexerManager,
-    });
     const writer = new Writer({
       indexer: this.indexerManager,
-      subdomains: subdomains,
     });
-    subdomains.writer = writer;
     this.writer = writer;
-    this.subdomains = subdomains;
   }
 
   private async shouldUpdateNomadDB (): Promise<boolean> {

@@ -3,7 +3,7 @@ import {joinAppDataPath} from "../util/paths";
 import {dirExists} from "../util/fs";
 import {IPCMessageRequest} from "../types";
 import UsersManager from "./users";
-import {Filter} from "../../../external/nomad-api/src/util/filter";
+import {Filter} from "nomad-api/lib/util/filter";
 
 const userDataDir = joinAppDataPath('.userData');
 

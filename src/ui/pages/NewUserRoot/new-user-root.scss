@@ -1,4 +1,4 @@
-@import "./external/universal/styles/variable";
+@import "node_modules/nomad-universal/lib/styles/variable";
 
 .new-user {
   @extend %col-nowrap;

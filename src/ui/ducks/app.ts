@@ -3,7 +3,7 @@ import {Dispatch} from "redux";
 import {useCallback} from "react";
 import {postIPCMain} from "../helpers/ipc";
 import {APP_DATA_EVENT_TYPES, IPCMessageRequestType, IPCMessageResponse} from "../../app/types";
-import {INDEXER_API} from "../../../external/universal/utils/api";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 
 export enum AppActionType {
   INIT = 'app/init',

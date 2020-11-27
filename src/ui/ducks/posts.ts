@@ -10,7 +10,7 @@ import {mapPostWithMetaToPost} from "../../app/util/posts";
 import {useCallback} from "react";
 import {addUserFollowings, useCurrentUser} from "./users";
 import {markup} from "../helpers/rte";
-import {Pageable} from '../../../external/nomad-api/src/services/indexer/Pageable';
+import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {parseUsername} from "../helpers/user";
 import uniq from "lodash.uniq";
 

@@ -6,7 +6,7 @@ import {mapPostWithMetaToPost} from "../../../app/util/posts";
 import uniq from "lodash.uniq";
 import {useDispatch} from "react-redux";
 import './media-view.scss';
-import {updateRawPost} from "../../../../external/universal/ducks/posts";
+import {updateRawPost} from "nomad-universal/lib/ducks/posts";
 import {Envelope as DomainEnvelope} from "../fn-client/lib/application/Envelope";
 
 type Props = {
