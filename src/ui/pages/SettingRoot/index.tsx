@@ -1,19 +1,21 @@
-import React, {ChangeEvent, ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {Switch, Route, Redirect, withRouter, RouteComponentProps} from "react-router-dom";
 import c from "classnames";
 import "./setting-root.scss";
 import "../index.scss";
-import SettingHeader from "../../components/Header/SettingHeader";
 import NetworkSetting from "./NetworkSetting";
 import LogSetting from "./LogSetting";
 import ProfileSetting from "./ProfileSetting";
-import {useCurrentUsername} from "../../../../external/universal/ducks/users";
-import {fetchIdentity} from "../../ducks/users";
+import {useCurrentUsername, useFetchUser, UsersActionType} from "nomad-universal/lib/ducks/users";
+import DomainSetting from "nomad-universal/lib/components/DomainSetting";
+
 import {useDispatch} from "react-redux";
+import {fetchIdentity} from "../../helpers/hooks";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 
 function SettingRoot (props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();
-  // @ts-ignore
+
   useEffect(() => {
     dispatch(fetchIdentity())
   }, []);
@@ -35,9 +37,44 @@ function renderSettingNav(props: RouteComponentProps): ReactElement {
   } = props;
 
   const currentUsername = useCurrentUsername();
+  const fetchUser = useFetchUser();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    (async function() {
+      if (currentUsername) {
+        await fetchUser(currentUsername);
+        const resp = await fetch(`${INDEXER_API}/blob/${currentUsername}/info`);
+        const {
+          payload: {
+            publicKey,
+          },
+        } = await resp.json();
+        dispatch({
+          type: UsersActionType.SET_USER_PUBLIC_KEY,
+          payload: {
+            name: currentUsername,
+            publicKey: publicKey,
+          },
+        });
+      }
+    })();
+  }, [currentUsername, fetchUser, dispatch]);
 
   return (
     <div className="setting__nav">
+      {
+        !!currentUsername && (
+          <div
+            className={c('setting__nav__row', {
+              'setting__nav__row--active': /domain/g.test(pathname),
+            })}
+            onClick={() => push('/settings/domain')}
+          >
+            Domain
+          </div>
+        )
+      }
       <div
         className={c('setting__nav__row', {
           'setting__nav__row--active': /network/g.test(pathname),
@@ -74,6 +111,9 @@ function renderSettingContent(): ReactElement {
   return (
     <div className="setting__content">
       <Switch>
+        <Route path="/settings/domain">
+          <DomainSetting />
+        </Route>
         <Route path="/settings/network">
           <NetworkSetting />
         </Route>
@@ -84,7 +124,7 @@ function renderSettingContent(): ReactElement {
           <ProfileSetting />
         </Route>
         <Route>
-          <Redirect to="/settings/network" />
+          <Redirect to="/settings/domain" />
         </Route>
       </Switch>
     </div>

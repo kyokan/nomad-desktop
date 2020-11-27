@@ -3,7 +3,7 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {FNDPeer, IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
 import {postIPCMain} from "../../../helpers/ipc";
 import "./network-setting.scss";
-import Button from "../../../../../external/universal/components/Button";
+import Button from "nomad-universal/lib/components/Button";
 import {
   useSetAPIKey,
   useSetBasePath,
@@ -14,7 +14,7 @@ import {
   useStopFND, useStopHSD
 } from "../../../helpers/hooks";
 import {useFNDStatus, useFetchAppData, useAppData} from "../../../ducks/app";
-import {INDEXER_API} from "../../../../../external/universal/utils/api";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 
 let watch: any | null;
 
@@ -90,7 +90,6 @@ function NetworkSetting(props: RouteComponentProps): ReactElement {
 
   useEffect(() => {
     (async function onPeerInfoGroupMount() {
-      console.log('hi')
       await fetchAppData();
       const json: IPCMessageResponse<{
         startHeight: number;

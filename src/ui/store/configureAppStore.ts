@@ -1,17 +1,14 @@
 import {createStore, applyMiddleware, combineReducers} from "redux";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
-import posts, {PostsActionType} from "../../../external/universal/ducks/posts";
-import users from "../../../external/universal/ducks/users";
-import fav from "../ducks/fav";
-import drafts from "../ducks/drafts";
-import replies from "../ducks/drafts/replies";
-import bookmark from "../ducks/bookmark";
-import blocklist from "../ducks/blocklist";
-import preview from "../ducks/preview";
+import posts, {PostsActionType} from "nomad-universal/lib/ducks/posts";
+import users from "nomad-universal/lib/ducks/users";
+import drafts from "nomad-universal/lib/ducks/drafts";
+import replies from "nomad-universal/lib/ducks/drafts/replies";
+import blocklist from "nomad-universal/lib/ducks/blocklist";
 import app, {AppActionType} from "../ducks/app";
-import search from "../../../external/universal/ducks/search";
-import views from "../../../external/universal/ducks/views";
+import search from "nomad-universal/lib/ducks/search";
+import views from "nomad-universal/lib/ducks/views";
 
 
 const rootReducer = combineReducers({
@@ -19,10 +16,7 @@ const rootReducer = combineReducers({
   users,
   replies,
   app,
-  fav,
-  bookmark,
   blocklist,
-  preview,
   drafts,
   search,
   views,

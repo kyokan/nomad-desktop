@@ -1,5 +1,5 @@
 @import "../../variables";
-@import "./external/universal/styles/variable";
+@import "node_modules/nomad-universal/lib/styles/variable";
 .footer {
   @extend %header-bg-gradient;
   user-select: none;

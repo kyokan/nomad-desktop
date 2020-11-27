@@ -3,30 +3,43 @@ import {remote} from "electron";
 import fs from "fs";
 import {fromFile} from "file-type";
 import {useDispatch} from "react-redux";
-import {addUserFollowings, useCurrentUser} from "../ducks/users";
+import {
+  addUserFollowings,
+  fetchCurrentUserLikes,
+  fetchUserBlocks,
+  fetchUserFollowings,
+  useCurrentUser
+} from "nomad-universal/lib/ducks/users";
 import {IPCMessageRequestType, IPCMessageResponse, RelayerNewPostResponse} from "../../app/types";
 import {postIPCMain} from "./ipc";
-import {addLikeCount} from "../ducks/posts";
+import {addLikeCount} from "nomad-universal/lib/ducks/posts";
 import {
   addUserBlocks,
   addUserLikes,
   useCurrentUsername,
   UsersActionType,
   UsersState
-} from "../../../external/universal/ducks/users";
-import {RepliesState, setSendingReplies} from "../ducks/drafts/replies";
-import {appendNewComment, createNewPost, updatePost} from "../../../external/universal/ducks/posts";
-import {PostType} from "../../../external/universal/types/posts";
-import {parseUsername, serializeUsername} from "../../../external/universal/utils/user";
+} from "nomad-universal/lib/ducks/users";
+import {setSendingReplies} from "nomad-universal/lib/ducks/drafts/replies";
+import {appendNewComment, createNewPost, updatePost} from "nomad-universal/lib/ducks/posts";
+import {PostType} from "nomad-universal/lib/types/posts";
+import {parseUsername, serializeUsername} from "nomad-universal/lib/utils/user";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import {INDEXER_API} from "../../../external/universal/utils/api";
+import {INDEXER_API} from "nomad-universal/lib/utils/api";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
-import {Pageable} from '../../../external/nomad-api/src/services/indexer/Pageable';
+import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
-import {DraftPost} from "../../../external/universal/ducks/drafts/type";
-import {AppActionType} from "../ducks/app";
+import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
+import {AppActionType, AppState, useAppInitialized} from "../ducks/app";
+
+type RepliesState = {
+  map: {
+    [parentId: string]: DraftPost;
+  };
+  isSendingReplies: boolean;
+}
 
 export const useFileUpload = (): () => Promise<string> => {
   const dispatch = useDispatch();
@@ -166,6 +179,7 @@ export const useStopFND = () => {
 
 export const useSendPost = () => {
   const dispatch = useDispatch();
+  const initialized = useAppInitialized();
 
   return useCallback(async (draft: DraftPost, truncate = false): Promise<RelayerNewPostResponse> => {
     const json: IPCMessageResponse<RelayerNewPostResponse> = await postIPCMain({
@@ -182,10 +196,12 @@ export const useSendPost = () => {
       throw new Error(json.payload as string);
     }
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
     dispatch(updatePost(createNewPost({
       hash: json.payload.refhash,
@@ -256,6 +272,7 @@ export const useQueryMediaForName = () => {
 export const useBlockUser = () => {
   const dispatch = useDispatch();
   const currentUsername = useCurrentUsername();
+  const initialized = useAppInitialized();
   return useCallback(async (username: string) => {
     if (!currentUsername) {
       return;
@@ -275,10 +292,12 @@ export const useBlockUser = () => {
       [username]: username,
     }));
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
   }, [dispatch, postIPCMain, currentUsername])
 };
@@ -286,6 +305,7 @@ export const useBlockUser = () => {
 export const useFollowUser = () => {
   const dispatch = useDispatch();
   const currentUser = useCurrentUser();
+  const initialized = useAppInitialized();
   return useCallback(async (username: string) => {
     const {tld, subdomain} = parseUsername(username);
 
@@ -297,11 +317,12 @@ export const useFollowUser = () => {
       },
     }, true);
 
-    await postIPCMain({
-      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-      payload: {},
-    }, true);
-
+    if (initialized) {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+        payload: {},
+      }, true);
+    }
 
     dispatch(addUserFollowings(currentUser.name, {
       [username]: username,
@@ -312,6 +333,7 @@ export const useFollowUser = () => {
 export const useLikePage = () => {
   const dispatch = useDispatch();
   const currentUsername = useCurrentUsername();
+  const initialized = useAppInitialized();
 
   return useCallback(async (postHash: string) => {
     if (!currentUsername) {
@@ -326,10 +348,12 @@ export const useLikePage = () => {
         },
       }, true);
 
-      await postIPCMain({
-        type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-        payload: {},
-      }, true);
+      if (initialized) {
+        await postIPCMain({
+          type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+          payload: {},
+        }, true);
+      }
 
       // dispatch(fetchCurrentUserLikes());
       dispatch(addLikeCount(postHash, 1));
@@ -342,10 +366,20 @@ export const useLikePage = () => {
   }, [postIPCMain, dispatch, currentUsername]);
 };
 
-export const sendReply = (id: string) => async (dispatch: ThunkDispatch<{ replies: RepliesState }, any, Action>, getState: () => { replies: RepliesState; users: UsersState }): Promise<IPCMessageResponse<any>> => {
+export const sendReply = (id: string) => async (
+  dispatch: ThunkDispatch<{ replies: RepliesState }, any, Action>,
+  getState: () => {
+    replies: RepliesState;
+    users: UsersState;
+    app: AppState;
+  }
+): Promise<IPCMessageResponse<any>> => {
   dispatch(setSendingReplies(true));
-
-  const { replies, users: { currentUser } } = getState();
+  const {
+    replies,
+    users: { currentUser },
+    app: { initialized },
+  } = getState();
   const { tld } = parseUsername(currentUser);
   const reply = replies.map[id];
 
@@ -364,10 +398,12 @@ export const sendReply = (id: string) => async (dispatch: ThunkDispatch<{ replie
 
   const json = await postIPCMain(ipcMessage, true);
 
-  await postIPCMain({
-    type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
-    payload: {},
-  }, true);
+  if (initialized) {
+    await postIPCMain({
+      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+      payload: {},
+    }, true);
+  }
 
   dispatch(setSendingReplies(false));
 
@@ -434,4 +470,37 @@ export const fetchCurrentUserData = () => async (dispatch: Dispatch<any>): Promi
     type: UsersActionType.SET_CURRENT_USER_DATA,
     payload: resp.payload,
   });
+};
+
+type FetchIdentityIPCResponse = IPCMessageResponse<{
+  users: string[];
+  currentUser: string;
+}>
+export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>) => {
+  const ipcEvt = {
+    type: IPCMessageRequestType.GET_IDENTITY,
+    payload: {},
+  };
+
+  postIPCMain(ipcEvt, true)
+    .then((resp: FetchIdentityIPCResponse) => {
+      const { users, currentUser } = resp.payload;
+      users.forEach(name => dispatch({
+        type: UsersActionType.ADD_IDENTITY,
+        payload: name,
+      }));
+
+      if (currentUser) {
+        dispatch({
+          type: UsersActionType.UPDATE_CURRENT_USER,
+          payload: currentUser,
+        });
+
+        dispatch(fetchCurrentUserLikes());
+        dispatch(fetchUserFollowings(currentUser));
+        dispatch(fetchUserBlocks(currentUser));
+      }
+
+      dispatch(fetchCurrentUserData());
+    });
 };

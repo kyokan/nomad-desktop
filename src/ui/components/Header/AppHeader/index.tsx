@@ -6,13 +6,12 @@ import "./app-header.scss";
 import {useDispatch} from "react-redux";
 import {fetchIdentity, useIdentities} from "../../../ducks/users";
 import Logo from "../../../../../static/assets/icons/logo-green.svg";
-import Icon from "../../../../../external/universal/components/Icon";
-import {useCurrentUsername, useUser} from "../../../../../external/universal/ducks/users";
-import Button from "../../../../../external/universal/components/Button";
-import Avatar from "../../../../../external/universal/components/Avatar";
-import Menuable from "../../../../../external/universal/components/Menuable";
-import {parseUsername} from "../../../../../external/universal/utils/user";
-import {useAppData} from "../../../ducks/app";
+import Icon from "nomad-universal/lib/components/Icon";
+import {useCurrentUsername, useUser} from "nomad-universal/lib/ducks/users";
+import Button from "nomad-universal/lib/components/Button";
+import Avatar from "nomad-universal/lib/components/Avatar";
+import Menuable from "nomad-universal/lib/components/Menuable";
+import {parseUsername} from "nomad-universal/lib/utils/user";
 
 function AppHeader(props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();

@@ -1,11 +1,16 @@
 import {postIPCMain} from "./helpers/ipc";
 const _fetch = fetch;
+let apiKey = '';
 // @ts-ignore
 global.fetch = async function (url, options) {
-  const {payload: apiKey} = await postIPCMain({
-    type: IPCMessageRequestType.GET_API_KEY,
-    payload: null,
-  }, true);
+  if (!apiKey) {
+    const {payload} = await postIPCMain({
+      type: IPCMessageRequestType.GET_API_KEY,
+      payload: null,
+    }, true);
+
+    apiKey = payload;
+  }
 
   if (typeof url === 'string') {
     return _fetch(url, {
@@ -39,19 +44,20 @@ import {
   IPCMessageRequestType,
   ResponsePost
 } from "../app/types";
-import * as postsActions from './ducks/posts';
-import {mapRawToPost, PostType} from './ducks/posts';
+import * as postsActions from 'nomad-universal/lib/ducks/posts';
+import {mapRawToPost} from 'nomad-universal/lib/ducks/posts';
 import {MemoryRouter} from 'react-router-dom';
-import {setMuteUser, setUnmuteUser} from "./ducks/blocklist";
+import {setMuteUser, setUnmuteUser} from "nomad-universal/lib/ducks/blocklist";
 import {
-  addIdentity,
-  fetchCurrentUserData,
-  fetchUserBlockee,
+  addIdentity, fetchUserBlocks,
+  // fetchCurrentUserData,
+  // fetchUserBlockee,
   fetchUserLikes,
   setCurrentUpdateQueue,
   updateCurrentLastFlushed,
   updateCurrentUser
-} from "./ducks/users";
+} from "nomad-universal/lib/ducks/users";
+
 import {
   AppActionType,
   setFNDStatus,
@@ -61,7 +67,9 @@ import {
   setInitialized,
   setLastSync,
 } from "./ducks/app";
-import {fetchUserFollowings} from "../../external/universal/ducks/users";
+import {fetchUserFollowings} from "nomad-universal/lib/ducks/users";
+import {fetchCurrentUserData} from "./helpers/hooks";
+import {PostType} from "nomad-universal/lib/types/posts";
 
 
 
@@ -118,10 +126,10 @@ ipcRenderer.on('pushMessage', (_: any, message: IPCMessageRequest<any>) => {
       return;
     case IPCMessageRequestType.CURRENT_IDENTITY_CHANGED:
       store.dispatch(updateCurrentUser(message.payload));
-      store.dispatch(fetchUserFollowings(message.payload));
-      store.dispatch(fetchUserBlockee(message.payload));
-      store.dispatch(fetchUserLikes(message.payload));
-      store.dispatch(fetchCurrentUserData());
+      store.dispatch<any>(fetchUserFollowings(message.payload));
+      store.dispatch<any>(fetchUserBlocks(message.payload));
+      store.dispatch<any>(fetchUserLikes(message.payload));
+      // store.dispatch<any>(fetchCurrentUserData());
       return;
     case IPCMessageRequestType.NEW_INDEXER_LOG_ENTRY:
       // store.dispatch(appActions.updateFooter(message.payload[0], ''));

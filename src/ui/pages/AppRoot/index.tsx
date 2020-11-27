@@ -1,23 +1,23 @@
 import React, {ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
-import {Redirect, Route, Switch} from "react-router";
+import {Redirect, Route, Switch, withRouter, RouteComponentProps} from "react-router";
 import Footer from '../../components/Footer';
 import "./root.scss";
 import "../railcasts.scss";
 import "../index.scss";
 import "./styles/menu.scss";
-import AppHeader from "../../components/Header/AppHeader";
 import {MessagePort} from "../../components/SystemMessage";
-import {CustomViewContainer} from "../../../../external/universal/components/CustomFilterView";
-import UserView from "../../../../external/universal/components/UserView";
-import DiscoverView from "../../../../external/universal/components/DiscoverView";
+import {CustomViewContainer} from "nomad-universal/lib/components/CustomFilterView";
+import UserView from "nomad-universal/lib/components/UserView";
+import DiscoverView from "nomad-universal/lib/components/DiscoverView";
+import UserDirectoryView from "nomad-universal/lib/components/UserDirectoryView";
 import {
   fetchUserFollowings,
   fetchUserLikes,
   useCurrentUsername,
   useFetchUser
-} from "../../../../external/universal/ducks/users";
+} from "nomad-universal/lib/ducks/users";
 import {useDispatch} from "react-redux";
-import HomeView from "../../../../external/universal/components/HomeView";
+import HomeView from "nomad-universal/lib/components/HomeView";
 import {
   sendReply,
   useBlockUser,
@@ -27,29 +27,30 @@ import {
   useSaveCustomView,
   fetchCurrentUserData,
   useFileUpload,
-  useSendPost,
+  useSendPost, fetchIdentity,
 } from "../../helpers/hooks";
 import {useFetchAppData, useHydrated, useInitialized} from "../../ducks/app";
 import InitApp from "../../components/InitApp";
-import DiscoverPanels from "../../../../external/universal/components/DiscoverPanels";
-import UserPanels from "../../../../external/universal/components/UserPanels";
-import Onboarding, {OnboardingViewType} from "../../../../external/universal/components/Onboarding";
+import DiscoverPanels from "nomad-universal/lib/components/DiscoverPanels";
+import UserPanels from "nomad-universal/lib/components/UserPanels";
+import Onboarding, {OnboardingViewType} from "nomad-universal/lib/components/Onboarding";
 import {postIPCMain} from "../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../app/types";
-import SearchView from "../../../../external/universal/components/SearchView";
-import SearchPanels from "../../../../external/universal/components/SearchPanels";
-import SavedView from "../../../../external/universal/components/SavedView";
-import SavedViewPanels from "../../../../external/universal/components/SavedViewPanels";
-import BlocksView from "../../../../external/universal/components/UserView/BlocksView";
-import FollowingView from "../../../../external/universal/components/UserView/FollowingView";
-import FollowersView from "../../../../external/universal/components/UserView/FollowersView";
-import ComposeView from "../../../../external/universal/components/ComposeView";
-import {FullScreenModal} from "../../../../external/universal/components/FullScreenModal";
-import Icon from "../../../../external/universal/components/Icon";
-import Logo from "../../../../static/assets/icons/logo.svg";
-import Button from "../../../../external/universal/components/Button";
+import SearchView from "nomad-universal/lib/components/SearchView";
+import SearchPanels from "nomad-universal/lib/components/SearchPanels";
+import SavedView from "nomad-universal/lib/components/SavedView";
+import SavedViewPanels from "nomad-universal/lib/components/SavedViewPanels";
+import BlocksView from "nomad-universal/lib/components/UserView/BlocksView";
+import FollowingView from "nomad-universal/lib/components/UserView/FollowingView";
+import FollowersView from "nomad-universal/lib/components/UserView/FollowersView";
+import ComposeView from "nomad-universal/lib/components/ComposeView";
+import AppHeader from "nomad-universal/lib/components/AppHeader";
+import {FullScreenModal} from "nomad-universal/lib/components/FullScreenModal";
+import Icon from "nomad-universal/lib/components/Icon";
+import Logo from "../../../../static/assets/icons/logo-green.svg";
+import Button from "nomad-universal/lib/components/Button";
 
-export default function Root(): ReactElement {
+function Root(props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();
   const currentUsername = useCurrentUsername();
   const fetchUser = useFetchUser();
@@ -59,11 +60,25 @@ export default function Root(): ReactElement {
   const [isBrowsing, setBrowsing] = useState<boolean>(false);
   const [isClosed, closeModal] = useState<boolean>(true);
 
+  const onSetting = useCallback(() => postIPCMain({
+    type: IPCMessageRequestType.OPEN_SETTING_WINDOW,
+    payload: null,
+  }), []);
+
+  const onLogout = useCallback(async () => {
+    await postIPCMain({
+      type: IPCMessageRequestType.UNSET_CURRENT_USER,
+      payload: null,
+    }, true);
+  }, []);
+
+  useEffect(() => dispatch<any>(fetchIdentity()), []);
+
   useEffect(() => {
     (async function onAppMount() {
       await fetchAppData();
       if (currentUsername) {
-        fetchUser(currentUsername);
+        await fetchUser(currentUsername);
         dispatch(fetchUserLikes(currentUsername));
         dispatch(fetchUserFollowings(currentUsername));
         dispatch(fetchCurrentUserData());
@@ -78,7 +93,14 @@ export default function Root(): ReactElement {
 
   return (
     <div className="app">
-      <AppHeader />
+      <AppHeader
+        signup={() => props.history.push('/signup')}
+        signupText="Add User"
+        logoUrl={Logo}
+        onSetting={onSetting}
+        onLogout={onLogout}
+        multiAccount
+      />
       <div className="content">
         <div className="content__body">
           { showContent && summary }
@@ -183,6 +205,11 @@ function renderSummary(): ReactNode {
 
   return (
     <Switch>
+      <Route path="/directory">
+        <UserDirectoryView
+          onFollowUser={onFollowUser}
+        />
+      </Route>
       <Route path="/posts/:postHash">
         <DiscoverView
           onLikePost={onLikePost}
@@ -276,9 +303,8 @@ function renderSummary(): ReactNode {
       </Route>
       <Route path="/write">
         <ComposeView
-          onFileUpload={() => Promise.resolve('')}
+          onFileUpload={() => Promise.reject('not supported')}
           onSendPost={sendPost}
-          onFileUploadButtonClick={fileUpload}
         />
       </Route>
       <Route>
@@ -312,11 +338,11 @@ function renderPanels(): ReactNode {
             />
           </div>
         </Route>
+        <Route path="/directory">
+          <div className="panels" />
+        </Route>
         <Route path="/home">
           <div className="panels">
-            <SearchPanels
-              onCreateNewView={onCreateNewView}
-            />
           </div>
         </Route>
         <Route path="/posts/:postHash">
@@ -331,3 +357,6 @@ function renderPanels(): ReactNode {
       </Switch>
   )
 }
+
+export default withRouter(Root);
+

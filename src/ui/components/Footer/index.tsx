@@ -3,7 +3,7 @@ import c from "classnames";
 import "./footer.scss";
 import {useAppData, useFNDStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
 import moment from "moment";
-import Icon from "../../../../external/universal/components/Icon";
+import Icon from "nomad-universal/lib/components/Icon";
 import {postIPCMain} from "../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../app/types";
 

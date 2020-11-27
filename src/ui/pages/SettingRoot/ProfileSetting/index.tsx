@@ -1,15 +1,15 @@
 import React, {ReactElement, useCallback, useEffect, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import "./profile-setting.scss";
-import {useCurrentUsername, useFetchUser, useUser} from "../../../../../external/universal/ducks/users";
-import {RawUserCard} from "../../../../../external/universal/components/UserCard";
-import {parseUsername} from "../../../../../external/universal/utils/user";
-import Button from "../../../../../external/universal/components/Button";
+import {useCurrentUsername, useFetchUser, useUser} from "nomad-universal/lib/ducks/users";
+import {RawUserCard} from "nomad-universal/lib/components/UserCard";
+import {parseUsername} from "nomad-universal/lib/utils/user";
+import Button from "nomad-universal/lib/components/Button";
 import {useFileUpload, useQueryMediaForName} from "../../../helpers/hooks";
 import {postIPCMain} from "../../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../../app/types";
-import {createNewDraft} from "../../../../../external/universal/ducks/drafts/type";
-import Menuable from "../../../../../external/universal/components/Menuable";
+import {createNewDraft} from "nomad-universal/lib/ducks/drafts/type";
+import Menuable from "nomad-universal/lib/components/Menuable";
 type Props = {
 
 } & RouteComponentProps;
@@ -121,12 +121,6 @@ function ProfileSetting(props: Props): ReactElement {
     profilePicture,
     coverImage,
   ]);
-
-  useEffect(() => {
-    if (currentUsername) {
-      fetchUser(currentUsername);
-    }
-  }, [currentUsername, fetchUser]);
 
   useEffect(() => {
     setProfilePicture(user?.profilePicture || '');
