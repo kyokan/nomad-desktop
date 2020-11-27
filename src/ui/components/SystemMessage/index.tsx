@@ -1,9 +1,9 @@
-import React, {Component, ReactElement, useCallback} from "react";
+import React, {Component, ReactElement} from "react";
 import ReactDOM from "react-dom";
 import {removeSystemMessage, useSystemMessages} from "../../ducks/app";
 import CancelIcon from '../../../../static/assets/icons/cancel.svg';
 import './sys-message.scss';
-import Icon from "../Icon";
+import Icon from "nomad-universal/lib/components/Icon";
 import {useDispatch} from "react-redux";
 import c from "classnames";
 

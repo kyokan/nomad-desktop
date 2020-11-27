@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {encrypt} from '../util/key';
+import {encrypt} from 'nomad-universal/lib/utils/key';
 import {dirExists} from '../util/fs';
 import {joinAppDataPath} from '../util/paths';
 import * as path from 'path';

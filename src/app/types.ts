@@ -138,7 +138,7 @@ export type ResponsePost = {
   title: string;
 };
 
-export const DEFAULT_FLUSH_TIMEOUT = (15 * 1000);
+export const DEFAULT_FLUSH_TIMEOUT = (2 * 1000);
 
 /**
  * {"id":1,"subdomain":"jchan6","tld":"nomadsub.","email":"test6@test.com","public_key":"","created_at":"2020-03-02T17:12:17.386019Z","updated_at":"2020-03-02T17:12:17.386019Z"}

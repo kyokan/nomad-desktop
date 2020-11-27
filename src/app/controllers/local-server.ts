@@ -6,6 +6,7 @@ const jsonParser = bodyParser.json();
 import {isAppInitialized} from "../util/appData";
 import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {API_KEY} from "../types";
+import {Writer} from "nomad-api/lib/services/writer";
 const app = express();
 
 app.use(express.static(joinAppRootPath('imageCache')));
@@ -18,19 +19,22 @@ const doAuth = (req: Request, res: Response, next: NextFunction) => {
 };
 const port = 7373;
 
-type Props = {
+type Opts = {
   indexerManager: IndexerManager;
+  writer: Writer;
 }
 
 export default class LocalServer {
   indexerManager: IndexerManager;
+  writer: Writer;
 
-  constructor(opts: Props) {
+  constructor(opts: Opts) {
     this.indexerManager = opts.indexerManager;
+    this.writer = opts.writer;
   }
 
   async init() {
-    const { indexerManager } = this;
+    const { indexerManager, writer } = this;
 
     // indexerManager.setRoutes(app);
 
@@ -51,6 +55,11 @@ export default class LocalServer {
     app.get('/media/:refhash', this.fallbackGet, indexerManager.handlers['/media/:refhash']);
     app.get('/trending/tags', this.fallbackGet, doAuth, indexerManager.handlers['/trending/tags']);
     app.get('/trending/users', this.fallbackGet, doAuth, indexerManager.handlers['/trending/users']);
+    app.get('/trending/users', this.fallbackGet, doAuth, indexerManager.handlers['/trending/users']);
+    app.get('/trending/users', this.fallbackGet, doAuth, indexerManager.handlers['/trending/users']);
+    app.post(`/relayer/precommit`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/relayer/precommit']);
+    app.post(`/relayer/commit`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/relayer/commit']);
+    app.get(`/blob/:blobName/info`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/blob/:blobName/info']);
 
     app.get('/health', (req, res) => {
       res.send('ok');

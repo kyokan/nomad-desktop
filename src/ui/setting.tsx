@@ -1,13 +1,17 @@
 import {postIPCMain} from "./helpers/ipc";
 
 const _fetch = fetch;
+let apiKey = '';
 // @ts-ignore
 global.fetch = async function (url, options) {
-  const {payload: apiKey} = await postIPCMain({
-    type: IPCMessageRequestType.GET_API_KEY,
-    payload: null,
-  }, true);
+  if (!apiKey) {
+    const {payload} = await postIPCMain({
+      type: IPCMessageRequestType.GET_API_KEY,
+      payload: null,
+    }, true);
 
+    apiKey = payload;
+  }
   if (typeof url === 'string') {
     return _fetch(url, {
       ...options || {},

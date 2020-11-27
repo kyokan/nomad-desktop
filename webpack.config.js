@@ -95,10 +95,7 @@ module.exports = [
       }),
     ],
   },
-  makeDevRendererBundle('new_post'),
-  makeDevRendererBundle('new_user'),
   makeDevRendererBundle('setting'),
-  makeDevRendererBundle('post_viewer'),
 ];
 
 function makeDevRendererBundle(name) {
