@@ -3,12 +3,9 @@ import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
 import posts, {PostsActionType} from "nomad-universal/lib/ducks/posts";
 import users from "nomad-universal/lib/ducks/users";
-import fav from "../ducks/fav";
-import drafts from "../ducks/drafts";
-import replies from "../ducks/drafts/replies";
-import bookmark from "../ducks/bookmark";
-import blocklist from "../ducks/blocklist";
-import preview from "../ducks/preview";
+import drafts from "nomad-universal/lib/ducks/drafts";
+import replies from "nomad-universal/lib/ducks/drafts/replies";
+import blocklist from "nomad-universal/lib/ducks/blocklist";
 import app, {AppActionType} from "../ducks/app";
 import search from "nomad-universal/lib/ducks/search";
 import views from "nomad-universal/lib/ducks/views";
@@ -19,10 +16,7 @@ const rootReducer = combineReducers({
   users,
   replies,
   app,
-  fav,
-  bookmark,
   blocklist,
-  preview,
   drafts,
   search,
   views,

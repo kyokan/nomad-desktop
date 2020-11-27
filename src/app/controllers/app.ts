@@ -4,18 +4,17 @@ import {Connection as DomainConnection} from 'fn-client/lib/application/Connecti
 import {Moderation as DomainModeration, ModerationType} from 'fn-client/lib/application/Moderation';
 import UsersController from './users';
 import SignerManager from './signer';
-import FavsManager from './favorites';
 import BlocklistManager from './blocklist';
 import electron, {ipcMain, IpcMainEvent} from 'electron';
 import {API_KEY, APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
-import {DraftPost} from '../../ui/ducks/drafts/type';
+import {DraftPost} from 'nomad-universal/lib/ducks/drafts/type';
 import {mapDraftToDomainPost} from '../util/posts';
 import FNDController from './fnd';
 import UserDataManager from './userData';
-import {decrypt} from "../util/key";
+import {decrypt} from "nomad-universal/lib/utils/key";
 import logger from "../util/logger";
 import LocalServer from "./local-server";
-import {isSubdomain, isTLD, parseUsername} from "../../ui/helpers/user";
+import {isSubdomain, isTLD, parseUsername} from "nomad-universal/lib/utils/user";
 import * as path from "path";
 import {resourcesPath} from "../util/paths";
 import {
@@ -31,6 +30,8 @@ import {extendFilter} from "nomad-api/lib/util/filter";
 import {serializeUsername} from "nomad-universal/lib/utils/user";
 import crypto from "crypto";
 import HSDService, {HSD_API_KEY} from "./hsd";
+import HSDClient from "nomad-api/lib/services/hsd";
+import {Writer} from "nomad-api/lib/services/writer";
 
 const ECKey = require('eckey');
 const conv = require('binstring');
@@ -46,7 +47,7 @@ export default class AppManager {
   usersController: UsersController;
   userDataManager: UserDataManager;
   fndController: FNDController;
-  favsManager: FavsManager;
+  // favsManager: FavsManager;
   blocklistManager: BlocklistManager;
   localServer: LocalServer;
 
@@ -64,7 +65,7 @@ export default class AppManager {
       dispatchMain: this.dispatchMain,
       dispatchNewPost: this.dispatchNewPost,
     });
-    this.favsManager = new FavsManager();
+    // this.favsManager = new FavsManager();
     this.userDataManager = new UserDataManager({
       dispatchMain: this.dispatchMain,
       dispatchSetting: this.dispatchSetting,
@@ -81,14 +82,21 @@ export default class AppManager {
       userDataManager: this.userDataManager,
     });
     this.fndController.subscribe(this.onDDRPLogUpdate);
+    const writer = new Writer({
+      indexer: this.indexerManager,
+      // @ts-ignore
+      subdomains: undefined,
+    });
     this.signerManager = new SignerManager({
       usersController: this.usersController,
       fndController: this.fndController,
       indexerManager: this.indexerManager,
       userDataManager: this.userDataManager,
+      writer: writer,
     });
     this.localServer = new LocalServer({
       indexerManager: this.indexerManager,
+      writer: writer,
     });
   }
 
@@ -396,69 +404,6 @@ export default class AppManager {
         return this.handleRequest(this.fndController.getDDRPLog, evt, req);
       case IPCMessageRequestType.SET_FND_LOG_LEVEL:
         return this.handleRequest(this.fndController.setLogLevel.bind(this, req.payload), evt, req);
-      case IPCMessageRequestType.GET_BOOKMARKS:
-        return this.handleRequest(
-          this.favsManager.getBookmarks.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.ADD_BOOKMARK:
-        return this.handleRequest(
-          this.favsManager.addBookmark.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.REMOVE_BOOKMARK:
-        return this.handleRequest(
-          this.favsManager.removeBookmark.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.ADD_TOPIC_TO_FAVORITE:
-        return this.handleRequest(
-          this.favsManager.addTopic.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.REMOVE_TOPIC_TO_FAVORITE:
-        return this.handleRequest(
-          this.favsManager.removeTopic.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.ADD_USER_TO_FAVORITE:
-        return this.handleRequest(
-          this.favsManager.addUser.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.REMOVE_USER_TO_FAVORITE:
-        return this.handleRequest(
-          this.favsManager.removeUser.bind(
-            this,
-            req.payload,
-          ),
-          evt, req,
-        );
-      case IPCMessageRequestType.GET_FAVORITES:
-        return this.handleRequest(async () => {
-          return {
-            topics: await this.favsManager.getTopics(),
-            users: await this.favsManager.getUsers(),
-          };
-        }, evt, req);
       case IPCMessageRequestType.GET_MUTE_LIST:
         return this.handleRequest(async () => {
           return {
@@ -753,7 +698,7 @@ export default class AppManager {
             networkId,
             mapDraftToDomainPost(req.payload!.draft),
           ),
-          !!req.payload?.truncate,
+          req.payload?.truncate,
         );
       })
       .then((envelop) => {
@@ -831,18 +776,33 @@ export default class AppManager {
       payload: type,
     });
 
+    let hsdClient;
+
     if (type) {
       if (type === 'P2P') {
         await this.fndController.setAPIKey(HSD_API_KEY);
         await this.fndController.setHost('http://127.0.0.1');
         await this.fndController.setBasePath('');
         await this.fndController.setPort('12037');
+        hsdClient = new HSDClient({
+          host: 'http://127.0.0.1',
+          port: '12037',
+          apiKey: HSD_API_KEY
+        });
       } else if (type === 'CUSTOM') {
         await this.fndController.setAPIKey(conn.apiKey);
         await this.fndController.setHost(conn.host);
         await this.fndController.setBasePath(conn.basePath);
         await this.fndController.setPort(`${conn.port}`);
+        hsdClient = new HSDClient({
+          host: conn.host,
+          port: `${conn.port}`,
+          apiKey: conn.apiKey,
+          basePath: conn.basePath,
+        });
       }
+
+      this.indexerManager.hsdClient = hsdClient;
 
       await this.hsdManager.start()
         .catch(async () =>{
@@ -865,7 +825,6 @@ export default class AppManager {
     await this.usersController.init();
     await this.userDataManager.init();
     await this.signerManager.init();
-    await this.favsManager.init();
     await this.blocklistManager.init();
     await this.localServer.init();
 

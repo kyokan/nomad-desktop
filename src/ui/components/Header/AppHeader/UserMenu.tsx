@@ -1,8 +1,8 @@
 import React, {MouseEvent, ReactElement, useCallback, useState} from "react";
-import Menuable, {MenuProps} from "../../Menuable";
-import HeaderButton from "../../HeaderButton";
+import Menuable, {MenuProps} from "nomad-universal/lib/components/Menuable";
+import HeaderButton from "nomad-universal/lib/components/HeaderButton";
 import UserIcon from "../../../../../static/assets/icons/user.svg";
-import {setCurrentUser, useIdentities, useIdentity} from "../../../ducks/users";
+import {setCurrentUser, useIdentities, useIdentity} from "nomad-universal/lib/ducks/users";
 import TickIcon from "../../../../../static/assets/icons/tick.svg";
 import PlusIcon from "../../../../../static/assets/icons/plus.svg";
 import UploadIcon from "../../../../../static/assets/icons/upload.svg";
@@ -10,11 +10,11 @@ import {postIPCMain} from "../../../helpers/ipc";
 import {IPCMessageRequestType, IPCMessageResponse} from "../../../../app/types";
 import {useDispatch} from "react-redux";
 import {RouteComponentProps, withRouter} from "react-router";
-import {dotName, isSubdomain, isTLD, undotName} from "../../../helpers/user";
+import {dotName, isSubdomain, isTLD, undotName} from "nomad-universal/lib/utils/user";
 import {addSystemMessage} from "../../../ducks/app";
 import {remote} from "electron";
 import fs from "fs";
-import {decrypt} from "../../../../app/util/key";
+import {decrypt} from "nomad-universal/lib/utils/key";
 import {useCurrentUsername, useUser} from "nomad-universal/lib/ducks/users";
 import {getImageURLFromPostHash} from "nomad-universal/lib/utils/posts";
 
@@ -59,7 +59,7 @@ function getUsersMenuItems(props: RouteComponentProps): (MenuProps | null)[] {
 
   const selectUser = useCallback(async () => {
     try {
-      await dispatch(setCurrentUser(editingName, password));
+      await dispatch(setCurrentUser(editingName));
       setEditingName('');
       setPassword('');
       setImporting(false);

@@ -14,7 +14,7 @@ import {
   IPCMessageRequest,
   IPCMessageRequestType
 } from "../types";
-import {dotName, isSubdomain} from "../../ui/helpers/user";
+import {dotName, isSubdomain} from "nomad-universal/lib/utils/user";
 import logger from "nomad-api/lib/util/logger";
 import {
   getEndHeightFromLog,

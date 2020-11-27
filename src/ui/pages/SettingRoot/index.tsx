@@ -1,19 +1,19 @@
-import React, {ChangeEvent, ReactElement, ReactNode, useCallback, useEffect, useState} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {Switch, Route, Redirect, withRouter, RouteComponentProps} from "react-router-dom";
 import c from "classnames";
 import "./setting-root.scss";
 import "../index.scss";
-import SettingHeader from "../../components/Header/SettingHeader";
 import NetworkSetting from "./NetworkSetting";
 import LogSetting from "./LogSetting";
 import ProfileSetting from "./ProfileSetting";
 import {useCurrentUsername} from "nomad-universal/lib/ducks/users";
-import {fetchIdentity} from "../../ducks/users";
+
 import {useDispatch} from "react-redux";
+import {fetchIdentity} from "../../helpers/hooks";
 
 function SettingRoot (props: RouteComponentProps): ReactElement {
   const dispatch = useDispatch();
-  // @ts-ignore
+
   useEffect(() => {
     dispatch(fetchIdentity())
   }, []);

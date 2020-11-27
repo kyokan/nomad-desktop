@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 import posts, {PostsActionType} from "nomad-universal/lib/ducks/posts";
 import app, {AppActionType} from "../ducks/app";
-import blocklist from "../ducks/blocklist";
+import blocklist from "nomad-universal/lib/ducks/blocklist";
 import users from "nomad-universal/lib/ducks/users";
 
 const rootReducer = combineReducers({

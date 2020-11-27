@@ -1,38 +1,8 @@
-import {DraftPost} from "../../ui/ducks/drafts/type";
+import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {ResponsePost} from "../types";
 import {serializeUsername} from "../../ui/helpers/user";
-import {RelayerPostModel} from "nomad-universal/lib/types/posts";
-
-export const mapDraftToPostPayload = (draft?: DraftPost): RelayerPostModel => {
-  if (!draft) {
-    return {
-      title: '',
-      parent: '',
-      context: '',
-      content: '',
-      topic: '',
-      tags: [],
-    };
-  }
-
-  let content = draft.content;
-
-  if (draft.attachments) {
-    content = content + '\n';
-    content = content + draft.attachments.map(h => `<div data-image-file-hash="${h}"></div>`).join('');
-  }
-
-  return {
-    title: draft.title,
-    parent: draft.parent,
-    context: draft.context,
-    content: content,
-    topic: draft.topic,
-    tags: draft.tags,
-  };
-};
 
 export const mapDraftToDomainPost = (draft: DraftPost): DomainPost => {
   if (!draft) {
@@ -86,23 +56,3 @@ export const mapPostWithMetaToPost = (env: DomainEnvelope<DomainPost>): Response
     },
   };
 };
-
-export function parsePreviewLinks(content: string): string[] {
-  const links: string[] = [];
-
-  try {
-    const lines = content.split('\n');
-    lines.forEach((line) => {
-      const parsed = line.match(/!\[.*\](\(.*\))/);
-
-      if (parsed) {
-        links.push(parsed[1].split(' ')[0].replace(/\(|\)/g, ''));
-      }
-    });
-  } catch (e) {
-    //
-    return links;
-  }
-
-  return links;
-}

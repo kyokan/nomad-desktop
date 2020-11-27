@@ -3,10 +3,16 @@ import {remote} from "electron";
 import fs from "fs";
 import {fromFile} from "file-type";
 import {useDispatch} from "react-redux";
-import {addUserFollowings, useCurrentUser} from "../ducks/users";
+import {
+  addUserFollowings,
+  fetchCurrentUserLikes,
+  fetchUserBlocks,
+  fetchUserFollowings,
+  useCurrentUser
+} from "nomad-universal/lib/ducks/users";
 import {IPCMessageRequestType, IPCMessageResponse, RelayerNewPostResponse} from "../../app/types";
 import {postIPCMain} from "./ipc";
-import {addLikeCount} from "../ducks/posts";
+import {addLikeCount} from "nomad-universal/lib/ducks/posts";
 import {
   addUserBlocks,
   addUserLikes,
@@ -14,7 +20,7 @@ import {
   UsersActionType,
   UsersState
 } from "nomad-universal/lib/ducks/users";
-import {RepliesState, setSendingReplies} from "../ducks/drafts/replies";
+import {setSendingReplies} from "nomad-universal/lib/ducks/drafts/replies";
 import {appendNewComment, createNewPost, updatePost} from "nomad-universal/lib/ducks/posts";
 import {PostType} from "nomad-universal/lib/types/posts";
 import {parseUsername, serializeUsername} from "nomad-universal/lib/utils/user";
@@ -27,6 +33,13 @@ import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
 import {AppActionType} from "../ducks/app";
+
+type RepliesState = {
+  map: {
+    [parentId: string]: DraftPost;
+  };
+  isSendingReplies: boolean;
+}
 
 export const useFileUpload = (): () => Promise<string> => {
   const dispatch = useDispatch();
@@ -434,4 +447,37 @@ export const fetchCurrentUserData = () => async (dispatch: Dispatch<any>): Promi
     type: UsersActionType.SET_CURRENT_USER_DATA,
     payload: resp.payload,
   });
+};
+
+type FetchIdentityIPCResponse = IPCMessageResponse<{
+  users: string[];
+  currentUser: string;
+}>
+export const fetchIdentity = () => (dispatch: ThunkDispatch<any, any, any>) => {
+  const ipcEvt = {
+    type: IPCMessageRequestType.GET_IDENTITY,
+    payload: {},
+  };
+
+  postIPCMain(ipcEvt, true)
+    .then((resp: FetchIdentityIPCResponse) => {
+      const { users, currentUser } = resp.payload;
+      users.forEach(name => dispatch({
+        type: UsersActionType.ADD_IDENTITY,
+        payload: name,
+      }));
+
+      if (currentUser) {
+        dispatch({
+          type: UsersActionType.UPDATE_CURRENT_USER,
+          payload: currentUser,
+        });
+
+        dispatch(fetchCurrentUserLikes());
+        dispatch(fetchUserFollowings(currentUser));
+        dispatch(fetchUserBlocks(currentUser));
+      }
+
+      dispatch(fetchCurrentUserData());
+    });
 };
