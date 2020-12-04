@@ -1,5 +1,7 @@
 import {postIPCMain} from "./helpers/ipc";
 const _fetch = fetch;
+
+console.log('hih')
 let apiKey = '';
 // @ts-ignore
 global.fetch = async function (url, options) {

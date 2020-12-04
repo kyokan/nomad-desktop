@@ -7,6 +7,7 @@ import {isAppInitialized} from "../util/appData";
 import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {API_KEY} from "../types";
 import {Writer} from "nomad-api/lib/services/writer";
+import {getLinkPreview} from 'link-preview-js';
 const app = express();
 
 app.use(express.static(joinAppRootPath('imageCache')));
@@ -60,6 +61,11 @@ export default class LocalServer {
     app.post(`/relayer/precommit`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/relayer/precommit']);
     app.post(`/relayer/commit`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/relayer/commit']);
     app.get(`/blob/:blobName/info`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/blob/:blobName/info']);
+
+    app.get('/preview', async (req, res) => {
+      const preview = await getLinkPreview(req.query.url);
+      res.send(preview);
+    });
 
     app.get('/health', (req, res) => {
       res.send('ok');
