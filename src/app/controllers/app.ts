@@ -1,5 +1,6 @@
 import WindowsController from './windows';
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
+import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {Connection as DomainConnection} from 'fn-client/lib/application/Connection';
 import {Moderation as DomainModeration, ModerationType} from 'fn-client/lib/application/Moderation';
 import UsersController from './users';
@@ -8,13 +9,13 @@ import BlocklistManager from './blocklist';
 import electron, {ipcMain, IpcMainEvent} from 'electron';
 import {API_KEY, APP_DATA_EVENT_TYPES, IPCMessageRequest, IPCMessageRequestType, IPCMessageResponse} from '../types';
 import {DraftPost} from 'nomad-universal/lib/ducks/drafts/type';
-import {mapDraftToDomainPost} from '../util/posts';
+import {mapDraftToPostPayload} from 'nomad-universal/lib/utils/posts';
 import FNDController from './fnd';
 import UserDataManager from './userData';
 import {decrypt} from "nomad-universal/lib/utils/key";
 import logger from "../util/logger";
 import LocalServer from "./local-server";
-import {isSubdomain, isTLD, parseUsername} from "nomad-universal/lib/utils/user";
+import {isSubdomain, isTLD, parseUsername, serializeUsername} from "nomad-universal/lib/utils/user";
 import * as path from "path";
 import {resourcesPath} from "../util/paths";
 import {
@@ -27,17 +28,20 @@ import {
 } from "../util/appData";
 import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {extendFilter} from "nomad-api/lib/util/filter";
-import {serializeUsername} from "nomad-universal/lib/utils/user";
 import crypto from "crypto";
 import HSDService, {HSD_API_KEY} from "./hsd";
 import HSDClient from "nomad-api/lib/services/hsd";
 import {Writer} from "nomad-api/lib/services/writer";
+import {mapBodyToEnvelope} from "nomad-api/lib/util/envelope";
 
 const ECKey = require('eckey');
 const conv = require('binstring');
 const dbPath = path.join(electron.app.getPath('userData'), 'appData', 'nomad.db');
 const namedbPath = path.join(electron.app.getPath('userData'), 'appData', 'names.db');
 const rp = resourcesPath();
+
+const { SkynetClient } = require('@nebulous/skynet');
+const skynet = new SkynetClient();
 
 export default class AppManager {
   hsdManager: HSDService;
@@ -256,6 +260,8 @@ export default class AppManager {
           this.fndController.unbanPeer.bind(this, req.payload.peerId),
           evt, req,
         );
+      case IPCMessageRequestType.SEND_NEW_MEDIA:
+        return this.handleUploadSkyNet(evt, req);
       case IPCMessageRequestType.SEND_NEW_POST:
         return this.handleSendNewPost(evt, req);
       case IPCMessageRequestType.SEND_NEW_REACTION:
@@ -592,7 +598,7 @@ export default class AppManager {
               'FOLLOW',
             ),
           ),
-          !!req.payload?.truncate,
+          req.payload ? !!req.payload.truncate : false,
         );
       })
       // @ts-ignore
@@ -684,11 +690,26 @@ export default class AppManager {
       });
   }
 
+  private async handleUploadSkyNet(
+    ipcEvt: IpcMainEvent,
+    req: IPCMessageRequest<{filepath: string}>
+  ) {
+    try {
+      const filepath = req.payload.filepath;
+      const skylink = await skynet.uploadFile(filepath);
+      return this.sendResponse(ipcEvt, req.id, skylink);
+    } catch (err) {
+      return this.sendResponse(ipcEvt, req.id, err.message, true);
+    }
+  }
+
   private handleSendNewPost(ipcEvt: IpcMainEvent, req: IPCMessageRequest<{draft: DraftPost; truncate: boolean}>) {
     this.usersController.getCurrentUser()
       .then(async creator => {
         const { tld, subdomain } = parseUsername(creator);
         const networkId = crypto.randomBytes(8).toString('hex');
+        const post = mapDraftToPostPayload(req.payload.draft);
+
         return this.signerManager.sendNewPost(
           creator,
           await DomainEnvelope.createWithMessage(
@@ -696,7 +717,19 @@ export default class AppManager {
             tld,
             subdomain || null,
             networkId,
-            mapDraftToDomainPost(req.payload!.draft),
+            new DomainPost(
+              0,
+              post.content,
+              post.title || null,
+              post.parent || null,
+              post.topic || null,
+              post.tags,
+              0,
+              0,
+              0,
+              undefined,
+              post.subtype,
+            ),
           ),
           req.payload?.truncate,
         );

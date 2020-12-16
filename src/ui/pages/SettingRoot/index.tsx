@@ -1,16 +1,20 @@
 import React, {ReactElement, useEffect} from "react";
 import {Switch, Route, Redirect, withRouter, RouteComponentProps} from "react-router-dom";
 import c from "classnames";
+import "nomad-universal/lib/components/UserPanels/user-panels.scss";
+import "nomad-universal/lib/components/Setting/settings.scss";
 import "./setting-root.scss";
 import "../index.scss";
 import NetworkSetting from "./NetworkSetting";
 import LogSetting from "./LogSetting";
-import ProfileSetting from "./ProfileSetting";
+import {version} from "../../../../package.json";
 import {useCurrentUsername, useFetchUser, UsersActionType} from "nomad-universal/lib/ducks/users";
 import DomainSetting from "nomad-universal/lib/components/DomainSetting";
+import ProfileSetting from "nomad-universal/lib/components/ProfileSetting";
+import ModerationSetting from "nomad-universal/lib/components/ModerationSetting";
 
 import {useDispatch} from "react-redux";
-import {fetchIdentity} from "../../helpers/hooks";
+import {fetchIdentity, useFileUpload, useSendPost} from "../../helpers/hooks";
 import {INDEXER_API} from "nomad-universal/lib/utils/api";
 
 function SettingRoot (props: RouteComponentProps): ReactElement {
@@ -103,16 +107,31 @@ function renderSettingNav(props: RouteComponentProps): ReactElement {
           </div>
         )
       }
+      <div
+        className={c('setting__nav__row', {
+          'setting__nav__row--active': /moderation/g.test(pathname),
+        })}
+        onClick={() => push('/settings/moderation')}
+      >
+        Moderation
+      </div>
+      <div className="setting__nav__version">
+        Version {version}
+      </div>
     </div>
   )
 }
 
 function renderSettingContent(): ReactElement {
+  const onSendPost = useSendPost();
+  const onFileUpload = useFileUpload();
   return (
     <div className="setting__content">
       <Switch>
         <Route path="/settings/domain">
-          <DomainSetting />
+          <DomainSetting
+            sendPost={onSendPost}
+          />
         </Route>
         <Route path="/settings/network">
           <NetworkSetting />
@@ -121,7 +140,13 @@ function renderSettingContent(): ReactElement {
           <LogSetting />
         </Route>
         <Route path="/settings/profile">
-          <ProfileSetting />
+          <ProfileSetting
+            sendPost={onSendPost}
+            onFileUpload={onFileUpload}
+          />
+        </Route>
+        <Route path="/settings/moderation">
+          <ModerationSetting />
         </Route>
         <Route>
           <Redirect to="/settings/domain" />

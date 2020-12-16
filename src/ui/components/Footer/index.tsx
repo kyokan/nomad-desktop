@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode} from "react";
+import React, {ReactElement, ReactNode, useCallback, useState} from "react";
 import c from "classnames";
 import "./footer.scss";
 import {useAppData, useFNDStatus, useHandshakeEndHeight, useHandshakeStartHeight, useLastSync} from "../../ducks/app";
@@ -51,6 +51,20 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
   // if (ddrpStatus === 'on' && !endHeight) {
   //   displayText = `Fetching Handshake info...`;
   // }
+  const [loading, setLoading] = useState(false);
+  const scan = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    await postIPCMain({
+      type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
+      payload: {},
+    }, true);
+    await postIPCMain({
+      type: IPCMessageRequestType.SCAN_ALL_NAMES,
+      payload: null,
+    }, true);
+    setLoading(false);
+  }, [loading]);
 
   return (
     <>
@@ -74,16 +88,11 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
         {
           showingFallback
             ? 'Connected via https://api.nmd.co'
-            : (
+            : loading ? <div className="loader" /> : (
               <Icon
                 material="refresh"
                 width={16}
-                onClick={async () => {
-                  await postIPCMain({
-                    type: IPCMessageRequestType.SCAN_ALL_NAMES,
-                    payload: null,
-                  }, true);
-                }}
+                onClick={scan}
               />
             )
         }

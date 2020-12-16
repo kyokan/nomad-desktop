@@ -4,7 +4,7 @@ import {dirExists} from '../util/fs';
 import {joinAppDataPath} from '../util/paths';
 import * as path from 'path';
 import {IPCMessageRequest, IPCMessageRequestType, RelayerLoginResponse, RelayerSignupResponse} from "../types";
-import {isSubdomain, parseUsername, serializeUsername} from "../../ui/helpers/user";
+import {isSubdomain, parseUsername, serializeUsername} from "nomad-api/lib/util/user";
 
 type Identity = {
   tld: string;

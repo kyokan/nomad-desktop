@@ -7,9 +7,11 @@ import {isAppInitialized} from "../util/appData";
 import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {API_KEY} from "../types";
 import {Writer} from "nomad-api/lib/services/writer";
-import {getLinkPreview} from 'link-preview-js';
+const {getLinkPreview} = require('link-preview-js/build');
+import {makeResponse} from "nomad-api/lib/util/rest";
 const app = express();
 
+// app.use(upload.any());
 app.use(express.static(joinAppRootPath('imageCache')));
 
 const doAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -63,12 +65,32 @@ export default class LocalServer {
     app.get(`/blob/:blobName/info`, jsonParser, this.fallbackPost, doAuth, writer.handlers['/blob/:blobName/info']);
 
     app.get('/preview', async (req, res) => {
-      const preview = await getLinkPreview(req.query.url);
+      const preview = await getLinkPreview(req.query.url as string);
       res.send(preview);
     });
 
     app.get('/health', (req, res) => {
       res.send('ok');
+    });
+
+    app.post('/upload/sia', async (req, res) => {
+      const resp = await fetch('https://siasky.net/skynet/skyfile', {
+        method: 'POST',
+        body: req.body,
+        // @ts-ignore
+        headers: {
+          'Content-Type': req.headers['content-type'],
+          'Content-Length': req.headers['content-length'],
+          'Origin': req.headers['origin'],
+          'User-Agent': req.headers['user-agent'],
+        },
+      });
+
+      const json = await resp.json();
+      res.send(makeResponse({
+        file: json.file,
+        skylink: `sia://${json.skylink}`,
+      }));
     });
 
     app.listen(port, () => {

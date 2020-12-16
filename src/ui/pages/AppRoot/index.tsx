@@ -27,12 +27,13 @@ import {
   useSaveCustomView,
   fetchCurrentUserData,
   useFileUpload,
-  useSendPost, fetchIdentity,
+  useSendPost, fetchIdentity, useOpenLink,
 } from "../../helpers/hooks";
 import {useFetchAppData, useHydrated, useInitialized} from "../../ducks/app";
 import InitApp from "../../components/InitApp";
 import DiscoverPanels from "nomad-universal/lib/components/DiscoverPanels";
 import UserPanels from "nomad-universal/lib/components/UserPanels";
+import HomePanels from "nomad-universal/lib/components/HomePanels";
 import Onboarding, {OnboardingViewType} from "nomad-universal/lib/components/Onboarding";
 import {postIPCMain} from "../../helpers/ipc";
 import {IPCMessageRequestType} from "../../../app/types";
@@ -43,7 +44,7 @@ import SavedViewPanels from "nomad-universal/lib/components/SavedViewPanels";
 import BlocksView from "nomad-universal/lib/components/UserView/BlocksView";
 import FollowingView from "nomad-universal/lib/components/UserView/FollowingView";
 import FollowersView from "nomad-universal/lib/components/UserView/FollowersView";
-import ComposeView from "nomad-universal/lib/components/ComposeView";
+import ComposeModal from "nomad-universal/lib/components/ComposeModal";
 import AppHeader from "nomad-universal/lib/components/AppHeader";
 import {FullScreenModal} from "nomad-universal/lib/components/FullScreenModal";
 import Icon from "nomad-universal/lib/components/Icon";
@@ -60,6 +61,8 @@ function Root(props: RouteComponentProps): ReactElement {
   const hydrated = useHydrated();
   const [isBrowsing, setBrowsing] = useState<boolean>(false);
   const [isClosed, closeModal] = useState<boolean>(true);
+  const onFileUpload = useFileUpload();
+  const onSendPost = useSendPost();
 
   const onSetting = useCallback(() => postIPCMain({
     type: IPCMessageRequestType.OPEN_SETTING_WINDOW,
@@ -89,6 +92,8 @@ function Root(props: RouteComponentProps): ReactElement {
 
   const summary = renderSummary();
   const panels = renderPanels();
+  const onOpenLink = useOpenLink();
+  const [showEditor, setShowEditor] = useState(false);
 
   const showContent = initialized || isBrowsing;
 
@@ -100,6 +105,8 @@ function Root(props: RouteComponentProps): ReactElement {
         logoUrl={Logo}
         onSetting={onSetting}
         onLogout={onLogout}
+        onCompose={() => setShowEditor(true)}
+        onDownloadKeystore={() => Promise.reject('not yet')}
         multiAccount
       />
       <div className="content">
@@ -136,7 +143,16 @@ function Root(props: RouteComponentProps): ReactElement {
           </FullScreenModal>
         )
       }
-
+      {
+        showEditor && (
+          <ComposeModal
+            onClose={() => setShowEditor(false)}
+            onFileUpload={onFileUpload}
+            onSendPost={onSendPost}
+            onOpenLink={onOpenLink}
+          />
+        )
+      }
     </div>
   );
 }
@@ -147,11 +163,11 @@ function renderSummary(): ReactNode {
   const onBlockUser = useBlockUser();
   const onFollowUser = useFollowUser();
   const dispatch = useDispatch();
-  // const initialized = useInitialized();
+  const initialized = useInitialized();
 
   const onSendReply = useCallback(async (postHash: string) => {
     dispatch(sendReply(postHash));
-  }, [dispatch]);
+  }, [dispatch, initialized]);
 
   const onSubdomainLogin = useCallback(async (tld: string, subdomain: string, password: string) => {
     return postIPCMain({
@@ -202,7 +218,7 @@ function renderSummary(): ReactNode {
   }, []);
 
   const sendPost = useSendPost();
-  const fileUpload = useFileUpload();
+  const onFileUpload = useFileUpload();
 
   const onOpenLink = useCallback((url: string) => {
     shell.openExternal(url);
@@ -221,6 +237,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/users/:username/blocks">
@@ -245,6 +262,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/discover">
@@ -254,6 +272,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/views/:viewIndex">
@@ -263,6 +282,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/search">
@@ -272,6 +292,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/home">
@@ -281,6 +302,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/custom-view/:viewIndex">
@@ -290,6 +312,7 @@ function renderSummary(): ReactNode {
           onBlockUser={onBlockUser}
           onFollowUser={onFollowUser}
           onOpenLink={onOpenLink}
+          onFileUpload={onFileUpload}
         />
       </Route>
       <Route path="/login/:username?">
@@ -310,13 +333,6 @@ function renderSummary(): ReactNode {
           onTLDLogin={onTLDLogin}
           onSearch={onSearch}
           onAddTLD={onAddTLD}
-        />
-      </Route>
-      <Route path="/write">
-        <ComposeView
-          onFileUpload={() => Promise.reject('not supported')}
-          onSendPost={sendPost}
-          onOpenLink={onOpenLink}
         />
       </Route>
       <Route>
@@ -355,6 +371,7 @@ function renderPanels(): ReactNode {
         </Route>
         <Route path="/home">
           <div className="panels">
+            <HomePanels />
           </div>
         </Route>
         <Route path="/posts/:postHash">

@@ -386,7 +386,7 @@ async function fetchConnectedPeers(): Promise<number> {
           includeBanned: false,
         }
       }, true);
-      resolve(resp.payload?.length || 0);
+      resolve(resp.payload ? resp.payload.length : 0);
     } catch (e) {
       resolve(0);
     } finally {

@@ -2,7 +2,7 @@ import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
 import {ResponsePost} from "../types";
-import {serializeUsername} from "../../ui/helpers/user";
+import {serializeUsername} from "nomad-api/lib/util/user";
 
 export const mapDraftToDomainPost = (draft: DraftPost): DomainPost => {
   if (!draft) {

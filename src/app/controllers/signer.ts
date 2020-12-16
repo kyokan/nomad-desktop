@@ -15,7 +15,7 @@ import {resourcesPath} from '../util/paths';
 import logger from "../util/logger";
 import UsersManager from "./users";
 import FNDController, {fndVersionPath} from "./fnd";
-import {isTLD, parseUsername} from "../../ui/helpers/user";
+import {isTLD, parseUsername} from "nomad-api/lib/util/user";
 import {IndexerManager} from "nomad-api/lib/services/indexer";
 import {Writer} from "nomad-api/lib/services/writer";
 import UserDataManager from "./userData";
@@ -235,7 +235,8 @@ export default class SignerManager {
 
     if (isTLD(username)) {
       if (truncate) {
-        await this.writer!.truncateBlob(tld, new Date(), false, this.signer);
+        const res = await this.writer!.truncateBlob(tld, new Date(), true, this.signer);
+        return res;
       }
 
       const res = await this.appendTLDMessage(tld, envelope, truncate);

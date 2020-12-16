@@ -1,6 +1,6 @@
 import {Dispatch, useCallback} from "react";
-import {remote} from "electron";
-import fs from "fs";
+import {remote, shell} from "electron";
+import fs, {link} from "fs";
 import {fromFile} from "file-type";
 import {useDispatch} from "react-redux";
 import {
@@ -29,6 +29,7 @@ import {Action} from "redux";
 import {INDEXER_API} from "nomad-universal/lib/utils/api";
 import {Envelope as DomainEnvelope} from 'fn-client/lib/application/Envelope';
 import {Post as DomainPost} from 'fn-client/lib/application/Post';
+import {ModerationType} from 'fn-client/lib/application/Moderation';
 import {Pageable} from 'nomad-api/lib/services/indexer/Pageable';
 import {CustomViewProps, UserData} from "../../app/controllers/userData";
 import {DraftPost} from "nomad-universal/lib/ducks/drafts/type";
@@ -41,35 +42,29 @@ type RepliesState = {
   isSendingReplies: boolean;
 }
 
-export const useFileUpload = (): () => Promise<string> => {
+export const useOpenLink = () => {
+  return useCallback((url: string) => {
+    return shell.openExternal(url);
+  }, [shell])
+};
+
+export const useFileUpload = () => {
   const dispatch = useDispatch();
   const uploadImage = useUploadImage();
   const currentUser = useCurrentUser();
 
-  return useCallback(async (): Promise<string> => {
+  return useCallback(async (cb: (file: File, skylink: string, prog: number) => Promise<void>): Promise<void> => {
     const selected = await remote.dialog.showOpenDialog({
-      filters: [
-        { name: 'Images', extensions: ['jpg', 'png', 'gif', 'jpeg', 'tiff', 'bmp', 'svg'] },
-      ],
       properties: ['openFile'],
     });
     const {filePaths: [filePath]} = selected;
-    const parts = filePath!.split('/');
-    const fileName = parts[parts.length - 1];
-    const file = await fs.promises.readFile(filePath);
-    const fileType = await fromFile(filePath);
-
-    if (!fileType?.mime) {
-      return Promise.reject(new Error('unknown mime type'));
-    }
-    // console.log(fileName, file, fileType)
-    const json: IPCMessageResponse<any> = await uploadImage(fileName, file, fileType?.mime);
+    const json: IPCMessageResponse<any> = await uploadImage(filePath);
 
     if (json.error) {
       return Promise.reject(json.payload);
     }
 
-    return json.payload.refhash;
+    await cb(new File([], filePath), json.payload, 1);
   }, [dispatch, uploadImage, currentUser.name]);
 };
 
@@ -180,6 +175,7 @@ export const useStopFND = () => {
 export const useSendPost = () => {
   const dispatch = useDispatch();
   const initialized = useAppInitialized();
+  const sendModeration = useSendModeration();
 
   return useCallback(async (draft: DraftPost, truncate = false): Promise<RelayerNewPostResponse> => {
     const json: IPCMessageResponse<RelayerNewPostResponse> = await postIPCMain({
@@ -189,7 +185,6 @@ export const useSendPost = () => {
         truncate,
       },
     }, true);
-
 
     if (json.error) {
       // @ts-ignore
@@ -203,32 +198,40 @@ export const useSendPost = () => {
       }, true);
     }
 
-    dispatch(updatePost(createNewPost({
-      hash: json.payload.refhash,
-      id: json.payload.network_id,
-      type: PostType.ORIGINAL,
-      creator: serializeUsername(json.payload.username, json.payload.tld),
-      timestamp: json.payload.timestamp * 1000,
-      content: json.payload.body,
-      topic: json.payload.topic,
-      tags: json.payload.tags,
-      context: '',
-      parent: json.payload.reference,
-    })));
+    if (draft.moderationType === 'SETTINGS__NO_BLOCKS') {
+      await sendModeration(json.payload.refhash, 'SETTINGS__NO_BLOCKS');
+    }
+
+    if (draft.moderationType === 'SETTINGS__FOLLOWS_ONLY') {
+      await sendModeration(json.payload.refhash, 'SETTINGS__FOLLOWS_ONLY');
+    }
+
+    if (!truncate) {
+      dispatch(updatePost(createNewPost({
+        hash: json.payload.refhash,
+        id: json.payload.network_id,
+        type: PostType.ORIGINAL,
+        creator: serializeUsername(json.payload.username, json.payload.tld),
+        timestamp: json.payload.timestamp * 1000,
+        content: json.payload.body,
+        topic: json.payload.topic,
+        tags: json.payload.tags,
+        context: '',
+        parent: json.payload.reference,
+      })));
+    }
 
     return json.payload;
-  }, [dispatch]);
+  }, [dispatch, initialized]);
 };
 
 export const useUploadImage = () => {
   // const dispatch = useDispatch();
-  return useCallback(async (fileName: string, content: Buffer, mimeType?: string): Promise<any> => {
+  return useCallback(async (filepath: string): Promise<any> => {
     return await postIPCMain({
       type: IPCMessageRequestType.SEND_NEW_MEDIA,
       payload: {
-        fileName,
-        content,
-        mimeType,
+        filepath,
       },
     }, true);
   }, [postIPCMain]);
@@ -299,7 +302,7 @@ export const useBlockUser = () => {
       }, true);
     }
 
-  }, [dispatch, postIPCMain, currentUsername])
+  }, [dispatch, postIPCMain, currentUsername, initialized])
 };
 
 export const useFollowUser = () => {
@@ -327,7 +330,7 @@ export const useFollowUser = () => {
     dispatch(addUserFollowings(currentUser.name, {
       [username]: username,
     }));
-  }, [dispatch, postIPCMain, currentUser.name])
+  }, [dispatch, postIPCMain, currentUser.name, initialized])
 }
 
 export const useLikePage = () => {
@@ -363,7 +366,7 @@ export const useLikePage = () => {
     } catch (e) {
       //
     }
-  }, [postIPCMain, dispatch, currentUsername]);
+  }, [postIPCMain, dispatch, currentUsername, initialized]);
 };
 
 export const sendReply = (id: string) => async (
@@ -427,6 +430,29 @@ export const sendReply = (id: string) => async (
 
   return json;
 };
+
+export const useSendModeration = () => {
+  const currentUser = useCurrentUser();
+
+  return useCallback(async (reference: string, type: ModerationType) => {
+    if (!currentUser) {
+      return;
+    }
+
+    try {
+      await postIPCMain({
+        type: IPCMessageRequestType.SEND_NEW_REACTION,
+        payload: {
+          parent: reference,
+          moderationType: type,
+        },
+      }, true);
+    } catch (e) {
+      //
+    }
+  }, [currentUser]);
+}
+
 
 export const useCreateNewView = () => {
   const dispatch = useDispatch();
