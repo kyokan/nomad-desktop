@@ -130,6 +130,12 @@
       ],
       "icon": "resources/icon.icns"
     },
+    "win": {
+      "target": [
+        "msi"
+      ],
+      "icon": "resources/icon.icns"
+    },
     "dmg": {
       "contents": [
         {

@@ -58,7 +58,8 @@ function renderFooterStatus(showingFallback: boolean): ReactNode {
     await postIPCMain({
       type: IPCMessageRequestType.SEND_UPDATE_FOR_CURRENT_USER,
       payload: {},
-    }, true);
+    }, true)
+      .catch(() => null);
     await postIPCMain({
       type: IPCMessageRequestType.SCAN_ALL_NAMES,
       payload: null,
